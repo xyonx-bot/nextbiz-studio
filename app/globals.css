@@ -28,6 +28,7 @@ a { color: inherit; text-decoration: none; }
   max-width: var(--shell-max);
   margin: 0 auto;
   background: var(--paper);
+  overflow: hidden;   /* wireframe §shell — scribbles/decor overflow must not widen the page */
 }
 .pad { padding-left: var(--pad-x); padding-right: var(--pad-x); }
 
