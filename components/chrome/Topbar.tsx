@@ -32,7 +32,12 @@ export function Topbar({ current }: { current?: string }) {
 
         <nav className="topnav" aria-label="Primary">
           {NAV_LINKS.map((l) => (
-            <Link key={l.href} href={l.href} aria-current={l.href === current ? "page" : undefined}>
+            <Link
+              key={l.href}
+              href={l.href}
+              className={l.href === current ? "on" : undefined}
+              aria-current={l.href === current ? "page" : undefined}
+            >
               {l.label}
             </Link>
           ))}

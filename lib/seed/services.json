@@ -1,0 +1,154 @@
+{
+  "page": "services",
+  "sectionOrder": ["catalog", "dossiers", "spec", "compare", "arc", "route"],
+  "catalog": {
+    "micro": "Capabilities · Services · Index",
+    "h1": ["Three ways in.", "One product coming."],
+    "intro": "Bring us in as your digital team, or choose a focused capability for what you need right now. Every engagement starts with a conversation about your business — then takes the shape that serves it best. No preset packages.",
+    "meta": [
+      { "k": "Capabilities", "v": "03 live · 01 in development" },
+      { "k": "Engagements", "v": "Whole-team or focused" },
+      { "k": "Start time", "v": "1–2 weeks from first call" },
+      { "k": "Quotes", "v": "Fixed, no surprise lines" }
+    ],
+    "index": [
+      { "no": "01", "name": "Web & Digital Products", "cat": "Digital foundations", "go": "Read the dossier", "href": "#c01" },
+      { "no": "02", "name": "Marketing & Growth", "cat": "Visibility & campaigns", "go": "Read the dossier", "href": "#c02" },
+      { "no": "03", "name": "WhatsApp & Meta Solutions", "cat": "Customer conversations", "go": "Read the dossier", "href": "#c03" },
+      { "no": "04", "name": "Meta Proxy", "cat": "Product · In development", "go": "See the spec sheet", "href": "#meta-proxy" }
+    ]
+  },
+  "dossiers": [
+    {
+      "id": "c01",
+      "no": "01",
+      "micro": "Capability 01 · Digital foundations",
+      "h2": "Web & Digital Products",
+      "copy": [
+        "Digital experiences shaped around the way your business works — from a clear first website to a more capable product or platform. We start with what your customers need to do, then build the shortest path to it.",
+        "Everything ships with the basics done properly: fast loads, working forms, sensible content structure, and a layout your team can actually keep updated. No framework theatrics for their own sake."
+      ],
+      "includes": [
+        "Business websites — from one-pager to full site",
+        "Web applications & customer portals",
+        "Digital platforms & workflow-led interfaces",
+        "Content structure & launch-ready copy shape"
+      ],
+      "fit": "You need a first proper site, a rebuild that finally works on mobile, or a small internal tool that replaces a spreadsheet everybody hates.",
+      "foot": "Typical first deliverable: a working draft in week two."
+    },
+    {
+      "id": "c02",
+      "no": "02",
+      "micro": "Capability 02 · Visibility & campaigns",
+      "h2": "Marketing & Growth",
+      "copy": [
+        "A considered mix of social media, advertising and creative work that helps your business show up with a clearer, more consistent voice — without needing a full marketing department on payroll.",
+        "We plan around what you actually sell and who actually buys it. Campaigns get measured against real outcomes — enquiries, calls, footfall — not vanity metrics."
+      ],
+      "includes": [
+        "Social media management & content systems",
+        "Ad creation & campaign setup",
+        "Marketing creatives — visuals, copy, layout",
+        "Simplified advertising workflows you can run"
+      ],
+      "fit": "You have a good business that nobody knows about yet — or campaigns that run but never show you what they earned.",
+      "foot": "Typical start: a content & campaign plan in week one."
+    },
+    {
+      "id": "c03",
+      "no": "03",
+      "micro": "Capability 03 · Customer conversations",
+      "h2": "WhatsApp & Meta Solutions",
+      "copy": [
+        "Practical WhatsApp and Meta-related solutions for businesses that want customer communication and day-to-day workflows to be simpler — not another channel nobody watches.",
+        "From automated replies and catalog setup to conversation flows that route real customers to a real person, we build around how your customers actually reach you today."
+      ],
+      "includes": [
+        "WhatsApp business setup & workflows",
+        "Conversation flows & auto-replies that make sense",
+        "Meta platform support — pages, catalogs, basics",
+        "Handover points to real humans, designed in"
+      ],
+      "fit": "Your customers already message you — and the phone buzzing all day is starting to cost more than it earns.",
+      "foot": "Typical start: a conversation audit — where messages go today."
+    }
+  ],
+  "spec": {
+    "micro": "Product 04 · In development",
+    "h2": "Meta Proxy",
+    "h2Suffix": "/ THE SPEC SHEET",
+    "statusLine": "Actively building",
+    "statusMicro": "PREPARING FOR MARKET · 2026",
+    "lede": "Our marketing technology product for simpler WhatsApp Business API workflows — managed infrastructure and storage without the integration ceremony.",
+    "photoNote": "WORKSPACE STILL-LIFE 1408×912 (crop 16:10) · Brand strategy desk — warm grade · radius 14/14/14/60 · saturate .85",
+    "copy": [
+      "We're building Meta Proxy to simplify the WhatsApp Business API (WABA), with managed infrastructure and storage. It's being prepared for market as a standalone product — and can also support a broader NextBiz Studio engagement.",
+      "What that means in practice: one setup instead of five, infrastructure you never have to babysit, and workflows your team can actually operate on day one."
+    ],
+    "sheetTitle": "PRODUCT SPEC — META PROXY",
+    "sheetRev": "Rev. 0.9 · Preview",
+    "sheetRows": [
+      { "k": "Category", "v": "Marketing technology · WABA infrastructure" },
+      { "k": "Status", "v": "In development", "live": "Building now" },
+      { "k": "Core function", "v": "Simplified WhatsApp Business API workflows" },
+      { "k": "Includes", "v": "Managed infrastructure · Managed storage · Setup handled" },
+      { "k": "Availability", "v": "Standalone product — or part of a studio engagement" },
+      { "k": "Pricing", "v": "To be published at launch — early conversations welcome" }
+    ],
+    "sheetFoot": "Building something on WABA already? Tell us what's painful — your setup shapes the product.",
+    "sheetCta": "Discuss Meta Proxy"
+  },
+  "compare": {
+    "micro": "Ways to work together",
+    "h2": ["Work with the whole.", "Or choose one part."],
+    "cols": [
+      {
+        "letter": "A",
+        "h3": "Your digital team",
+        "copy": "Bring NextBiz Studio in across digital products, marketing and Meta-related solutions — matched to what your business needs, scaled month to month.",
+        "use": [
+          "You want one accountable team instead of three vendors",
+          "Your needs change too fast for fixed yearly scopes"
+        ],
+        "pick": "Best for: ongoing businesses"
+      },
+      {
+        "letter": "B",
+        "h3": "A focused solution",
+        "copy": "Start with a specific capability, a single project, or an independent product such as Meta Proxy — without a full-service engagement.",
+        "use": [
+          "You know exactly what you need — a site, a campaign, a setup",
+          "You want to try us before a broader commitment"
+        ],
+        "pick": "Best for: clear, bounded needs"
+      }
+    ]
+  },
+  "arc": {
+    "micro": "A clear way forward",
+    "h2": ["What working together", "looks like."],
+    "headAside": ["NO HIDDEN STEPS", "NO SURPRISE LINES"],
+    "rows": [
+      { "when": "Day 1–3", "h3": "The conversation", "p": "A short call about your business, goals and where you are today. We ask more than we pitch.", "marker": "You leave with: a clear next step" },
+      { "when": "Week 1", "h3": "The brief & fixed quote", "p": "Scope, timeline and a fixed price — what's included, what's not, and what it costs. Written down before any work starts.", "marker": "You leave with: a one-page brief you approve" },
+      { "when": "Week 2 onward", "h3": "Build in the open", "p": "Working drafts early, honest progress updates, feedback rounds — no hiding for a big reveal that misses.", "marker": "You leave with: something real in your hands early" },
+      { "when": "Launch", "h3": "Handover, done properly", "p": "Documentation, access, and a walkthrough — you own everything. Small changes are part of the engagement.", "marker": "You leave with: no mysteries, no lock-in" },
+      { "when": "Ongoing", "h3": "Iterate with purpose", "p": "We keep learning from real use and refine as your business changes — a rhythm, not a one-off project.", "marker": "You leave with: a partner, not a vendor" }
+    ]
+  },
+  "route": {
+    "micro": "Make the next move",
+    "ask": ["Not sure which", "one fits?"],
+    "col1": {
+      "label": "If you have a specific need",
+      "p": "Tell us what it is — a site, a campaign, a WhatsApp setup. We'll scope it, quote it, and get moving.",
+      "cta": "Start a conversation"
+    },
+    "col2": {
+      "label": "If you want the whole team",
+      "p": "Describe your business and where it's going. We'll propose the mix — capabilities, cadence and cost.",
+      "cta": "See how we work"
+    }
+  }
+}

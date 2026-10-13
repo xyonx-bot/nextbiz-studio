@@ -1,0 +1,101 @@
+/* ============================================================
+   PROJECTS — work journal page
+   Ported 1:1 from ~/prototypes/nextbizstudio/projects/wireframe.html (v2)
+   ============================================================ */
+
+/* ═══ 1 · VOLUME REGISTER ═══ */
+.register { padding-top: 80px; padding-bottom: 70px; border-bottom: 1px solid var(--line); }
+.register-head { display: grid; grid-template-columns: 1.25fr .75fr; gap: 50px; align-items: end; }
+.register-head .lede { font-size: 14.5px; line-height: 1.8; color: var(--muted); max-width: 50ch; margin: 0; }
+.register-meta { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.register-meta .row { display: grid; grid-template-columns: 110px 1fr; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 11px; }
+.register-meta dt { color: var(--muted); font-weight: 800; font-size: 9px; letter-spacing: .8px; text-transform: uppercase; padding-top: 2px; }
+.register-meta dd { margin: 0; font-weight: 600; line-height: 1.5; }
+.reg-table { margin-top: 50px; border-top: 2px solid var(--ink); }
+.reg-cols { display: grid; grid-template-columns: 60px 1.5fr 1fr 90px 120px; gap: 18px; padding: 10px 0; border-bottom: 1px solid var(--ink); }
+.reg-cols span { font-size: 9px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
+.reg-row { display: grid; grid-template-columns: 60px 1.5fr 1fr 90px 120px; gap: 18px; align-items: baseline; padding: 18px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: inherit; }
+.reg-row .no { font-size: 20px; letter-spacing: -1px; color: var(--muted); font-weight: 400; }
+.reg-row .name { font-size: clamp(18px, 2vw, 24px); font-weight: 700; letter-spacing: -.6px; }
+.reg-row .type { font-size: 11px; font-weight: 600; color: var(--muted); }
+.reg-row .year { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: .5px; }
+.reg-row .status { font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.reg-row .status.demo { color: var(--ink); border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; width: max-content; }
+.reg-note { margin-top: 16px; font-size: 10.5px; color: var(--muted); line-height: 1.6; }
+
+/* ═══ 2 · CASE ENTRY ═══ */
+.entry { border-bottom: 1px solid var(--line); padding-top: 70px; padding-bottom: 70px; }
+.entry-head { display: grid; grid-template-columns: 80px 1fr auto; gap: 22px; align-items: start; margin-bottom: 14px; }
+.entry-head .no { font-size: clamp(40px, 4.6vw, 64px); line-height: .9; letter-spacing: -2.5px; color: transparent; -webkit-text-stroke: 1.5px var(--ink); opacity: .5; font-weight: 400; }
+.entry-head .titles { display: grid; gap: 6px; padding-top: 4px; }
+.entry-head .titles .micro { color: var(--ink); letter-spacing: 1.6px; }
+.entry-head .titles h2 { margin: 0; font-size: clamp(28px, 3.2vw, 44px); }
+.entry-head .badge { font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; border: 1px solid var(--line); border-radius: 999px; padding: 5px 11px; color: var(--muted); margin-top: 8px; }
+.entry-meta { display: flex; gap: 26px; flex-wrap: wrap; margin: 0 0 30px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.entry-meta span { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: .6px; text-transform: uppercase; }
+.entry-meta b { color: var(--ink); font-weight: 800; margin-left: 6px; letter-spacing: 0; text-transform: none; font-size: 11px; }
+.entry-photo { border-radius: 16px 16px 16px 60px; overflow: hidden; margin-bottom: 40px; }
+.entry-photo .imgph { height: 320px; border-radius: 0; }
+.photo-caption { display: flex; justify-content: space-between; gap: 20px; margin-top: 12px; font-size: 10px; color: var(--muted); font-weight: 600; }
+.entry-brief { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 60px); margin-bottom: 36px; }
+.entry-brief .body-copy p { margin: 0 0 12px; }
+.entry-brief .body-copy p:last-child { margin-bottom: 0; }
+.entry-split { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(28px, 4vw, 60px); align-items: start; }
+.entry-split .approach .micro { display: block; margin-bottom: 12px; color: var(--ink); letter-spacing: 1.6px; }
+.deliver-list { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.deliver-list .item { display: grid; grid-template-columns: 26px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: start; font-size: 12px; font-weight: 600; line-height: 1.55; }
+.deliver-list .item i { width: 16px; height: 16px; border: 1px solid var(--ink); border-radius: 3px; margin-top: 1px; display: grid; place-items: center; font-style: normal; font-size: 9px; font-weight: 800; }
+.outcome { margin-top: 34px; border-left: 3px solid var(--ink); padding: 6px 0 6px 22px; }
+.outcome .micro { display: block; margin-bottom: 8px; color: var(--ink); letter-spacing: 1.6px; }
+.outcome p { margin: 0; font-size: clamp(16px, 1.8vw, 21px); line-height: 1.4; letter-spacing: -.4px; font-weight: 400; max-width: 46ch; }
+
+/* ═══ 3 · PROCESS NOTES ═══ */
+.process { background: var(--soft); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding-top: 70px; padding-bottom: 75px; }
+.process-head { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: end; margin-bottom: 38px; }
+.process-head .micro { line-height: 1.9; text-align: right; }
+.notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+.note-col { display: grid; gap: 0; align-content: start; border-top: 2px solid var(--ink); padding-top: 18px; }
+.note-col .step { font-size: 9px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.note-col h3 { margin: 0 0 10px; font-size: 16px; font-weight: 700; letter-spacing: -.3px; }
+.note-col p { margin: 0; font-size: 12px; line-height: 1.7; color: var(--muted); }
+
+/* ═══ 4 · COMPASS CLOSE ═══ */
+.compass { padding-top: 70px; padding-bottom: 85px; display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(35px, 5vw, 80px); align-items: start; }
+.compass .micro { display: block; margin-bottom: 14px; }
+.compass .ask { font-size: clamp(30px, 3.6vw, 50px); letter-spacing: -1.8px; line-height: 1.02; font-weight: 400; margin: 0 0 18px; }
+.compass-aside { display: grid; gap: 16px; align-content: start; padding-top: 26px; border-top: 2px solid var(--ink); }
+.compass-aside p { margin: 0; font-size: 12.5px; line-height: 1.7; color: var(--muted); max-width: 42ch; }
+.compass-aside .action { margin-top: 6px; }
+
+/* ── Responsive (wireframe verbatim) ─────────────────────── */
+@media (max-width: 1050px) and (min-width: 761px) {
+  .register-head { grid-template-columns: 1fr; gap: 28px; }
+  .reg-cols { display: none; }
+  .reg-row { grid-template-columns: 44px 1fr auto; row-gap: 6px; }
+  .reg-row .type { grid-column: 2; }
+  .reg-row .year { display: none; }
+  .reg-row .status { grid-row: 1; grid-column: 3; justify-self: end; }
+  .entry-head { grid-template-columns: 52px 1fr; row-gap: 8px; }
+  .entry-head .badge { grid-column: 2; justify-self: start; margin-top: 4px; }
+  .entry-brief { grid-template-columns: 1fr; }
+  .entry-split { grid-template-columns: 1fr; gap: 28px; }
+  .notes { grid-template-columns: 1fr; gap: 22px; }
+  .compass { grid-template-columns: 1fr; gap: 30px; }
+}
+@media (max-width: 760px) {
+  .register { padding-top: 55px; padding-bottom: 50px; }
+  h1 { font-size: clamp(44px, 11vw, 56px); letter-spacing: -2px; }
+  /* wireframe ≤760 block omitted this — tablet pattern extended (register-meta spilled 408px @375) */
+  .register-head { grid-template-columns: 1fr; gap: 28px; }
+  .reg-row { grid-template-columns: 34px 1fr auto; padding: 14px 0; }
+  /* wireframe design bug fixed in port: .reg-cols stays visible ≤760 in Mira's
+     wireframe (tablet-only hide) → 5-col header spills @375. Hidden on mobile
+     to match the tablet intent. REPORTED to Mira for wireframe sync. */
+  .reg-cols { display: none; }
+  .reg-row .name { font-size: 17px; }
+  .entry { padding-top: 52px; padding-bottom: 52px; }
+  .entry-photo .imgph { height: 220px; }
+  .entry-photo { margin-bottom: 28px; border-radius: 12px 12px 12px 44px; }
+  .process { padding-top: 52px; padding-bottom: 52px; }
+  .compass { padding-top: 50px; padding-bottom: 55px; }
+}

@@ -1,0 +1,28 @@
+{
+  "page": "terms",
+  "num": "02",
+  "h1a": "Terms &",
+  "h1b": "Conditions",
+  "lede": "The terms that apply when you use our website or work with NextBiz Studio — the short version: be fair, and we will be too.",
+  "metaDoc": "Terms & Conditions — Legal 02",
+  "updated": "[DATE]",
+  "version": "1.0",
+  "updatesNote": "First published. Questions about this document? Write to hello@nextbizstudio.com.",
+  "sections": [
+    { "title": "Who we are", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — Kira fills with Joydip-approved legal text. Structure below shows the expected shape.]" }] },
+    { "title": "What these terms cover", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — website use + project engagements.]" }] },
+    { "title": "Quotes & scope", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — fixed quotes, what's included and not, written briefs before work.]" }] },
+    { "title": "Payments & timelines", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — schedules, milestones, what happens on delay.]" }] },
+    { "title": "Revisions & feedback", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — revision rounds, feedback windows.]" }] },
+    { "title": "Intellectual property", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — ownership on full payment, licenses, third-party assets.]" }] },
+    { "title": "Website availability", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — site provided as-is, maintenance expectations.]" }] },
+    { "title": "Limitation of liability", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — cap and carve-outs.]" }] },
+    { "title": "Governing law", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — jurisdiction.]" }] },
+    { "title": "Contact", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — where to send questions about these terms.]" }] }
+  ],
+  "siblings": [
+    { "href": "/legal/privacy", "label": "Privacy Policy" },
+    { "href": "/legal/refund", "label": "Refund & Cancellation" },
+    { "href": "/legal/cookie", "label": "Cookie Policy" }
+  ]
+}

@@ -1,0 +1,60 @@
+/* ============================================================
+   LEGAL ×4 — shared document pattern
+   Ported 1:1 from ~/prototypes/nextbizstudio/legal/privacy/wireframe.html (v2)
+   ============================================================ */
+
+/* 1 · doc header */
+.doc-head { padding-top: 70px; padding-bottom: 60px; border-bottom: 1px solid var(--line); }
+.doc-head-top { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; padding-bottom: 22px; border-bottom: 1px solid var(--line); }
+.doc-ver { font-size: 9px; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase; color: var(--muted); }
+.doc-head h1 { font-size: clamp(48px, 5.4vw, 84px); line-height: 1; letter-spacing: -3.5px; margin: 26px 0 30px; font-weight: 400; }
+.doc-stand { display: grid; grid-template-columns: 1.3fr .7fr; gap: 50px; align-items: start; }
+.doc-head .lede { color: var(--muted); font-size: 14px; line-height: 1.75; max-width: 52ch; margin: 0; }
+.doc-meta-rows { display: grid; gap: 0; border-top: 1px solid var(--line); }
+.doc-meta-rows > div { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 11px; }
+.doc-meta-rows dt { color: var(--muted); font-weight: 800; font-size: 9px; letter-spacing: .8px; text-transform: uppercase; padding-top: 2px; }
+.doc-meta-rows dd { margin: 0; font-weight: 600; line-height: 1.5; }
+
+/* 2 · body — TOC rail + article */
+.doc-body { display: grid; grid-template-columns: .42fr 1.28fr; gap: clamp(40px, 6vw, 100px); padding-top: 65px; padding-bottom: 90px; align-items: start; }
+.toc { position: sticky; top: 32px; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.toc a { display: grid; grid-template-columns: 26px 1fr; gap: 8px; padding: 13px 0; border-bottom: 1px solid var(--line); font-size: 11.5px; font-weight: 600; color: var(--muted); }
+.toc a.on { color: var(--ink); font-weight: 800; }
+.toc a span { font-size: 9px; font-weight: 800; color: var(--muted); }
+.toc .micro { margin-bottom: 14px; display: block; }
+.doc-article { max-width: 640px; }
+.doc-article h2 { font-size: 24px; letter-spacing: -1px; margin: 44px 0 14px; font-weight: 700; line-height: 1.2; }
+.doc-article h2:first-child { margin-top: 0; }
+.doc-article h2 .no { font-size: 11px; font-weight: 800; color: var(--muted); display: block; margin-bottom: 8px; letter-spacing: 1.4px; }
+.doc-article p { font-size: 13px; line-height: 1.75; color: var(--ink); margin: 0 0 14px; }
+.doc-article p.muted { color: var(--muted); }
+.doc-article ul { margin: 0 0 16px; padding-left: 0; list-style: none; display: grid; gap: 9px; }
+.doc-article ul li { display: grid; grid-template-columns: 18px 1fr; gap: 10px; font-size: 12.5px; line-height: 1.65; color: var(--ink); }
+.doc-article ul li::before { content: "—"; color: var(--muted); }
+.callout { border: 1px solid var(--line); border-left: 3px solid var(--ink); border-radius: 6px; padding: 18px 22px; margin: 22px 0; background: var(--card); font-size: 12px; line-height: 1.7; color: var(--ink); }
+.callout b { display: block; margin-bottom: 6px; font-size: 11px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; }
+.updates { display: flex; gap: 10px; align-items: flex-start; border-top: 1px solid var(--line); margin-top: 44px; padding-top: 26px; font-size: 11px; color: var(--muted); line-height: 1.6; }
+.updates .dt { font-weight: 800; color: var(--ink); white-space: nowrap; }
+
+/* 3 · doc end strip */
+.doc-end { border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr auto auto; gap: 40px; align-items: center; padding-top: 38px; padding-bottom: 38px; }
+.doc-end p { margin: 0; font-size: 12px; color: var(--muted); max-width: 420px; line-height: 1.65; }
+.doc-links { display: flex; gap: 18px; font-size: 10px; font-weight: 700; }
+.doc-links a { border-bottom: 1px solid var(--ink); padding-bottom: 3px; color: inherit; text-decoration: none; }
+.scribble-note { font-size: 19px; }
+
+/* ── Responsive (wireframe verbatim) ─────────────────────── */
+@media (max-width: 1050px) {
+  .doc-stand { grid-template-columns: 1fr; gap: 26px; }
+  .doc-body { grid-template-columns: 1fr; gap: 34px; }
+  .toc { position: static; border: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+  .toc a { border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; grid-template-columns: auto; gap: 0; font-size: 10px; }
+  .toc .micro { width: 100%; }
+}
+@media (max-width: 760px) {
+  .doc-head { padding-top: 55px; }
+  .doc-head h1 { font-size: clamp(40px, 11vw, 52px); letter-spacing: -2px; }
+  .doc-stand { grid-template-columns: 1fr; gap: 24px; }
+  .doc-body { padding-top: 45px; padding-bottom: 55px; }
+  .doc-end { grid-template-columns: 1fr; gap: 18px; }
+}

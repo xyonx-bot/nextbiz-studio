@@ -62,6 +62,7 @@
   display: grid; grid-template-columns: .8fr 1fr .95fr; gap: 55px;
   padding-top: 85px; padding-bottom: 75px; align-items: center;
 }
+.services > * { min-width: 0; }   /* grid min-content trap — long service titles overflowed @375 */
 .services h2 { margin-top: 23px; }
 .svc-note { font-size: 18px; line-height: 1.05; display: inline-flex; align-items: flex-end; gap: 6px; margin-top: 28px; }
 .svc-note svg { width: 34px; height: 34px; }
@@ -179,6 +180,9 @@
   .team-photo .imgph { width: 700px; max-width: none; }
   .team-names { width: 700px; }
   .team-note { display: none; }
-  .contact { grid-template-columns: 1fr auto; padding-top: 40px; padding-bottom: 40px; }
+  .contact { grid-template-columns: minmax(0, 1fr) auto auto; padding-top: 40px; padding-bottom: 40px; }
+  .contact > * { min-width: 0; }
   .contact p, .contact-arrow { display: none; }
+  /* wireframe's 1fr auto leaves the inline-call on an implicit 3rd track;
+     minmax(0,1fr) lets the h2 track shrink instead of spilling @375 */
 }
