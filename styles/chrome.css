@@ -75,21 +75,80 @@
 }
 .copyright .legal { display: flex; gap: 25px; }
 
+/* ── Mobile burger + dropdown panel (Mira wireframe 2026-10-13:
+      hairlines, orbit switch, ledger rows) ──────────────────── */
+.burger {
+  display: none;
+  width: 44px; height: 44px;
+  border: 1px solid var(--line);
+  background: none;
+  border-radius: 3px;
+  position: relative;
+  cursor: pointer;
+  flex: none;
+}
+.burger i, .burger i::before, .burger i::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 20px; height: 2px; background: var(--ink);
+  translate: -50% -50%;
+}
+.burger i::before { translate: -50% calc(-50% - 7px); }
+.burger i::after { translate: -50% calc(-50% + 7px); }
+.burger.open i { background: transparent; }
+.burger.open i::before { rotate: 45deg; translate: -50% -50%; }
+.burger.open i::after { rotate: -45deg; translate: -50% -50%; }
+
+.mobilenav { display: none; border-bottom: 1px solid var(--line); position: relative; z-index: 5; }
+.mobilenav.open { display: block; }
+.mobilenav .mn-label {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 13px 22px; font-size: 9px; font-weight: 800;
+  letter-spacing: 1.4px; text-transform: uppercase; color: var(--muted);
+  border-bottom: 1px solid var(--line);
+}
+.mobilenav nav a {
+  display: grid; grid-template-columns: 26px 1fr auto; align-items: center;
+  padding: 13px 22px; border-bottom: 1px solid var(--line);
+  font-size: 21px; font-weight: 400; letter-spacing: -.5px;
+}
+.mobilenav nav a .no { font-size: 9px; font-weight: 800; letter-spacing: 1px; color: var(--muted); }
+.mobilenav nav a .st { width: 16px; height: 16px; border: 1px solid var(--ink); position: relative; opacity: .45; }
+.mobilenav nav a.on { font-weight: 800; }
+.mobilenav nav a.on .st { opacity: 1; }
+.mobilenav nav a.on .st::after { content: ""; position: absolute; inset: 2.5px; background: var(--ink); }
+.mobilenav nav a.last { border-bottom: 0; }
+.mobilenav .mn-call {
+  display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center;
+  padding: 14px 22px; background: var(--soft);
+}
+.mobilenav .mn-call svg { width: 17px; height: 17px; stroke: var(--ink); stroke-width: 1.4; fill: none; }
+.mobilenav .mn-call small { display: block; font-size: 9px; letter-spacing: 1px; font-weight: 800; text-transform: uppercase; color: var(--muted); }
+.mobilenav .mn-call b { font-size: 13px; }
+
 /* ── Breakpoints (sheet §4: >1050 desktop · 761–1050 tablet · ≤760 mobile) ── */
 @media (max-width: 1050px) {
   .topbar { grid-template-columns: 180px minmax(0, 1fr) 200px; }
   .brandcell { padding: 0 20px; font-size: 14px; }
   .topnav { gap: clamp(10px, 1.8vw, 18px); min-width: 0; }
 }
+@media (max-width: 1050px) and (min-width: 761px) {
+  .burger { display: block; margin-left: auto; }
+  .topbar { position: relative; grid-template-columns: 1fr auto; }
+  .topbar .topnav, .topbar .callcell { display: none !important; }
+}
 @media (max-width: 900px) and (min-width: 761px) {
-  .topbar { grid-template-columns: 175px minmax(0, 1fr); }
-  .callcell { display: none; }
+  .topbar { grid-template-columns: 1fr auto; position: relative; padding: 0 26px; gap: 14px; }
+  .topbar .topnav, .topbar .callcell { display: none !important; }
+  .burger { display: block; margin-left: auto; }
+  .brandcell { font-size: 13px; border-right: 0; padding: 0; }
+  .brandcell .brandlogo, .brandcell .logo-ph { width: 22px; height: 22px; }
 }
 @media (max-width: 760px) {
-  .topbar { grid-template-columns: 1fr; height: 70px; }
-  /* S1: topnav/callcell hide on mobile; hamburger drawer lands with S2
-     once all 9 routes exist (wireframe itself ships no mobile menu UI). */
-  .topnav, .callcell { display: none; }
+  .topbar { position: relative; grid-template-columns: 1fr auto; height: 70px; padding: 0 18px; gap: 14px; align-items: center; }
+  .topbar .topnav, .topbar .callcell { display: none !important; }
+  .burger { display: block; margin-left: auto; }
+  .brandcell { font-size: 13px; border-right: 0; padding: 0; }
+  .brandcell .brandlogo, .brandcell .logo-ph { width: 22px; height: 22px; }
   .pad { padding-left: 22px; padding-right: 22px; }
   .footer { grid-template-columns: 1fr 1fr; }
   .fcol.brand, .news, .copyright { grid-column: 1 / -1; }
