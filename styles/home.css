@@ -1,0 +1,184 @@
+/* ============================================================
+   HOME — section styles, ported 1:1 from home/wireframe.html
+   (frozen homepage — geometry is REAL, incl. 59px slab peek)
+   ============================================================ */
+
+/* ── 1 · HERO — slab top-anchored, front box bottom-anchored ──
+   container align-items:end; slab absolute top:0 → slab peeks
+   ~59px above the front box (490 × 12%) */
+.hero {
+  min-height: 650px;
+  display: grid;
+  grid-template-columns: .88fr 1.12fr;
+  gap: 60px;
+  padding-top: 70px;
+  padding-bottom: 70px;
+  align-items: center;
+}
+.hero-actions { margin-top: 35px; display: flex; align-items: center; gap: 22px; }
+.watch { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; }
+.watch svg { width: 32px; height: 32px; flex: none; }
+.hero-visual { height: 490px; position: relative; display: flex; align-items: end; }
+.hero-visual .ph { width: 91%; height: 88%; margin-left: auto; position: relative; z-index: 2; border-radius: 28px 28px 28px 90px; }
+.slabph {
+  position: absolute; width: 43%; height: 88%; left: 0; top: 0;
+  border-radius: 22px 22px 70px 22px; background: var(--slab);
+}
+.hero-note {
+  position: absolute; z-index: 3; right: 25px; bottom: 25px;
+  color: var(--primary-fg); font-size: 20px; line-height: 1.1;
+}
+
+/* ── 2 · PARTNER/AUDIENCE STRIP ───────────────────────────── */
+.partners { border-top: 1px solid var(--line); padding: 0 30px 42px; text-align: center; position: relative; z-index: 4; }
+.partners .eyebrow { margin: -12px auto 25px; box-shadow: 0 2px 15px rgb(9 11 15 / .07); }
+.partner-row { display: flex; justify-content: space-between; align-items: center; font-size: 21px; font-family: Georgia, serif; font-weight: 400; color: #36383C; }
+.partner-row b { font-family: var(--font-body); font-weight: 800; }
+.partner-row i { font-style: normal; color: var(--muted); }
+
+/* ── 3 · ABOUT / PROCESS ──────────────────────────────────── */
+.about { padding-top: 95px; padding-bottom: 100px; }
+.center-head { text-align: center; }
+.center-head .eyebrow { margin: 0 auto 18px; }
+.center-head p { color: var(--muted); line-height: 1.6; }
+.center-head h2 { font-size: 42px; }
+.about-grid { display: grid; grid-template-columns: 1fr 1.08fr; gap: 70px; margin-top: 60px; align-items: center; }
+.about-photo { height: 480px; }
+.about-photo .imgph { width: 100%; height: 100%; border-radius: 24px 24px 24px 80px; }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.stat { min-height: 140px; background: var(--soft); border-radius: 8px; padding: 24px; display: flex; gap: 16px; }
+.stat svg { width: 26px; height: 26px; flex: none; margin-top: 2px; }
+.stat strong { display: block; font-size: 32px; letter-spacing: -1px; font-weight: 400; }
+.stat p { color: var(--muted); font-size: 12px; line-height: 1.45; margin: 10px 0 0; max-width: 150px; }
+.about-actions { grid-column: 1 / -1; display: flex; gap: 25px; align-items: center; margin-top: 12px; }
+.inline-call { display: flex; align-items: center; gap: 10px; }
+.inline-call svg { width: 17px; height: 17px; flex: none; }
+.inline-call span { display: grid; font-size: 12px; font-weight: 700; line-height: 1.3; }
+.inline-call small { font-size: 9px; color: var(--muted); font-weight: 600; }
+
+/* ── 4 · SERVICES SPLIT ───────────────────────────────────── */
+.services {
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  display: grid; grid-template-columns: .8fr 1fr .95fr; gap: 55px;
+  padding-top: 85px; padding-bottom: 75px; align-items: center;
+}
+.services h2 { margin-top: 23px; }
+.svc-note { font-size: 18px; line-height: 1.05; display: inline-flex; align-items: flex-end; gap: 6px; margin-top: 28px; }
+.svc-note svg { width: 34px; height: 34px; }
+.svc-list a { display: grid; grid-template-columns: 28px 1fr 20px; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--line); min-height: 92px; align-items: start; }
+.svc-list a:first-child { border-top: 1px solid var(--line); }
+.svc-list span { font-size: 10px; font-weight: 800; }
+.svc-list h3 { margin: 0 0 6px; font-size: 16px; font-weight: 400; }
+.svc-list p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+.svc-list a svg { width: 18px; height: 18px; }
+.svc-photo { height: 410px; position: relative; }
+.svc-photo .ph { width: 92%; height: 92%; border-radius: 28px 28px 28px 65px; }
+.photo-card {
+  position: absolute; top: 65px; left: 30%;
+  background: var(--card); padding: 28px 38px;
+  font-size: 23px; line-height: .94; font-weight: 800;
+  box-shadow: 0 10px 25px rgb(9 11 15 / .08);
+}
+.photo-card sup { font-size: 8px; }
+.sticky {
+  position: absolute; right: 0; bottom: 0;
+  background: var(--note-blue); padding: 22px 30px;
+  font-size: 19px; box-shadow: 0 9px 25px rgb(9 11 15 / .1); line-height: 1.05;
+}
+
+/* ── 5 · SELECTED WORK ────────────────────────────────────── */
+.work { display: grid; grid-template-columns: .72fr 2.28fr; gap: 45px; padding-top: 55px; padding-bottom: 60px; }
+.work h2 { margin-top: 23px; }
+.proj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; align-items: end; }
+.proj .ph { height: 220px; border-radius: 9px; }
+.proj h3 { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin: 13px 0 2px; font-weight: 700; }
+.proj h3 svg { width: 15px; height: 15px; }
+.proj p { font-size: 11px; color: var(--muted); margin: 0; }
+
+/* ── 6 · INDUSTRIES ───────────────────────────────────────── */
+.industries { display: grid; grid-template-columns: 1fr 1.25fr; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.ind-img {
+  min-height: 430px; position: relative; background: var(--slab);
+  border-radius: 0 30px 30px 0;
+  display: grid; place-items: center; color: var(--primary-fg);
+  font-size: 33px; line-height: 1.03; text-align: left; padding: 14%;
+}
+.ind-copy { display: flex; flex-direction: column; justify-content: center; padding-top: 55px; padding-bottom: 45px; }
+.ind-copy h2 { margin-top: 18px; }
+.ind-icons { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 25px; }
+.ind-icons span { display: grid; gap: 8px; justify-items: center; font-size: 9px; text-align: center; }
+.ind-icons svg { width: 24px; height: 24px; stroke-width: 1.2; }
+
+/* ── 7 · TESTIMONIAL ──────────────────────────────────────── */
+.testi { display: grid; grid-template-columns: 1fr 1fr; min-height: 410px; padding-top: 50px; padding-bottom: 50px; border-bottom: 1px solid var(--line); gap: 30px; }
+.testi blockquote { margin: 23px 0 25px; font-size: clamp(24px, 2.5vw, 36px); line-height: 1.18; letter-spacing: -1px; font-weight: 400; }
+.qmeta { display: flex; align-items: center; gap: 12px; }
+.qmeta .ava { width: 58px; height: 58px; border-radius: 50%; background: #DDDBD6; flex: none; }
+.qmeta span { display: grid; }
+.qmeta b { font-size: 13px; }
+.qmeta small { color: var(--muted); font-size: 10px; }
+.stars { color: var(--star-gold); letter-spacing: 2px; font-size: 12px; font-style: normal; }
+.qctrl { display: flex; gap: 10px; margin-top: 20px; }
+.qctrl button { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); background: transparent; display: grid; place-items: center; padding: 0; color: inherit; cursor: pointer; }
+.qctrl svg { width: 15px; height: 15px; }
+.qimg { position: relative; height: 280px; align-self: center; }
+.qimg .imgph { width: 88%; height: 100%; margin-left: auto; border-radius: 25px 25px 70px 25px; }
+.qimg .scribble { position: absolute; right: 0; top: 25px; font-size: 21px; }
+
+/* ── 8 · TEAM ─────────────────────────────────────────────── */
+.team { display: grid; grid-template-columns: .8fr 2fr 100px; gap: 45px; align-items: center; padding-top: 55px; padding-bottom: 55px; border-bottom: 1px solid var(--line); }
+.team h2 { margin-top: 23px; }
+.team-photo .imgph { width: 100%; aspect-ratio: 1.8; border-radius: 18px 18px 18px 55px; }
+.team-names { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+.team-names span { display: grid; }
+.team-names b { font-size: 10px; }
+.team-names small { color: var(--muted); font-size: 8px; }
+.team-note { font-size: 20px; line-height: 1.1; }
+
+/* ── 9 · CONTACT BAND ─────────────────────────────────────── */
+.contact { min-height: 180px; display: grid; grid-template-columns: 1.1fr 80px .9fr auto auto 1.1fr; gap: 25px; align-items: center; position: relative; padding-top: 50px; padding-bottom: 50px; }
+.contact h2 { font-size: 40px; margin: 0; }
+.contact p { font-size: 11px; color: var(--muted); }
+.contact-arrow { width: 55px; height: 55px; transform: rotate(-10deg); flex: none; }
+.cimg { height: 180px; position: relative; margin-right: calc(var(--pad-x) * -1); overflow: hidden; }
+.cimg .imgph { width: 100%; height: 100%; border-radius: 0; opacity: .7; filter: saturate(.5); }
+.cimg .scribble { position: absolute; right: 25px; top: 40px; font-size: 18px; }
+
+/* ── Responsive (wireframe breakpoints verbatim) ──────────── */
+@media (max-width: 1050px) {
+  .hero { gap: 30px; }
+  .services { grid-template-columns: 1fr 1fr; }
+  .svc-photo { display: none; }
+  .contact { grid-template-columns: 1fr 60px 1fr auto; }
+  .cimg { display: none; }
+}
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 55px; padding-bottom: 44px; gap: 45px; }
+  .hero-visual { height: 380px; }
+  .hero-visual .ph { width: 94%; }
+  h1 { font-size: 47px; letter-spacing: -2px; }
+  .partners { padding: 24px 22px 38px; }
+  .partner-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 12px; font-size: 14px; }
+  .partner-row i { display: none; }
+  .about { padding-top: 70px; }
+  .center-head h2 { font-size: 35px; }
+  .about-grid, .testi, .industries { grid-template-columns: 1fr; }
+  .about-grid { gap: 25px; }
+  .about-photo { height: 410px; }
+  .stats { gap: 10px; }
+  .stat { min-height: 145px; padding: 18px 14px; }
+  .about-actions { flex-direction: column; align-items: flex-start; }
+  .services { grid-template-columns: 1fr; padding-top: 65px; }
+  .work { grid-template-columns: 1fr; }
+  .proj-grid { grid-template-columns: repeat(3, 260px); overflow-x: auto; padding-bottom: 10px; }
+  .ind-img { min-height: 330px; border-radius: 0 0 30px 0; }
+  .ind-icons { grid-template-columns: repeat(3, 1fr); row-gap: 25px; }
+  .testi { gap: 20px; }
+  .team { grid-template-columns: 1fr; gap: 25px; }
+  .team-photo { overflow-x: auto; }
+  .team-photo .imgph { width: 700px; max-width: none; }
+  .team-names { width: 700px; }
+  .team-note { display: none; }
+  .contact { grid-template-columns: 1fr auto; padding-top: 40px; padding-bottom: 40px; }
+  .contact p, .contact-arrow { display: none; }
+}
