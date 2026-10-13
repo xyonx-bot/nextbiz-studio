@@ -23,3 +23,17 @@ Cleanup: debug script find-overflow.mjs accidentally committed → removed (cb3d
 | F-3 | e2e nav.spec.ts: burger 375/768 visible, 1440 hidden, drawer opens, links resolve | feat/nav-chrome | done (21/21) |
 | F-4 | Screenshots → docs/screenshots/s1fix/ + push + handoff | — | done (087355f, joyverse answered) |
 
+## S2 (r-nbs-s2) — remaining 8 pages + draft seed content
+| # | Task | Branch | Status |
+|---|---|---|---|
+| S2-1 | Page infra: 8 routes, per-page CSS, legal shared layout, current/.on wiring | feat/s2-pages | done (88097f0) |
+| S2-2 | About — editorial doc (masthead+ghost, story drop-cap, defs, method, facts, roster, close) | feat/s2-pages | done |
+| S2-3 | Services — catalog, 3 dossiers, Meta Proxy spec sheet, compare, arc, route | feat/s2-pages | done |
+| S2-4 | Projects — register, 3 case entries, process notes, compass | feat/s2-pages | done |
+| S2-5 | Contact — desk, channels, paper form (UI-only), response ledger, FAQ, qclose | feat/s2-pages | done |
+| S2-6 | Legal ×4 — shared doc pattern + 4 seeds | feat/s2-pages | done |
+| S2-7 | E2E: 9 pages × 3 widths + link resolution + chrome identity + element-spill test + screenshots s2/ | feat/s2-pages | done (174/174, 27 shots) |
+
+S2 extras (Joydip/Mira mid-sprint): rich footer sitewide (minimal variant removed); Mira's contact 760-block re-sync (18:54); 11 mobile spill fixes — wireframe ≤760 gaps (channels/rrow/faq-head/desk-head/close/catalog-intro/register-head/reg-cols) + grid min-width traps (services/svc-list, spec-body, sheet-row dd) + contact band minmax fix.
+
+
