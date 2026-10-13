@@ -1,0 +1,136 @@
+@import "tailwindcss";
+@import "../styles/tokens.css";
+@import "../styles/chrome.css";
+@import "../styles/home.css";
+
+/* ============================================================
+   GLOBALS — ported from home/wireframe.html + design-sheet rules
+   Classnames match the wireframe 1:1 (port, don't reinterpret).
+   ============================================================ */
+
+* { box-sizing: border-box; border-color: var(--line); }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Every <a> defaults to inherit — HANDOFF rule: no browser-blue leaks.
+   Real link styles opt-in via .text-link / .action etc. */
+a { color: inherit; text-decoration: none; }
+
+.shell {
+  width: 100%;
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  background: var(--paper);
+}
+.pad { padding-left: var(--pad-x); padding-right: var(--pad-x); }
+
+/* ── Type scale (design sheet §2) ─────────────────────────── */
+h1 {
+  font-size: clamp(48px, 5vw, 76px);
+  line-height: 1.04;
+  letter-spacing: -3px;
+  margin: 20px 0 24px;
+  font-weight: 400;
+}
+h2 {
+  font-size: clamp(40px, 4vw, 61px);
+  line-height: 1.03;
+  letter-spacing: -2px;
+  margin-bottom: 20px;
+  font-weight: 400;
+}
+.lede { color: var(--muted); font-size: 15px; line-height: 1.65; max-width: 600px; }
+
+/* ── Eyebrow pill (sheet §3, with ◎ orbit dot) ────────────── */
+.eyebrow {
+  width: max-content;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--soft);
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.orbit {
+  width: 12px; height: 12px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  flex: none;
+}
+.orbit::after {
+  content: "";
+  position: absolute;
+  inset: 3.5px;
+  background: var(--ink);
+  border-radius: 50%;
+}
+
+/* ── Actions (sheet §3: radius 3, min-h 48, 1px ink border) ── */
+.action {
+  width: max-content;
+  min-height: 48px;
+  border: 1px solid var(--ink);
+  padding: 0 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 3px;
+  color: inherit;
+}
+.action.dark { background: var(--primary); color: var(--primary-fg); }
+.action svg { width: 14px; height: 14px; flex: none; }
+
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 22px;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 4px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.text-link svg { width: 14px; height: 14px; }
+
+.scribble {
+  font-family: var(--font-scribble);
+  font-weight: 700;
+  transform: rotate(-7deg);
+}
+
+/* ── Image placeholders (S1: neutral stand-ins at the wireframe's
+      exact geometry/radius; real warm-grade photos land in S2/S6) ── */
+.imgph {
+  background: #DDDBD6;               /* wireframe --wf-img */
+  display: grid;
+  place-items: center;
+  color: #8A8782;                    /* wireframe --wf-ink */
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.6;
+  padding: 18px;
+}
+
+/* ── Motion language (sheet §5, ambient only) ─────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .orbit { animation: orbit-breathe 3.8s ease-in-out infinite; }
+  @keyframes orbit-breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+  }
+  .action, .text-link { transition: transform .35s cubic-bezier(.22,.8,.32,1); }
+}
