@@ -14,3 +14,12 @@ Packet: joyverse `requests/r-nbs-s1`. Gate AFTER: Joydip visual sign-off on Home
 | S1-8 | Playwright e2e: 375/768/1440 screenshots, no-overflow, no broken imgs | test/e2e-home | done (9ca429c, 12/12 pass) |
 
 Cleanup: debug script find-overflow.mjs accidentally committed → removed (cb3d662).
+
+## S1-FIX (design update, r-nbs-s1fix) — nav chrome redesign
+| # | Task | Branch | Status |
+|---|---|---|---|
+| F-1 | burger + .mobilenav CSS port (wireframe lines 37-59 verbatim) + breakpoints ≤1050 !important | feat/nav-chrome | done (ba12dcb) |
+| F-2 | Topbar client component: burger in header, drawer sibling, .on/.last/.mn-call | feat/nav-chrome | done (ba12dcb) |
+| F-3 | e2e nav.spec.ts: burger 375/768 visible, 1440 hidden, drawer opens, links resolve | feat/nav-chrome | done (21/21) |
+| F-4 | Screenshots → docs/screenshots/s1fix/ + push + handoff | — | done (087355f, joyverse answered) |
+
