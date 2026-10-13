@@ -7,7 +7,7 @@ import {
 export default function HomePage() {
   return (
     <main className="shell">
-      <Topbar />
+      <Topbar current="/" />
       <Hero />
       <Partners />
       <About />
