@@ -1,0 +1,20 @@
+services:
+  nextbiz-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nextbiz_app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    # No host port binding — reachable only via joyverse_nginx on this network
+    # (memory: host 0.0.0.0 ports = public risk; proxy via nginx only).
+    networks:
+      - joyverse_main_network
+
+networks:
+  joyverse_main_network:
+    external: true
