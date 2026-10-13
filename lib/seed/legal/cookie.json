@@ -1,0 +1,24 @@
+{
+  "page": "cookie",
+  "num": "04",
+  "h1a": "Cookie",
+  "h1b": "Policy",
+  "lede": "What our site's cookies do — a short, honest list rather than a wall of legalese.",
+  "metaDoc": "Cookie Policy — Legal 04",
+  "updated": "[DATE]",
+  "version": "1.0",
+  "updatesNote": "Finalized after build — lists only the cookies the live site actually uses. Questions? Write to hello@nextbizstudio.com.",
+  "sections": [
+    { "title": "What cookies are", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — Kira fills with Joydip-approved legal text. Structure below shows the expected shape.]" }] },
+    { "title": "The cookies we use", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — filled after build with the real cookie list (per HANDOFF: finalized once the site runs).]" }] },
+    { "title": "Third-party cookies", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — fonts/CDN/analytics if any.]" }] },
+    { "title": "Managing cookies", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — browser controls.]" }] },
+    { "title": "Updates", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — this list changes when the site does.]" }] },
+    { "title": "Contact", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — where to ask about a specific cookie.]" }] }
+  ],
+  "siblings": [
+    { "href": "/legal/privacy", "label": "Privacy Policy" },
+    { "href": "/legal/terms", "label": "Terms & Conditions" },
+    { "href": "/legal/refund", "label": "Refund & Cancellation" }
+  ]
+}

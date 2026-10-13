@@ -2,6 +2,11 @@
 @import "../styles/tokens.css";
 @import "../styles/chrome.css";
 @import "../styles/home.css";
+@import "../styles/about.css";
+@import "../styles/services.css";
+@import "../styles/projects.css";
+@import "../styles/contact.css";
+@import "../styles/legal.css";
 
 /* ============================================================
    GLOBALS — ported from home/wireframe.html + design-sheet rules

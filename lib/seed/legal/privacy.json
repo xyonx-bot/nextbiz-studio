@@ -1,0 +1,43 @@
+{
+  "page": "privacy",
+  "num": "01",
+  "h1a": "Privacy",
+  "h1b": "Policy",
+  "lede": "How NextBiz Studio collects, uses and protects information when you use our website and services — written plainly, without legal fog.",
+  "metaDoc": "Privacy Policy — Legal 01",
+  "updated": "[DATE]",
+  "version": "1.0",
+  "updatesNote": "First published. Questions about this document? Write to hello@nextbizstudio.com.",
+  "sections": [
+    {
+      "title": "Information we collect",
+      "blocks": [
+        { "t": "p", "muted": true, "text": "[Placeholder copy — Kira fills with Joydip-approved legal text. The structure below shows the expected shape.]" },
+        { "t": "p", "text": "We collect only what the site and our services need to work: the details you give us in the contact form (name, phone, email, project brief), and basic technical data your browser sends when you visit." },
+        { "t": "ul", "items": [
+          "Contact details you submit through forms or direct messages.",
+          "Project materials you share with us while we work together.",
+          "Basic analytics if enabled — pages visited, approximate region, device type."
+        ] }
+      ]
+    },
+    {
+      "title": "How we use it",
+      "blocks": [
+        { "t": "p", "text": "We use your information to reply to enquiries, prepare quotes, deliver work, and — if you opted in — send occasional studio updates. We do not sell your data. Full stop." },
+        { "t": "callout", "label": "Plain-language promise", "text": "We wrote this policy so you can actually read it. If any part feels unclear, ask us — we'd rather explain than have you guess." }
+      ]
+    },
+    { "title": "Cookies & analytics", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — see Cookie Policy page for the detailed breakdown; this section summarizes and links to it.]" }] },
+    { "title": "Data sharing", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — providers list (email, hosting, analytics) with purposes.]" }] },
+    { "title": "Data retention", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — how long enquiry + project data is kept.]" }] },
+    { "title": "Your rights", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — access, correction, deletion requests via email.]" }] },
+    { "title": "Changes to this policy", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — notification approach, effective dates.]" }] },
+    { "title": "Contact", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — privacy contact email + response expectation.]" }] }
+  ],
+  "siblings": [
+    { "href": "/legal/terms", "label": "Terms & Conditions" },
+    { "href": "/legal/refund", "label": "Refund & Cancellation" },
+    { "href": "/legal/cookie", "label": "Cookie Policy" }
+  ]
+}

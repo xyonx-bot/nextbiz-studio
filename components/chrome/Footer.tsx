@@ -38,9 +38,10 @@ const SOCIALS = [
 ];
 
 /**
- * Footer — HANDOFF §0 contract: brand col + Explore (5) + Services + Legal (×4)
- * + newsletter. Identical on all 9 pages. Newsletter input is decorative in S1
- * (product decision deferred — brief has no email marketing).
+ * Footer — single rich variant on ALL 9 pages (Joydip's call Oct 13:
+ * home's rich footer everywhere; Mira updated all 9 wireframes to match).
+ * Brand+socials · Quick Links · Our Services · Legal ×4 · newsletter.
+ * Newsletter input is decorative (brief has no email marketing).
  */
 export function Footer() {
   const cdn = process.env.NEXT_PUBLIC_CDN_BASE ?? "https://cdn.joyverse.fun";
@@ -69,7 +70,7 @@ export function Footer() {
       </div>
 
       <div className="fcol">
-        <b>Explore</b>
+        <b>Quick Links</b>
         {NAV_LINKS.map((l) => (
           <Link key={l.href} href={l.href}>{l.label}</Link>
         ))}

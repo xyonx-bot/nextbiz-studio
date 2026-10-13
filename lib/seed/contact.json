@@ -1,0 +1,72 @@
+{
+  "page": "contact",
+  "sectionOrder": ["desk", "deskForm", "response", "faq", "qclose"],
+  "desk": {
+    "micro": "Contact · The request desk · Open",
+    "h1": ["Tell us what", "you're building."],
+    "lede": "Whether you're starting fresh or looking to scale, send the brief below — or use whichever channel suits you. Every message reaches a real person who does the work, and gets a real reply.",
+    "channels": [
+      { "ch": "Call", "val": "22 (00) 356 7890", "sub": "Mon–Sat, 10:00–19:00 IST — fastest for quick questions", "note": ["Picks up", "in hours"] },
+      { "ch": "Email", "val": "hello@nextbizstudio.com", "sub": "Best for briefs, documents and long ideas", "note": ["Reply < 1", "business day"] },
+      { "ch": "Instagram", "val": "@nextbizstudio", "sub": "See latest work, day-to-day studio notes", "note": ["Replies", "most days"] },
+      { "ch": "Studio", "val": "Kolkata, India", "sub": "Working with businesses everywhere", "note": ["Remote-first", "since day 1"] }
+    ]
+  },
+  "deskForm": {
+    "micro": "The brief sheet · 02",
+    "ask": ["Fifteen honest", "minutes. That's all", "we ask."],
+    "copy": "Answer what you know, skip what you don't — \"not sure yet\" is a valid answer and costs you nothing. We follow up with questions, not a sales script.",
+    "photoNote": "STUDIO STILL-LIFE 1408×912 (crop 3:2) · Planning desk with notebook — warm grade · radius 14/14/14/60 · saturate .85",
+    "privacyNote": "Your details stay private. Used only to reply to this enquiry — see the Privacy Policy. No lists, no spam, no sharing.",
+    "fields": {
+      "name": { "label": "Your name", "hint": "What should we call you?", "placeholder": "Full name" },
+      "phone": { "label": "Phone / WhatsApp", "hint": "Optional — speeds things up", "placeholder": "+91 …" },
+      "email": { "label": "Email", "hint": "Where the reply goes", "placeholder": "you@business.com" },
+      "service": {
+        "label": "What do you need?",
+        "hint": "Pick the closest — we'll refine together",
+        "placeholder": "Choose the closest…",
+        "options": ["A new website", "Marketing & social media", "WhatsApp / Meta solutions", "Meta Proxy (the product)", "Not sure yet — help me shape it"]
+      },
+      "budget": {
+        "label": "Budget sense",
+        "hint": "Helps us scope honestly — never a commitment",
+        "placeholder": "Choose a range…",
+        "options": ["Under ₹25k", "₹25k – ₹75k", "₹75k – ₹2L", "Not sure yet"]
+      },
+      "brief": { "label": "The brief", "hint": "What are you building? What does success look like?", "placeholder": "A few honest lines beat a polished document — tell us where you are and where you want to be." }
+    },
+    "checkText": "Send me occasional studio updates — launches, notes, no spam. See the Privacy Policy.",
+    "hint": "Typical reply: under one business day — from the person who'd actually do the work.",
+    "submit": "Send the brief →"
+  },
+  "response": {
+    "micro": "After you hit send · 03",
+    "h2": ["No black box.", "Here's exactly what happens."],
+    "headAside": ["SAME STEPS FOR", "EVERY ENQUIRY"],
+    "rows": [
+      { "when": "Within 1 day", "h3": "A real reply", "p": "Not an autoresponder — the person who read your brief, with first thoughts and, if useful, a question or two." },
+      { "when": "Day 2–4", "h3": "A 15–20 minute call", "p": "If it looks like a fit. We listen more than we pitch, and you leave with a clear next step either way." },
+      { "when": "Within a week", "h3": "The brief & fixed quote", "p": "One page: scope, timeline, price — what's in, what's out. You approve it before any work starts." },
+      { "when": "If we're not the fit", "h3": "We say so", "p": "Honestly and early — often with a pointer to someone better suited. Your time is the thing we waste least." }
+    ]
+  },
+  "faq": {
+    "micro": "Before you ask · 04",
+    "h2": ["Common", "questions."],
+    "lede": "Anything else — the form above reaches a real person.",
+    "items": [
+      { "qn": "Q01", "h3": "How fast can we start?", "p": "Most projects start within one to two weeks of the first conversation. Quick websites can move even faster if your content is ready." },
+      { "qn": "Q02", "h3": "Do you work with businesses outside Kolkata?", "p": "Yes — most of our process runs smoothly over calls, WhatsApp and email. Distance has never been the bottleneck; clarity is." },
+      { "qn": "Q03", "h3": "What does a website cost?", "p": "It depends on what the business needs — pages, features, content. After one short conversation we give a fixed quote with no hidden lines." },
+      { "qn": "Q04", "h3": "Do you take care of content and images?", "p": "We can — planning the message, sourcing and optimizing imagery — or we work with whatever you already have. Both are fine." },
+      { "qn": "Q05", "h3": "What if I need changes after launch?", "p": "Small changes are part of the engagement. Bigger evolutions get their own honest quote — you'll always know before we build." }
+    ]
+  },
+  "qclose": {
+    "micro": "Prefer talking? · 05",
+    "ask": ["Skip the form.", "Just call."],
+    "aside": "Sometimes one honest conversation answers more than ten emails. If your idea is already formed, reach us directly — we'll pick up or call back within the day.",
+    "cta": "Call 22 (00) 356 7890"
+  }
+}

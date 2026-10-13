@@ -1,0 +1,25 @@
+{
+  "page": "refund",
+  "num": "03",
+  "h1a": "Refund &",
+  "h1b": "Cancellation",
+  "lede": "What happens if a project pauses or doesn't work out — we'd rather be clear now than awkward later.",
+  "metaDoc": "Refund & Cancellation — Legal 03",
+  "updated": "[DATE]",
+  "version": "1.0",
+  "updatesNote": "First published. Questions about this document? Write to hello@nextbizstudio.com.",
+  "sections": [
+    { "title": "When refunds apply", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — Kira fills with Joydip-approved legal text. Structure below shows the expected shape.]" }] },
+    { "title": "Work already delivered", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — delivered work is billed fairly; refunds cover the undelivered part.]" }] },
+    { "title": "Pausing vs cancelling", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — both allowed, different mechanics.]" }] },
+    { "title": "How to request", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — email, timeline for processing.]" }] },
+    { "title": "What's not refundable", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — third-party costs already spent (domains, ads, licenses).]" }] },
+    { "title": "Exceptions", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — edge cases handled in conversation first.]" }] },
+    { "title": "Contact", "blocks": [{ "t": "p", "muted": true, "text": "[Placeholder — where to start a refund/cancellation conversation.]" }] }
+  ],
+  "siblings": [
+    { "href": "/legal/privacy", "label": "Privacy Policy" },
+    { "href": "/legal/terms", "label": "Terms & Conditions" },
+    { "href": "/legal/cookie", "label": "Cookie Policy" }
+  ]
+}
