@@ -1,0 +1,34 @@
+/* ============================================================
+   NextBiz Studio — DESIGN TOKENS
+   SOURCE OF TRUTH: ~/prototypes/nextbizstudio/design-sheet.html v1
+   Copied verbatim from the sheet's :root block. Sheet wins on any
+   disagreement; never hardcode hex values in components.
+   ============================================================ */
+:root {
+  /* Canvas & ink */
+  --paper: #F9F6F2;          /* shell canvas */
+  --desk:  #EAE7E4;          /* page background behind shell (S1: unused per sheet §4, body IS paper) */
+  --ink:   #090B0F;          /* near-black, blue-tinted */
+  --primary: #07090C;        /* button fill (≈ink) */
+  --primary-fg: #FBFAF7;     /* text on dark */
+  --soft:  #EFEFF5;          /* card fill / eyebrow bg */
+  --muted: #656970;          /* body gray (token name in sheet: --muted-fg) */
+  --muted-fg: #656970;       /* alias — sheet's component CSS uses both */
+  --line:  #DDDAD5;          /* hairlines */
+  --card:  #FDFCF9;          /* raised card */
+  --slab:  #1B1D21;          /* hero-accent dark slab */
+
+  /* Closed accent set — each has exactly ONE job */
+  --note-blue: #ABE4FF;      /* sticky note ONLY (1/page max) */
+  --note: #ABE4FF;           /* alias used by sheet component CSS */
+  --star-gold: #F5A400;      /* testimonial stars ONLY */
+  --live-green: #77D199;     /* Meta Proxy status dot ONLY */
+
+  /* Type families (wired to next/font in app/layout.tsx) */
+  --font-body: var(--font-manrope), "Manrope", sans-serif;
+  --font-scribble: var(--font-scribble-family), "Nothing You Could Do", cursive;
+
+  /* Layout */
+  --shell-max: 1440px;
+  --pad-x: clamp(32px, 6vw, 100px);
+}
