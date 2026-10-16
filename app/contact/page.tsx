@@ -1,6 +1,9 @@
 import { Topbar } from "@/components/chrome/Topbar";
 import { Footer } from "@/components/chrome/Footer";
-import { Desk, DeskForm, ResponseLedger, Faq, QClose } from "@/components/sections/contact";
+import { Desk, ResponseLedger, Faq, QClose } from "@/components/sections/contact";
+import { DeskForm } from "@/components/sections/contact-form";
+
+export const metadata = { title: "Contact — NextBiz Studio" };
 
 export default function ContactPage() {
   return (
