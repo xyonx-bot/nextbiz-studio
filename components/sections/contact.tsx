@@ -1,13 +1,14 @@
 /* ============================================================
    CONTACT PAGE SECTIONS — ported 1:1 from ~/prototypes/nextbizstudio/contact/wireframe.html (v2)
-   Content: lib/seed/contact.json. Form is UI-only in S2 (backend = S3).
+   Content: lib/seed/contact.json. DeskForm (client-wired) lives in
+   contact-form.tsx since S3.
    ============================================================ */
 import Link from "next/link";
 import { ArrowRight } from "@/components/icons";
-import { CONTACT } from "@/lib/content";
+import { CONTACT, WHATSAPP_URL } from "@/lib/content";
 import contact from "@/lib/seed/contact.json";
 
-/** 1 · Desk opener + channels ledger */
+/** 1 · Desk opener + channels ledger + WhatsApp deep-link (P1.4) */
 export function Desk() {
   const c = contact.desk;
   return (
@@ -17,6 +18,14 @@ export function Desk() {
         <div>
           <h1 style={{ marginTop: 18 }}>{c.h1[0]}<br />{c.h1[1]}</h1>
           <p className="lede" style={{ marginTop: 26 }}>{c.lede}</p>
+          {/* WhatsApp click-to-chat — mobile opens the app, desktop opens
+              web.whatsapp.com; number is env-driven (placeholder till S6) */}
+          <a className="action wa-link" href={WHATSAPP_URL} target="_blank" rel="noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+            </svg>
+            WhatsApp us
+          </a>
         </div>
         <div className="channels">
           {c.channels.map((ch) => (
@@ -28,70 +37,6 @@ export function Desk() {
           ))}
         </div>
       </div>
-    </section>
-  );
-}
-
-/** 2 · Paper form — document-styled brief sheet (static in S2) */
-export function DeskForm() {
-  const c = contact.deskForm;
-  const f = c.fields;
-  return (
-    <section className="desk-form pad">
-      <aside className="form-aside">
-        <span className="micro">{c.micro}</span>
-        <p className="ask">{c.ask[0]}<br />{c.ask[1]}<br />{c.ask[2]}</p>
-        <p className="body-copy">{c.copy}</p>
-        <div className="form-photo"><div className="imgph">{c.photoNote}</div></div>
-        <p className="form-note"><b>Your details stay private.</b> Used only to reply to this enquiry — see the <u>Privacy Policy</u>. No lists, no spam, no sharing.</p>
-      </aside>
-      <form className="form-sheet" action="/contact" method="get">
-        <div className="f-row">
-          <div className="lab">{f.name.label}<small>{f.name.hint}</small></div>
-          <div className="field"><input type="text" name="name" placeholder={f.name.placeholder} /></div>
-        </div>
-        <div className="f-split">
-          <div className="col">
-            <div className="f-row">
-              <div className="lab">{f.phone.label}<small>{f.phone.hint}</small></div>
-              <div className="field"><input type="tel" name="phone" placeholder={f.phone.placeholder} /></div>
-            </div>
-          </div>
-          <div className="col">
-            <div className="f-row">
-              <div className="lab">{f.email.label}<small>{f.email.hint}</small></div>
-              <div className="field"><input type="email" name="email" placeholder={f.email.placeholder} /></div>
-            </div>
-          </div>
-        </div>
-        <div className="f-row">
-          <div className="lab">{f.service.label}<small>{f.service.hint}</small></div>
-          <div className="field">
-            <select name="service" defaultValue="">
-              <option value="">{f.service.placeholder}</option>
-              {f.service.options.map((o) => <option key={o}>{o}</option>)}
-            </select>
-          </div>
-        </div>
-        <div className="f-row">
-          <div className="lab">{f.budget.label}<small>{f.budget.hint}</small></div>
-          <div className="field">
-            <select name="budget" defaultValue="">
-              <option value="">{f.budget.placeholder}</option>
-              {f.budget.options.map((o) => <option key={o}>{o}</option>)}
-            </select>
-          </div>
-        </div>
-        <div className="f-row">
-          <div className="lab">{f.brief.label}<small>{f.brief.hint}</small></div>
-          <div className="field"><textarea name="brief" placeholder={f.brief.placeholder} /></div>
-        </div>
-        <label className="f-check"><span className="box" /><span>{c.checkText}</span></label>
-        <div className="f-foot">
-          <p className="hint">Typical reply: <b>under one business day</b> — from the person who'd actually do the work.</p>
-          <button className="action dark f-submit" type="submit">{c.submit}</button>
-        </div>
-      </form>
     </section>
   );
 }

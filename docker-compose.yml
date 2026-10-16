@@ -10,10 +10,36 @@ services:
       - NODE_ENV=production
       - PORT=3000
       - HOSTNAME=0.0.0.0
+    depends_on:
+      nextbiz-db:
+        condition: service_healthy
     # No host port binding — reachable only via joyverse_nginx on this network
     # (memory: host 0.0.0.0 ports = public risk; proxy via nginx only).
     networks:
       - joyverse_main_network
+
+  nextbiz-db:
+    image: postgres:16-alpine
+    container_name: nextbiz_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=nextbiz
+      - POSTGRES_PASSWORD=nextbiz
+      - POSTGRES_DB=nextbiz
+    volumes:
+      - nextbiz_db_data:/var/lib/postgresql/data
+    # no host port — app reaches it on the docker network; host access only
+    # via `docker exec nextbiz_db psql` (memory: no public DB ports ever)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nextbiz -d nextbiz"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - joyverse_main_network
+
+volumes:
+  nextbiz_db_data:
 
 networks:
   joyverse_main_network:

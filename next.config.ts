@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  serverExternalPackages: ["pg"],   // native pg must not be bundled by the build worker
   images: {
     remotePatterns: [
       {

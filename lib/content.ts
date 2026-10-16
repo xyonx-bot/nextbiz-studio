@@ -29,3 +29,10 @@ export const CONTACT = {
   phoneTel: "+910000000000",
   email: "hello@nextbizstudio.com",
 } as const;
+
+/** WhatsApp click-to-chat (P1.4) — env-driven number, prefilled message. */
+export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "910000000000";
+export const WHATSAPP_PREFILL =
+  process.env.NEXT_PUBLIC_WHATSAPP_PREFILL ??
+  "Hi NextBiz Studio — I'd like to talk about a project.";
+export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_PREFILL)}`;
