@@ -36,4 +36,17 @@ Cleanup: debug script find-overflow.mjs accidentally committed → removed (cb3d
 
 S2 extras (Joydip/Mira mid-sprint): rich footer sitewide (minimal variant removed); Mira's contact 760-block re-sync (18:54); 11 mobile spill fixes — wireframe ≤760 gaps (channels/rrow/faq-head/desk-head/close/catalog-intro/register-head/reg-cols) + grid min-width traps (services/svc-list, spec-body, sheet-row dd) + contact band minmax fix.
 
+## S3 (r-nbs-s3) — contact form live + WhatsApp
+| # | Task | Branch | Status |
+|---|---|---|---|
+| S3-1 | Postgres 16 in compose + leads migration + lib/db.ts | feat/s3-leads | done (14dc755) |
+| S3-2 | POST /api/leads: zod, honeypot fake-ok, per-IP rate limit (5/hr, env bypass for ops), DB insert, Slack fire-and-forget | feat/s3-leads | done |
+| S3-3 | Form wiring: client submit, inline errors, success panel | feat/s3-leads | done |
+| S3-4 | WhatsApp deep-link (env-driven, wa.me prefilled) | feat/s3-leads | done |
+| S3-5 | Tests: unit 19 + e2e contact-form (real-submit once + mocked elsewhere) | feat/s3-leads | done (193 pass / 0 fail) |
+| S3-6 | Handoff + proof | — | Slack ping LIVE in #agent-org (Joydip Test lead, 05:41Z); awaiting Joydip's own phone test (gate) |
+
+S3 bugs found+fixed: empty-select 422 (zod enum vs neutral prompt — preprocess ""→undefined; every untouched-dropdown user would have failed!), honeypot 422→fake-ok, footer newsletter input name clash in e2e, playwright multi-project rate-limit collision (real submit once + mocked elsewhere).
+Bonus: DB backup pipeline LIVE — scripts/db-backup.py → joyverse-user-data/backups/nextbiz-db/ daily 03:30 IST (hermes cron 6ed9d89386c0), restore drill passed.
+
 
