@@ -96,7 +96,13 @@ jobs:
   deploy:
     name: deploy → VM (gated on all green)
     needs: [quality, unit, e2e]
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    # main-push only, and skip cleanly until Tony has set the SSH secrets
+    if: >
+      github.ref == 'refs/heads/main' &&
+      github.event_name != 'pull_request' &&
+      secrets.DEPLOY_SSH_HOST != '' &&
+      secrets.DEPLOY_SSH_USER != '' &&
+      secrets.DEPLOY_SSH_KEY != ''
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
