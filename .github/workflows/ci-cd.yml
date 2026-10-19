@@ -96,18 +96,26 @@ jobs:
   deploy:
     name: deploy → VM (gated on all green)
     needs: [quality, unit, e2e]
-    # main-push only, and skip cleanly until Tony has set the SSH secrets
-    if: >
-      github.ref == 'refs/heads/main' &&
-      github.event_name != 'pull_request' &&
-      secrets.DEPLOY_SSH_HOST != '' &&
-      secrets.DEPLOY_SSH_USER != '' &&
-      secrets.DEPLOY_SSH_KEY != ''
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - name: Check deploy secrets (Tony)
+        id: secrets_check
+        env:
+          DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
+          DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          # secrets context is not allowed in job-level if — check here instead;
+          # skip cleanly until Tony configures the three DEPLOY_SSH_* secrets.
+          if [ -z "$DEPLOY_SSH_HOST" ] || [ -z "$DEPLOY_SSH_USER" ] || [ -z "$DEPLOY_SSH_KEY" ]; then
+            echo "SKIP: DEPLOY_SSH_* secrets not set yet (Tony) — deploy step will skip, tests-only run."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
       - name: SSH deploy + health gate
+        if: steps.secrets_check.outputs.skip != 'true'
         env:
           DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
           DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
@@ -119,6 +127,7 @@ jobs:
             "$DEPLOY_SSH_USER@$DEPLOY_SSH_HOST" \
             'bash -s' < scripts/deploy.sh
       - name: Post-deploy public verification
+        if: steps.secrets_check.outputs.skip != 'true'
         run: |
           sleep 5
           for path in / /contact; do
