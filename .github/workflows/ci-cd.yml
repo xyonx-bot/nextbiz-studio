@@ -82,7 +82,13 @@ jobs:
       - name: Apply DB migrations
         run: |
           for f in db/migrations/*.sql; do
-            docker exec ${{ job.services.postgres.id }} psql -U nextbiz -d nextbiz -f /dev/stdin < "$f"
+            echo "  applying $f"
+            # -i is load-bearing: without it docker exec drops stdin, psql
+            # reads EOF and exits 0 — SQL never runs, table missing, tests
+            # fail with no clue (bit us Oct 19). ON_ERROR_STOP makes any
+            # SQL error fail the step loudly.
+            docker exec -i ${{ job.services.postgres.id }} \
+              psql -U nextbiz -d nextbiz -v ON_ERROR_STOP=1 -f - < "$f"
           done
       - run: npm run build
       - name: Start app
