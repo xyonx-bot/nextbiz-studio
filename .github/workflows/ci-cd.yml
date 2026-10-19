@@ -90,7 +90,9 @@ jobs:
           # repo builds with output:standalone (Docker prod) — "next start"
           # warns and misbehaves; run the standalone server like production does
           cp -r .next/static .next/standalone/.next/static
-          cp -r public .next/standalone/public
+          # public/ is empty in this repo — not tracked by git, absent on a
+          # fresh checkout; copy only if present
+          [ -d public ] && cp -r public .next/standalone/public
           PORT=3000 HOSTNAME=127.0.0.1 node .next/standalone/server.js &
           for i in $(seq 1 60); do
             curl -sf -o /dev/null http://127.0.0.1:3000 && break
