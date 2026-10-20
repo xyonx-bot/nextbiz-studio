@@ -38,6 +38,10 @@ git archive origin/main | tar -x -C "$STAGE_DIR"
 cp "$MAIN_REPO/.env" "$STAGE_DIR/.env"
 chmod 600 "$STAGE_DIR/.env"
 
+# public/ is empty + untracked in git (same trap ci-cd.yml line ~99 documents),
+# so git archive drops it — but the Dockerfile COPYs /app/public. Recreate it.
+[ -d "$STAGE_DIR/public" ] || mkdir -p "$STAGE_DIR/public"
+
 cd "$STAGE_DIR"
 
 # 1. Build the production image (old container keeps serving meanwhile)
