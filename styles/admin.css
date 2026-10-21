@@ -1,0 +1,370 @@
+/* ── S4: Admin (login + inbox) ─────────────────────────────────────
+   Internal tool: clean, functional, zero design ambition — it must be
+   fast and legible, not pretty. Uses the same token palette so it
+   doesn't look like a different product. */
+
+.admin-login {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: var(--paper, #faf8f4);
+  padding: 24px;
+}
+
+.login-card {
+  width: min(400px, 100%);
+  background: #fff;
+  border: 1px solid #e5e0d8;
+  border-radius: 10px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login-micro {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8a8378;
+  margin: 0 0 4px;
+}
+
+.login-card h1 {
+  font-size: 22px;
+  margin: 0 0 14px;
+}
+
+.login-error {
+  background: #fbeeee;
+  color: #a33;
+  border: 1px solid #ecc;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  margin: 0 0 10px;
+}
+
+.login-card label {
+  font-size: 12px;
+  color: #6f6a60;
+  margin-top: 8px;
+}
+
+.login-card input {
+  border: 1px solid #d8d2c8;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font: inherit;
+  background: #faf9f6;
+}
+
+.login-card input:focus {
+  outline: 2px solid #1a1a18;
+  outline-offset: -1px;
+}
+
+.login-card button {
+  margin-top: 16px;
+  background: #1a1a18;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 11px 16px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.login-card button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* ── Inbox shell ─────────────────────────────────────────────────── */
+
+.admin-shell {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  min-height: 100vh;
+  background: var(--paper, #faf8f4);
+}
+
+.admin-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  border-bottom: 1px solid #e5e0d8;
+  padding-bottom: 14px;
+  margin-bottom: 10px;
+}
+
+.admin-micro {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8a8378;
+  margin: 0 0 4px;
+}
+
+.admin-top h1 {
+  font-size: 26px;
+  margin: 0;
+}
+
+.admin-logout {
+  background: none;
+  border: 1px solid #d8d2c8;
+  border-radius: 6px;
+  padding: 7px 14px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  color: #55504a;
+}
+
+.admin-logout:hover {
+  background: #f0ede6;
+}
+
+.admin-count {
+  font-size: 13px;
+  color: #6f6a60;
+  margin: 0 0 18px;
+}
+
+.admin-empty {
+  border: 1px dashed #d8d2c8;
+  border-radius: 8px;
+  padding: 28px;
+  text-align: center;
+  color: #8a8378;
+  font-size: 14px;
+}
+
+/* ── Lead rows ───────────────────────────────────────────────────── */
+
+.admin-inbox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lead-row {
+  background: #fff;
+  border: 1px solid #e5e0d8;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lead-head {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr auto;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 14px 16px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.lead-who {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lead-name {
+  font-size: 15px;
+}
+
+.lead-contact {
+  font-size: 12px;
+  color: #6f6a60;
+  word-break: break-word;
+}
+
+.lead-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.lead-msg-preview {
+  font-size: 13px;
+  color: #44403a;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.lead-time {
+  font-size: 11px;
+  color: #8a8378;
+}
+
+.lead-status {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: 20px;
+  justify-self: end;
+  white-space: nowrap;
+}
+
+.lead-status.s-new { background: #e8f0e6; color: #2c5e2e; }
+.lead-status.s-replied { background: #e6eef6; color: #2c4e6e; }
+.lead-status.s-quoted { background: #f3ecdf; color: #7a5a12; }
+.lead-status.s-won { background: #e0ecc6; color: #3d5a14; }
+.lead-status.s-lost { background: #f3e2e2; color: #8f2f2f; }
+
+/* ── Detail panel ────────────────────────────────────────────────── */
+
+.lead-detail {
+  border-top: 1px solid #eee8de;
+  padding: 14px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lead-msg-full {
+  font-size: 14px;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+.lead-tags {
+  font-size: 12px;
+  color: #7a5a12;
+  background: #f8f3e8;
+  border-radius: 5px;
+  padding: 5px 10px;
+  align-self: flex-start;
+  margin: 0;
+}
+
+.lead-status-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.lead-status-form label {
+  color: #6f6a60;
+}
+
+.lead-status-form select {
+  border: 1px solid #d8d2c8;
+  border-radius: 6px;
+  padding: 7px 10px;
+  font: inherit;
+  background: #fff;
+}
+
+.lead-status-form button {
+  border: none;
+  background: #1a1a18;
+  color: #fff;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.lead-notes h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8a8378;
+  margin: 4px 0 8px;
+}
+
+.note-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.note-list li {
+  background: #faf9f6;
+  border: 1px solid #eee8de;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.note-list p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  white-space: pre-wrap;
+}
+
+.note-time {
+  font-size: 11px;
+  color: #8a8378;
+}
+
+.note-empty {
+  font-size: 13px;
+  color: #8a8378;
+  margin: 0 0 10px;
+}
+
+.note-form {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.note-form textarea {
+  flex: 1;
+  border: 1px solid #d8d2c8;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 13px;
+  resize: vertical;
+  background: #fff;
+}
+
+.note-form button {
+  border: none;
+  background: #1a1a18;
+  color: #fff;
+  border-radius: 6px;
+  padding: 9px 14px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .lead-head {
+    grid-template-columns: 1fr auto;
+  }
+  .lead-meta {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+  .note-form {
+    flex-direction: column;
+  }
+  .note-form button {
+    align-self: flex-start;
+  }
+}
