@@ -83,6 +83,22 @@ test.describe("admin auth + inbox + pipeline (S4, Mira redesign)", () => {
 
   // ── P1.6 inbox content ─────────────────────────────────────────────
 
+  // CI runs this file FIRST on a fresh postgres — the inbox assertions
+  // need at least one persisted lead, so capture one through the real API
+  // (also proves the capture SYS entry in the notes ledger downstream).
+  // Rate-limit budget: 1 insert here + 1 in contact-form.spec = 2 ≤ 5/IP/hr.
+  test("seed: a lead captured through the real API (CI DB starts empty)", async ({ request }) => {
+    const res = await request.post("/api/leads", {
+      data: {
+        name: "Admin Suite Seed",
+        email: "seed@admin-e2e.nextbizstudio.com",
+        message: "Seed lead for inbox assertions — safe to delete.",
+      },
+    });
+    expect(res.status()).toBe(200);
+    expect((await res.json()).ok).toBe(true);
+  });
+
   test("inbox lists every captured lead, newest first, with key fields", async ({ page }) => {
     await login(page);
 
@@ -230,10 +246,19 @@ test.describe("admin auth + inbox + pipeline (S4, Mira redesign)", () => {
     await expect(page.locator(".fbar .fpill")).toHaveCount(6); // All + 5 statuses
     await expect(page.locator(".lhead span")).toHaveCount(6); // ledger columns
 
-    // chip palette exactly per wireframe (Replied #0B5FA5 on #EAF3FB)
-    const chip = await page.locator(".st-replied").first().evaluate((el) => {
+    // chip palette exactly per wireframe (Replied #0B5FA5 on #EAF3FB).
+    // State-independent: probe the CSS rule on a detached chip — a fresh
+    // CI DB may hold no 'replied' lead when this runs.
+    const chip = await page.evaluate(() => {
+      // append INSIDE .adminui — the status color vars are scoped there
+      const host = document.querySelector(".adminui") ?? document.body;
+      const el = document.createElement("span");
+      el.className = "st st-replied";
+      host.appendChild(el);
       const cs = getComputedStyle(el);
-      return { color: cs.color, bg: cs.backgroundColor };
+      const out = { color: cs.color, bg: cs.backgroundColor };
+      el.remove();
+      return out;
     });
     expect(chip.color).toBe("rgb(11, 95, 165)");
     expect(chip.bg).toBe("rgb(234, 243, 251)");
