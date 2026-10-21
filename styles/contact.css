@@ -1,52 +1,72 @@
 /* ============================================================
    CONTACT — request desk page
-   Ported 1:1 from ~/prototypes/nextbizstudio/contact/wireframe.html (v2)
-   Form is UI-only in S2; validation + persistence + Slack = S3.
+   Ported from ~/workspaces/mira/prototypes/nextbizstudio/contact/wireframe.html
+   v5 TWO-SECTION opener (Oct 20 design-fix bundle, r-nbs-design-fix-oct20):
+   Section A: intro (left) | brief form (right, promoted to top)
+   hairline divider
+   Section B: photo+text (left) | channels ledger (right)
+   Form backend (S3): validation/persistence live — see contact-form.tsx.
    ============================================================ */
 
-/* ═══ 1 · DESK OPENER + CHANNELS LEDGER ═══ */
-.desk { padding-top: 80px; padding-bottom: 70px; border-bottom: 1px solid var(--line); }
-.desk-head { display: grid; grid-template-columns: 1.25fr .75fr; gap: 50px; align-items: start; }
-.desk-head .lede { font-size: 14.5px; line-height: 1.8; color: var(--muted); max-width: 48ch; margin: 0; }
-.channels { display: grid; gap: 0; border-top: 2px solid var(--ink); margin-top: 18px; }
-.channel { display: grid; grid-template-columns: 110px 1fr auto; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+/* ═══ 1 · DESK OPENER — v5 TWO-SECTION ═══ */
+.desk { padding-top: 56px; padding-bottom: 80px; border-bottom: 1px solid var(--line); }
+.desk-top { display: grid; grid-template-columns: .95fr 1.05fr; gap: 10px clamp(40px, 5vw, 90px); align-items: start; }
+.desk-intro .micro { display: block; }
+.desk-intro .lede { font-size: 14.5px; line-height: 1.8; color: var(--muted); max-width: 52ch; margin: 0; }
+.desk-intro .wa-link { margin-top: 22px; }
+
+/* Section B: image+text | channels — hairline + vertical space between sections */
+.desk-lower { display: grid; grid-template-columns: .95fr 1.05fr; gap: 44px clamp(40px, 5vw, 90px); align-items: start; border-top: 1px solid var(--line); margin-top: 52px; padding-top: 48px; }
+.desk-reassure { display: grid; gap: 16px; align-content: start; padding-top: 7px; }
+.reassure-ask { font-size: clamp(24px, 2.6vw, 34px); line-height: 1.06; letter-spacing: -1.4px; font-weight: 400; margin: 8px 0 0; }
+.reassure-copy { font-size: 12.5px; line-height: 1.75; color: var(--muted); max-width: 40ch; margin: 0; }
+.form-photo { border-radius: 14px 14px 14px 60px; overflow: hidden; }
+.form-photo .imgph { height: 220px; border-radius: 0; }
+.form-note { font-size: 10.5px; color: var(--muted); line-height: 1.65; margin: 0; }
+.form-note b { color: var(--ink); }
+.form-note u, .f-check u { text-decoration: underline; text-underline-offset: 2px; }
+
+/* direct-lines sidebar (Section B right) */
+.desk-side { display: grid; gap: 20px; align-content: start; }
+.side-head .micro { display: block; margin-bottom: 6px; }
+.side-ask { font-size: clamp(20px, 2vw, 26px); line-height: 1.12; letter-spacing: -1px; font-weight: 400; margin: 0; }
+.channels { display: grid; gap: 0; border-top: 2px solid var(--ink); }
+.channel { display: grid; grid-template-columns: 92px 1fr auto; gap: 14px; padding: 14px 0 16px; border-bottom: 1px solid var(--line); align-items: baseline; }
 .channel .ch { font-size: 9px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
 .channel .val { font-size: 13px; font-weight: 700; letter-spacing: -.2px; }
 .channel .val small { display: block; font-size: 10px; font-weight: 600; color: var(--muted); margin-top: 3px; line-height: 1.5; }
 .channel .note { font-size: 9px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; text-align: right; line-height: 1.6; }
 
-/* ═══ 2 · PAPER FORM ═══ */
-.desk-form { border-top: 1px solid var(--line); padding-top: 65px; padding-bottom: 75px; display: grid; grid-template-columns: .75fr 1.25fr; gap: clamp(35px, 5vw, 90px); align-items: start; }
-.form-aside { position: sticky; top: 32px; display: grid; gap: 22px; }
-.form-aside .ask { font-size: clamp(26px, 2.8vw, 38px); line-height: 1.05; letter-spacing: -1.4px; font-weight: 400; margin: 0; }
-.form-aside .body-copy { font-size: 12.5px; max-width: 36ch; }
-.form-photo { border-radius: 14px 14px 14px 60px; overflow: hidden; }
-.form-photo .imgph { height: 210px; border-radius: 0; }
-.form-note { font-size: 10.5px; color: var(--muted); line-height: 1.65; }
-.form-note b { color: var(--ink); }
-.form-note u, .f-check u { text-decoration: underline; text-underline-offset: 2px; }
-.form-sheet { border-top: 2px solid var(--ink); }
-.f-row { display: grid; grid-template-columns: 200px 1fr; border-bottom: 1px solid var(--line); }
-.f-row .lab { padding: 18px 18px 18px 0; font-size: 9px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); border-right: 1px solid var(--line); display: grid; align-content: center; gap: 4px; }
-.f-row .lab small { font-size: 8.5px; font-weight: 600; letter-spacing: .4px; text-transform: none; opacity: .8; line-height: 1.5; }
-.f-row .field { padding: 8px 0 8px 18px; display: grid; align-content: center; min-height: 64px; }
-.f-row input, .f-row select, .f-row textarea { border: 0; background: transparent; font-size: 13.5px; font-weight: 600; color: var(--ink); width: 100%; outline: none; padding: 10px 0; font-family: inherit; }
+/* ═══ 2 · THE BRIEF SHEET — label above ink-ruled sheet; v5 compact scale ═══ */
+.form-sheet > .micro { display: block; margin-bottom: 4px; }
+.sheet-rows { border-top: 2px solid var(--ink); }
+.f-row { display: grid; grid-template-columns: 150px 1fr; border-bottom: 1px solid var(--line); }
+.f-row .lab { padding: 10px 14px 10px 0; font-size: 9px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); border-right: 1px solid var(--line); display: grid; align-content: center; gap: 3px; }
+.f-row .lab small { font-size: 8.5px; font-weight: 600; letter-spacing: .4px; text-transform: none; opacity: .8; line-height: 1.45; }
+.f-row .field { padding: 4px 0 4px 14px; display: grid; align-content: center; min-height: 44px; }
+.f-row input, .f-row select, .f-row textarea { border: 0; background: transparent; font-size: 13px; font-weight: 600; color: var(--ink); width: 100%; outline: none; padding: 8px 0; font-family: inherit; appearance: none; -webkit-appearance: none; }
 .f-row input::placeholder, .f-row textarea::placeholder { color: #8A8782; font-weight: 500; }
-.f-row textarea { resize: vertical; min-height: 88px; padding-top: 14px; }
+.f-row select:has(option:checked[value=""]) { color: #8A8782; font-weight: 500; }
+.f-row textarea { resize: vertical; min-height: 64px; padding-top: 10px; }
 .f-row .field:focus-within { background: var(--card); }
 .f-split { display: grid; grid-template-columns: 1fr 1fr; }
 .f-split .col { border-right: 1px solid var(--line); }
 .f-split .col:last-child { border-right: 0; }
-.f-check { display: flex; gap: 11px; align-items: flex-start; padding: 16px 0; font-size: 11px; color: var(--muted); line-height: 1.55; }
+.f-check { display: flex; gap: 11px; align-items: flex-start; padding: 10px 0; font-size: 11px; color: var(--muted); line-height: 1.55; }
 .f-check .box { width: 16px; height: 16px; border: 1px solid var(--line); border-radius: 3px; background: var(--card); flex: none; margin-top: 1px; }
-.f-foot { display: flex; align-items: center; justify-content: space-between; gap: 22px; padding-top: 22px; flex-wrap: wrap; }
+.f-foot { display: flex; align-items: center; justify-content: space-between; gap: 22px; padding-top: 12px; flex-wrap: wrap; }
 .f-foot .hint { font-size: 10px; color: var(--muted); line-height: 1.6; max-width: 36ch; }
 .f-foot .hint b { color: var(--ink); }
-.f-submit { min-height: 52px; padding: 0 26px; letter-spacing: .4px; cursor: pointer; }
+.f-submit { min-height: 48px; padding: 0 24px; letter-spacing: .4px; cursor: pointer; }
 .f-submit:disabled { opacity: .55; cursor: wait; }
 .f-error { margin: 6px 0 0; font-size: 10.5px; font-weight: 700; color: #B3261E; line-height: 1.5; }
 .f-form-error { margin: 16px 0 0; border-left-color: #B3261E; }
-.wa-link { margin-top: 22px; min-height: 48px; }
+
+/* success state (S3, uncovered-state built by Kira per sheet tokens) */
+.sent-callout { margin: 20px 0 26px; }
+.sent-panel-ask { margin: 0; font-size: clamp(24px, 2.4vw, 32px); line-height: 1.08; letter-spacing: -1.2px; font-weight: 400; }
+
+.wa-link { min-height: 48px; }
 .wa-link svg { width: 17px; height: 17px; }
 
 /* ═══ 3 · RESPONSE LEDGER ═══ */
@@ -75,32 +95,32 @@
 .qclose-aside { display: grid; gap: 16px; justify-items: start; max-width: 380px; }
 .qclose-aside p { margin: 0; font-size: 12px; line-height: 1.7; color: var(--muted); }
 
-/* ── Responsive (wireframe verbatim) ─────────────────────── */
+/* ── Responsive (wireframe v5 verbatim) ─────────────────────── */
 @media (max-width: 1050px) and (min-width: 761px) {
-  .desk-head { grid-template-columns: 1fr; gap: 30px; }
+  .desk-top { grid-template-columns: 1fr; gap: 32px; }
+  .desk-lower { grid-template-columns: 1fr; gap: 32px; margin-top: 40px; padding-top: 36px; }
+  .desk-reassure { max-width: 720px; }
+  .form-photo { max-width: 420px; }
   .channel { grid-template-columns: 96px 1fr; row-gap: 6px; }
   .channel .note { grid-column: 2; text-align: left; }
-  .desk-form { grid-template-columns: 1fr; gap: 34px; }
-  .form-aside { position: static; }
-  .form-photo { max-width: 420px; }
   .rrow { grid-template-columns: 110px 1fr; row-gap: 8px; padding: 16px 18px; }
   .rrow p { grid-column: 2; }
   .faq-head { grid-template-columns: 1fr; gap: 24px; }
   .qclose { grid-template-columns: 1fr; gap: 28px; }
 }
 @media (max-width: 760px) {
-  .desk { padding-top: 55px; padding-bottom: 50px; }
+  .desk { padding-top: 40px; padding-bottom: 50px; }
   h1 { font-size: clamp(38px, 10.5vw, 54px); letter-spacing: -2px; }
-  .desk-head { grid-template-columns: 1fr; gap: 34px; }
-  .desk-head .lede { max-width: 100%; }
+  .desk-top { grid-template-columns: 1fr; gap: 30px; }
+  .desk-lower { grid-template-columns: 1fr; gap: 28px; margin-top: 36px; padding-top: 32px; }
+  .desk-intro .lede { max-width: 100%; }
   .channel { grid-template-columns: 96px 1fr; row-gap: 6px; padding: 14px 0; }
   .channel .note { grid-column: 2; text-align: left; }
-  .desk-form { grid-template-columns: 1fr; gap: 34px; padding-top: 52px; padding-bottom: 60px; }
-  .form-aside { position: static; }
   .form-photo { max-width: 100%; }
   .response-head { grid-template-columns: 1fr; gap: 18px; align-items: start; margin-bottom: 28px; }
   .response-head .micro { text-align: left; line-height: 1.7; }
-  .rrow { grid-template-columns: 1fr; gap: 6px; padding: 16px 0; }
+  /* Oct 20 fix #2: stacked rows were flush to the card's left edge (Joydip) */
+  .rrow { grid-template-columns: 1fr; gap: 6px; padding: 16px 18px; }
   .rrow p { grid-column: 1; max-width: 100%; }
   .faq-head { grid-template-columns: 1fr; gap: 24px; }
   .qclose { grid-template-columns: 1fr; gap: 28px; }
@@ -109,7 +129,7 @@
   .f-row .field { padding: 6px 0 12px; min-height: 0; }
   .f-split { grid-template-columns: 1fr; }
   .f-split .col { border-right: 0; border-bottom: 1px dashed var(--line); }
-  .response { padding-top: 52px; padding-bottom: 52px; }
+  .response { padding-top: 72px; padding-bottom: 72px; }
   .faq { padding-top: 52px; padding-bottom: 52px; }
   .faq-item { grid-template-columns: 40px 1fr; }
   .qclose { padding-top: 50px; padding-bottom: 55px; }

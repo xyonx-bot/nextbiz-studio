@@ -4,7 +4,9 @@ import { useState } from "react";
 import contact from "@/lib/seed/contact.json";
 
 /**
- * Paper form (Mira's wireframe §2) — client-wired in S3.
+ * The brief sheet (wireframe v5 §form) — client-wired since S3.
+ * Embedded in Section A of the Desk opener (right column) since the
+ * Oct 20 design-fix bundle; renders ONLY the form itself.
  * Visible inline validation, success panel, friendly error; honeypot field
  * hidden via CSS. Never renders a raw error page.
  */
@@ -57,36 +59,25 @@ export function DeskForm() {
 
   if (sent) {
     return (
-      <section className="desk-form pad" id="brief-sheet">
-        <aside className="form-aside">
-          <span className="micro">{c.micro}</span>
-          <p className="ask">Brief received.<br />Thank you.</p>
-          <p className="body-copy">{contact.response.rows[0].p}</p>
-        </aside>
-        <div className="form-sheet" style={{ border: 0 }}>
-          <div className="callout" style={{ marginTop: 0 }}>
+      <div className="form-sheet" id="brief-sheet">
+        <span className="micro">{c.micro}</span>
+        <div className="sheet-rows">
+          <div className="callout sent-callout">
             <b>Sent — a real reply is next</b>
-            We've got your brief. Expect a reply from the person who'd actually do the work — usually under one business day.
+            Brief received. Thank you. Expect a reply from the person who'd actually do the work — usually under one business day.
           </div>
         </div>
-      </section>
+      </div>
     );
   }
 
   return (
-    <section className="desk-form pad" id="brief-sheet">
-      <aside className="form-aside">
-        <span className="micro">{c.micro}</span>
-        <p className="ask">{c.ask[0]}<br />{c.ask[1]}<br />{c.ask[2]}</p>
-        <p className="body-copy">{c.copy}</p>
-        <div className="form-photo"><div className="imgph">{c.photoNote}</div></div>
-        <p className="form-note"><b>Your details stay private.</b> Used only to reply to this enquiry — see the Privacy Policy. No lists, no spam, no sharing.</p>
-      </aside>
-      <form className="form-sheet" onSubmit={onSubmit} noValidate>
-        {/* honeypot — hidden from humans, tempting for bots */}
-        <input type="text" name="website" tabIndex={-1} autoComplete="off"
-               aria-hidden="true" style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }} />
+    <form className="form-sheet" onSubmit={onSubmit} noValidate>
+      {/* honeypot — hidden from humans, tempting for bots */}
+      <input type="text" name="website" tabIndex={-1} autoComplete="off"
+             aria-hidden="true" style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }} />
 
+      <div className="sheet-rows">
         <div className="f-row">
           <div className="lab">{f.name.label}<small>{f.name.hint}</small></div>
           <div className="field">
@@ -94,24 +85,18 @@ export function DeskForm() {
             {errors.name && <p className="f-error">{errors.name}</p>}
           </div>
         </div>
-        <div className="f-split">
-          <div className="col">
-            <div className="f-row">
-              <div className="lab">{f.phone.label}<small>{f.phone.hint}</small></div>
-              <div className="field">
-                <input type="tel" name="phone" placeholder={f.phone.placeholder} />
-                {errors.phone && <p className="f-error">{errors.phone}</p>}
-              </div>
-            </div>
+        <div className="f-row">
+          <div className="lab">{f.phone.label}<small>{f.phone.hint}</small></div>
+          <div className="field">
+            <input type="tel" name="phone" placeholder={f.phone.placeholder} />
+            {errors.phone && <p className="f-error">{errors.phone}</p>}
           </div>
-          <div className="col">
-            <div className="f-row">
-              <div className="lab">{f.email.label}<small>{f.email.hint}</small></div>
-              <div className="field">
-                <input type="email" name="email" placeholder={f.email.placeholder} />
-                {errors.email && <p className="f-error">{errors.email}</p>}
-              </div>
-            </div>
+        </div>
+        <div className="f-row">
+          <div className="lab">{f.email.label}<small>{f.email.hint}</small></div>
+          <div className="field">
+            <input type="email" name="email" placeholder={f.email.placeholder} />
+            {errors.email && <p className="f-error">{errors.email}</p>}
           </div>
         </div>
         <div className="f-row">
@@ -149,7 +134,7 @@ export function DeskForm() {
             {sending ? "Sending…" : c.submit}
           </button>
         </div>
-      </form>
-    </section>
+      </div>
+    </form>
   );
 }

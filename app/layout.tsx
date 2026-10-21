@@ -20,6 +20,13 @@ export const metadata: Metadata = {
   title: "NextBiz Studio — Your Digital Team, When You Need It",
   description:
     "We help businesses build, improve and grow through thoughtful digital solutions, marketing support and technology shaped around the way they work.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicons/favicon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/favicons/apple-touch-icon.png" }],
+  },
 };
 
 export const viewport: Viewport = {
