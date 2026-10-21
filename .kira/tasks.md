@@ -50,3 +50,13 @@ S3 bugs found+fixed: empty-select 422 (zod enum vs neutral prompt — preprocess
 Bonus: DB backup pipeline LIVE — scripts/db-backup.py → joyverse-user-data/backups/nextbiz-db/ daily 03:30 IST (hermes cron 6ed9d89386c0), restore drill passed.
 
 
+
+## S-DESIGNFIX (r-nbs-design-fix-oct20 + r-nbs-head-favicon-link) — Oct 20 design-fix bundle
+| # | Task | Branch | Status |
+|---|---|---|---|
+| DF-1 | tokens.css L14: --soft #EFEFF5 -> #F2EEE4 warm sand | fix/design-bundle-oct20 | done (e12fa17) |
+| DF-2 | contact.css mobile: .rrow padding 16px 0 -> 16px 18px | fix/design-bundle-oct20 | done |
+| DF-3 | Contact opener -> v5 two-section (intro|form top; photo+text|channels below) | fix/design-bundle-oct20 | done |
+| DF-4 | Favicon links in root layout metadata (r-nbs-head-favicon-link) | fix/design-bundle-oct20 | done |
+| DF-5 | Tests: --soft unit guard + design-fix-oct20 e2e (12 checks) | fix/design-bundle-oct20 | done (223/0/14-skip) |
+| DF-6 | Merge + push -> auto-deploy (bc8a2ae) + live verify | — | CI run 39572665237 in flight |
