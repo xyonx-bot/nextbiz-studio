@@ -73,3 +73,15 @@ Bonus: DB backup pipeline LIVE — scripts/db-backup.py → joyverse-user-data/b
 | S4-7 | server actions re-check session; revalidatePath | feat/admin-inbox | done |
 | S4-8 | tests: unit 6 (auth) + e2e 27 (all 15 checklist lines) | feat/admin-inbox | done (250 e2e green) |
 | S4-9 | merge → auto-deploy → live verify + Nina handoff | — | in flight |
+
+## S4-REDESIGN (post-S4 design-fidelity fix, Oct 21) — Mira admin package port
+| # | Task | Branch | Status |
+|---|---|---|---|
+| R-1 | admin.css — 1:1 port from 3 admin wireframes, .adminui-scoped | fix/admin-mira-redesign | done (8e8dbe8) |
+| R-2 | Login port (topstrip, ledger-card, inline errmsg, footstrip) | fix/admin-mira-redesign | done |
+| R-3 | AdminShell component (fixed 216px sidebar, off-canvas ≤900, scrim) | fix/admin-mira-redesign | done |
+| R-4 | Inbox port (filter pills, 6-col ledger, chips, empty state, CSV, row→detail) | fix/admin-mira-redesign | done |
+| R-5 | Lead detail page NEW /admin/lead/[id] (brief + notes ledger + stepper + quick actions + meta) | fix/admin-mira-redesign | done |
+| R-6 | Migration 003 (kind column) + status/capture ledger entries + countLeads | fix/admin-mira-redesign | done |
+| R-7 | Tests: admin.spec rewrite (fidelity + checklist) + csv unit; 242 e2e / 29 unit green | fix/admin-mira-redesign | done |
+| R-8 | Merge → auto-deploy 70f69e6 → live verify | — | CI 39650669222 in flight |
