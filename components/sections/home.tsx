@@ -17,8 +17,8 @@ const Placeholder = ({ note, className = "" }: { note: string; className?: strin
 );
 
 /* ═══ 1 · HERO ═══ */
-export function Hero() {
-  const c = homeContent.hero;
+export function Hero({ content }: { content?: typeof homeContent.hero }) {
+  const c = content ?? homeContent.hero;
   return (
     <section className="hero pad">
       <div>
@@ -48,11 +48,12 @@ export function Hero() {
 }
 
 /* ═══ 2 · PARTNER/AUDIENCE STRIP ═══ */
-export function Partners() {
-  const items = homeContent.partners.items as { label: string; strong: boolean }[];
+export function Partners({ content }: { content?: typeof homeContent.partners }) {
+  const p = content ?? homeContent.partners;
+  const items = p.items as { label: string; strong: boolean }[];
   return (
     <section className="partners">
-      <Eyebrow label={homeContent.partners.eyebrow} />
+      <Eyebrow label={p.eyebrow} />
       <div className="partner-row">
         {items.map((it, i) => (
           <span key={i} style={{ display: "contents" }}>
@@ -66,8 +67,8 @@ export function Partners() {
 }
 
 /* ═══ 3 · ABOUT / PROCESS ═══ */
-export function About() {
-  const c = homeContent.about;
+export function About({ content }: { content?: typeof homeContent.about }) {
+  const c = content ?? homeContent.about;
   return (
     <section className="about pad" id="about">
       <div className="center-head">
@@ -100,8 +101,8 @@ export function About() {
 }
 
 /* ═══ 4 · SERVICES SPLIT ═══ */
-export function ServicesSplit() {
-  const c = homeContent.services;
+export function ServicesSplit({ content }: { content?: typeof homeContent.services }) {
+  const c = content ?? homeContent.services;
   return (
     <section className="services pad" id="services">
       <div>
@@ -135,8 +136,8 @@ export function ServicesSplit() {
 }
 
 /* ═══ 5 · SELECTED WORK ═══ */
-export function Work() {
-  const c = homeContent.work;
+export function Work({ content }: { content?: typeof homeContent.work }) {
+  const c = content ?? homeContent.work;
   return (
     <section className="work pad" id="projects">
       <div>
@@ -161,8 +162,8 @@ export function Work() {
 }
 
 /* ═══ 6 · INDUSTRIES ═══ */
-export function Industries() {
-  const c = homeContent.industries;
+export function Industries({ content }: { content?: typeof homeContent.industries }) {
+  const c = content ?? homeContent.industries;
   return (
     <section className="industries">
       <div className="ind-img">
@@ -189,8 +190,8 @@ export function Industries() {
 }
 
 /* ═══ 7 · TESTIMONIAL ═══ */
-export function Testimonial() {
-  const c = homeContent.testimonial;
+export function Testimonial({ content }: { content?: typeof homeContent.testimonial }) {
+  const c = content ?? homeContent.testimonial;
   return (
     <section className="testi pad">
       <div>
@@ -222,8 +223,8 @@ export function Testimonial() {
 }
 
 /* ═══ 8 · TEAM ═══ */
-export function Team() {
-  const c = homeContent.team;
+export function Team({ content }: { content?: typeof homeContent.team }) {
+  const c = content ?? homeContent.team;
   return (
     <section className="team pad" id="team">
       <div>
@@ -248,8 +249,8 @@ export function Team() {
 }
 
 /* ═══ 9 · CONTACT BAND ═══ */
-export function ContactBand() {
-  const c = homeContent.contactBand;
+export function ContactBand({ content }: { content?: typeof homeContent.contactBand }) {
+  const c = content ?? homeContent.contactBand;
   return (
     <section className="contact pad" id="contact">
       <h2>{c.h2a}<br />{c.h2b}</h2>

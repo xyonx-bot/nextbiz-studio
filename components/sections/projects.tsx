@@ -7,8 +7,8 @@ import { ArrowRight } from "@/components/icons";
 import projects from "@/lib/seed/projects.json";
 
 /** 1 · Volume register — opener w/ table */
-export function Register() {
-  const c = projects.register;
+export function Register({ content }: { content?: typeof projects.register }) {
+  const c = content ?? projects.register;
   return (
     <section className="register pad">
       <span className="micro">{c.micro}</span>
@@ -41,10 +41,11 @@ export function Register() {
 }
 
 /** 2 · Case entries ×3 */
-export function Entries() {
+export function Entries({ content }: { content?: typeof projects.entries }) {
+  const list = content ?? projects.entries;
   return (
     <>
-      {projects.entries.map((e) => (
+      {list.map((e) => (
         <section className="entry pad" id={e.id} key={e.id}>
           <div className="entry-head">
             <span className="no">{e.no}</span>
@@ -86,8 +87,8 @@ export function Entries() {
 }
 
 /** 3 · Process notes */
-export function ProcessNotes() {
-  const c = projects.process;
+export function ProcessNotes({ content }: { content?: typeof projects.process }) {
+  const c = content ?? projects.process;
   return (
     <section className="process pad">
       <div className="process-head">
@@ -111,8 +112,8 @@ export function ProcessNotes() {
 }
 
 /** 4 · Compass close */
-export function Compass() {
-  const c = projects.compass;
+export function Compass({ content }: { content?: typeof projects.compass }) {
+  const c = content ?? projects.compass;
   return (
     <section className="compass pad" style={{ borderTop: 0 }}>
       <div>
