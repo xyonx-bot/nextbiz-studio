@@ -236,6 +236,25 @@ test.describe("admin auth + inbox + pipeline (S4, Mira redesign)", () => {
     await expect(page.locator(".lrow")).toHaveCount(2);
     await expect(page.locator(".footstrip")).toBeVisible();
     await expect(page.locator(".lc-head .micro .dot")).toBeVisible(); // live-dot
+
+    // autofill override shipped (login item 4): the -webkit-autofill rule
+    // must exist in the live stylesheet with the inset-paper box-shadow
+    const hasAutofillOverride = await page.evaluate(() => {
+      for (const sheet of Array.from(document.styleSheets)) {
+        try {
+          for (const rule of Array.from(sheet.cssRules)) {
+            const sel = (rule as CSSStyleRule).selectorText ?? "";
+            if (sel.includes("-webkit-autofill")) {
+              const s = (rule as CSSStyleRule).style;
+              const shadow = s.getPropertyValue("-webkit-box-shadow") || s.boxShadow;
+              if (shadow.includes("inset")) return true;
+            }
+          }
+        } catch { /* cross-origin sheets */ }
+      }
+      return false;
+    });
+    expect(hasAutofillOverride).toBe(true);
   });
 
   test("inbox shell: sidebar nav + pills + 6-col ledger + chip colors", async ({ page }) => {
