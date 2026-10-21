@@ -85,3 +85,17 @@ Bonus: DB backup pipeline LIVE — scripts/db-backup.py → joyverse-user-data/b
 | R-6 | Migration 003 (kind column) + status/capture ledger entries + countLeads | fix/admin-mira-redesign | done |
 | R-7 | Tests: admin.spec rewrite (fidelity + checklist) + csv unit; 242 e2e / 29 unit green | fix/admin-mira-redesign | done |
 | R-8 | Merge → auto-deploy 70f69e6 → live verify | — | CI 39650669222 in flight |
+
+## S5 (r-nbs-s5) — page configurator (P1.8 + P1.9)
+| # | Task | Branch | Status |
+|---|---|---|---|
+| A0 | Login autofill override (r-nbs-admin-design-fix item 4/5) | fix/admin-autofill | done (2033a7d) |
+| S5-1 | Migration 004: pages_config + page_sections | feat/s5-configurator-foundation | done (b61548e) |
+| S5-2 | lib/seed/pages.json — 9-page inventory + admin labels | feat/s5-configurator-foundation | done |
+| S5-3 | lib/config.ts — getSections merge/fallback, ensurePageRows, CRUD fns | feat/s5-configurator-foundation | done |
+| S5-4 | 32 section components accept content prop (seed fallback) | feat/s5-configurator-foundation | done |
+| S5-5 | 9 public pages compose via getSections (force-dynamic) | feat/s5-configurator-foundation | done |
+| S5-6 | /api/config CRUD routes (self-gated 401) + revalidatePath | feat/s5-configurator-foundation | done |
+| S5-7 | E2E config spec (8 checks, self-cleaning) + unit 40 | feat/s5-configurator-foundation | done (251 e2e fresh-DB) |
+| S5-8 | Admin Pages UI — Mira wireframe request open (r-nbs-pages-wireframe-request) | — | blocked-on-design |
+| S5-9 | Ship foundation → deploy e3e6bd8 → verify live | — | CI in flight |
