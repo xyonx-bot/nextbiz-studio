@@ -64,3 +64,67 @@ export async function closePool(): Promise<void> {
     pool = null;
   }
 }
+
+// ── S4: admin inbox (P1.6) + status pipeline & notes (P1.7) ─────────────
+
+export interface LeadWithNotes extends LeadRow {
+  notes: NoteRow[];
+}
+
+export interface NoteRow {
+  id: string;
+  lead_id: string;
+  note: string;
+  created_at: Date;
+}
+
+/**
+ * Inbox list, newest first (P1.6): every lead with key fields + its notes.
+ * Notes per lead fetched in one query and grouped in memory — leads count is
+ * small (this is a leads inbox, not analytics), so two queries beat a
+ * lateral join for clarity.
+ */
+export async function listLeads(): Promise<LeadWithNotes[]> {
+  const leads = await getPool().query<LeadRow>(
+    `SELECT * FROM leads ORDER BY created_at DESC`,
+  );
+  const notes = await getPool().query<NoteRow>(
+    `SELECT * FROM lead_notes ORDER BY created_at DESC`,
+  );
+  const byLead = new Map<string, NoteRow[]>();
+  for (const n of notes.rows) {
+    const arr = byLead.get(n.lead_id) ?? [];
+    arr.push(n);
+    byLead.set(n.lead_id, arr);
+  }
+  return leads.rows.map((l) => ({ ...l, notes: byLead.get(l.id) ?? [] }));
+}
+
+/** Single lead + its notes (detail view). */
+export async function getLead(id: string): Promise<LeadWithNotes | null> {
+  const lead = await getPool().query<LeadRow>(`SELECT * FROM leads WHERE id = $1`, [id]);
+  if (lead.rows.length === 0) return null;
+  const notes = await getPool().query<NoteRow>(
+    `SELECT * FROM lead_notes WHERE lead_id = $1 ORDER BY created_at DESC`,
+    [id],
+  );
+  return { ...lead.rows[0], notes: notes.rows };
+}
+
+/** Move a lead through the pipeline. Returns false for unknown status/id. */
+export async function setLeadStatus(id: string, status: string): Promise<boolean> {
+  const r = await getPool().query(
+    `UPDATE leads SET status = $1 WHERE id = $2`,
+    [status, id],
+  );
+  return (r.rowCount ?? 0) > 0;
+}
+
+/** Attach a timestamped note. Returns the stored row. */
+export async function addLeadNote(leadId: string, note: string): Promise<NoteRow> {
+  const { rows } = await getPool().query<NoteRow>(
+    `INSERT INTO lead_notes (lead_id, note) VALUES ($1, $2) RETURNING *`,
+    [leadId, note],
+  );
+  return rows[0];
+}

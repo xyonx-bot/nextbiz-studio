@@ -66,6 +66,10 @@ jobs:
       DATABASE_URL: postgres://nextbiz:nextbiz@127.0.0.1:5432/nextbiz
       SLACK_WEBHOOK_URL: ""            # CI never pings Slack
       IP_HASH_SALT: ci-test-salt-only
+      # S4 admin (e2e-only throwaway creds; prod creds live in VM .env only)
+      ADMIN_USER: e2e-admin
+      ADMIN_PASS: e2e-test-pass-2026
+      SESSION_SECRET: ci-e2e-session-secret-0123456789abcdef
       NEXT_PUBLIC_BUSINESS_PHONE: "+910000000000"
       NEXT_PUBLIC_BUSINESS_EMAIL: "hello@example.com"
       NEXT_PUBLIC_WHATSAPP_NUMBER: "910000000000"

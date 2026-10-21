@@ -60,3 +60,16 @@ Bonus: DB backup pipeline LIVE — scripts/db-backup.py → joyverse-user-data/b
 | DF-4 | Favicon links in root layout metadata (r-nbs-head-favicon-link) | fix/design-bundle-oct20 | done |
 | DF-5 | Tests: --soft unit guard + design-fix-oct20 e2e (12 checks) | fix/design-bundle-oct20 | done (223/0/14-skip) |
 | DF-6 | Merge + push -> auto-deploy (bc8a2ae) + live verify | — | done (CI green 39572665237; live: v5 live, f2eee4 live, favicons 200) |
+
+## S4 (r-nbs-s4) — admin auth + leads inbox + pipeline + notes
+| # | Task | Branch | Status |
+|---|---|---|---|
+| S4-1 | migration 002: leads_status_check constraint + lead_notes table | feat/admin-inbox | done |
+| S4-2 | lib/auth.ts: env creds + timing-safe compare + HMAC cookie session | feat/admin-inbox | done |
+| S4-3 | middleware.ts: /admin + /admin/* gate (fail-closed, ?next kept) | feat/admin-inbox | done |
+| S4-4 | login page + useActionState form + rate-limit (10/15min) | feat/admin-inbox | done |
+| S4-5 | inbox page + rows: name/contact/preview/timestamp newest-first | feat/admin-inbox | done |
+| S4-6 | status select (new→replied→quoted→won/lost) + notes per lead | feat/admin-inbox | done |
+| S4-7 | server actions re-check session; revalidatePath | feat/admin-inbox | done |
+| S4-8 | tests: unit 6 (auth) + e2e 27 (all 15 checklist lines) | feat/admin-inbox | done (250 e2e green) |
+| S4-9 | merge → auto-deploy → live verify + Nina handoff | — | in flight |
