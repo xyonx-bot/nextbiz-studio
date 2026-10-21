@@ -1,370 +1,265 @@
-/* ── S4: Admin (login + inbox) ─────────────────────────────────────
-   Internal tool: clean, functional, zero design ambition — it must be
-   fast and legible, not pretty. Uses the same token palette so it
-   doesn't look like a different product. */
+/* ============================================================
+   ADMIN — Mira's S4 design package, ported 1:1 from wireframes:
+     ~/workspaces/mira/prototypes/nextbizstudio/admin/login/wireframe.html
+     ~/workspaces/mira/prototypes/nextbizstudio/admin/inbox/wireframe.html
+     ~/workspaces/mira/prototypes/nextbizstudio/admin/lead/wireframe.html
+   + shared rules from admin/prompt.md (shell, chips, pinned chrome,
+     FIXED sidebar — never sticky).
+   EVERY rule is scoped `.adminui` (app/admin/layout.tsx wrapper) so the
+   ported wireframe classnames never collide with public-site CSS that
+   shares the same bundle. Admin = work tool: no scribbles, no decor.
+   ============================================================ */
 
-.admin-login {
+.adminui {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
-  background: var(--paper, #faf8f4);
-  padding: 24px;
-}
-
-.login-card {
-  width: min(400px, 100%);
-  background: #fff;
-  border: 1px solid #e5e0d8;
-  border-radius: 10px;
-  padding: 32px 28px;
+  background: var(--desk);
+  color: var(--ink);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  /* status palette (wireframe :root) — closed set, admin only */
+  --st-blue: #0B5FA5;
+  --st-amber: #9A6B00;
+  --st-green: #1A6B3C;
+  --st-red: #B3261E;
 }
 
-.login-micro {
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #8a8378;
-  margin: 0 0 4px;
+/* ═══ LOGIN (no sidebar shell — the gate renders alone) ═══ */
+.adminui .topstrip { height: 52px; border-bottom: 1px solid var(--line); background: var(--paper); display: flex; align-items: center; padding: 0 clamp(16px, 3vw, 36px); justify-content: space-between; }
+.adminui .topstrip .brand { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; text-decoration: none; color: inherit; }
+.adminui .logo-ph { width: 24px; height: 24px; background: var(--soft); border: 1px solid var(--line); display: grid; place-items: center; font-size: 9px; font-weight: 800; border-radius: 5px; flex: none; }
+.adminui .topstrip .back { font-size: 10px; font-weight: 700; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; }
+.adminui .topstrip .back svg { width: 12px; height: 12px; }
+
+.adminui .stage { flex: 1; display: grid; place-items: center; padding: 36px 18px; }
+.adminui .logincard { width: 100%; max-width: 360px; background: var(--paper); border: 1px solid var(--line); }
+.adminui .logincard .lc-head { padding: 22px 24px 18px; border-bottom: 1px solid var(--line); }
+.adminui .logincard .lc-head .micro { font-size: 8px; font-weight: 800; letter-spacing: 1.3px; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.adminui .logincard .lc-head .micro .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--live-green); }
+.adminui .logincard h1 { font-size: 22px; letter-spacing: -1px; margin: 10px 0 6px; font-weight: 400; line-height: 1.12; }
+.adminui .logincard .lc-sub { font-size: 10.5px; color: var(--muted); line-height: 1.6; margin: 0; }
+
+.adminui .lrow { display: grid; grid-template-columns: 1fr; border-bottom: 1px solid var(--line); }
+.adminui .lrow:last-of-type { border-bottom: 0; }
+.adminui .lrow label { padding: 13px 24px 5px; font-size: 8px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; color: var(--muted); }
+.adminui .lrow .field { padding: 0 24px 12px; }
+.adminui .lrow input { width: 100%; border: 0; background: transparent; font-size: 12.5px; font-weight: 600; color: var(--ink); outline: none; padding: 6px 0; border-bottom: 1px dashed var(--line); font-family: inherit; }
+.adminui .lrow input:focus { border-bottom: 1px solid var(--ink); }
+.adminui .lrow input::placeholder { color: #A8A5A0; font-weight: 500; }
+.adminui .lrow .hint { font-size: 8.5px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+/* error state — inline, friendly, never a raw error page */
+.adminui .lrow.err label { color: var(--st-red); }
+.adminui .lrow.err input { border-bottom: 1px solid var(--st-red); }
+.adminui .lrow .errmsg { display: none; font-size: 9px; color: var(--st-red); font-weight: 600; padding: 5px 24px 11px; line-height: 1.5; align-items: center; gap: 5px; }
+.adminui .lrow.err .errmsg { display: flex; }
+.adminui .lrow .errmsg svg { width: 11px; height: 11px; flex: none; }
+
+.adminui .lc-foot { padding: 14px 24px 18px; display: grid; gap: 11px; border-top: 1px solid var(--line); }
+.adminui .lc-foot .action { width: 100%; min-height: 40px; border: 1px solid var(--ink); background: var(--primary); color: var(--primary-fg); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; border-radius: 3px; text-decoration: none; font-family: inherit; cursor: pointer; gap: 7px; padding: 0 12px; }
+.adminui .lc-foot .action:disabled { opacity: .55; cursor: wait; }
+.adminui .lc-foot .action svg { width: 13px; height: 13px; }
+.adminui .lc-note { font-size: 8.5px; color: var(--muted); line-height: 1.55; text-align: center; margin: 0; }
+
+.adminui .footstrip { border-top: 1px solid var(--line); background: var(--paper); padding: 12px clamp(16px, 3vw, 36px); display: flex; justify-content: space-between; align-items: center; font-size: 8.5px; color: var(--muted); }
+.adminui .footstrip a { color: inherit; text-decoration: none; font-weight: 600; }
+
+/* ═══ SHELL: sidebar + main (inbox + lead detail) ═══ */
+.adminui .shell { display: grid; grid-template-columns: 216px minmax(0, 1fr); min-height: 100vh; }
+
+/* sidebar — FIXED, never sticky (prompt.md hard rule: sticky slides up at
+   page bottom; fixed never moves) */
+.adminui .side { background: var(--paper); border-right: 1px solid var(--line); display: flex; flex-direction: column; position: fixed; left: 0; top: 0; bottom: 0; width: 216px; overflow-y: auto; }
+.adminui .side .sbrand { height: 52px; padding: 0 14px; border-bottom: 1px solid var(--line); display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; flex: none; }
+.adminui .side .slabel { padding: 14px 14px 5px; font-size: 8px; font-weight: 800; letter-spacing: 1.3px; text-transform: uppercase; color: var(--muted); }
+.adminui .side nav { display: grid; gap: 0; }
+.adminui .side nav a,
+.adminui .side nav .nnav { display: grid; grid-template-columns: 15px 1fr auto; align-items: center; gap: 10px; padding: 8px 14px; font-size: 11.5px; font-weight: 600; text-decoration: none; color: var(--muted); border-left: 2px solid transparent; }
+.adminui .side nav .nnav { cursor: default; }
+.adminui .side nav a svg { width: 13px; height: 13px; }
+.adminui .side nav a .cnt { font-size: 8.5px; font-weight: 800; background: var(--ink); color: var(--paper); border-radius: 999px; padding: 1px 6px; }
+.adminui .side nav a.on { color: var(--ink); border-left-color: var(--ink); background: var(--card); }
+.adminui .side .sgap { flex: 1; }
+.adminui .side .sfoot { border-top: 1px solid var(--line); padding: 10px 14px; display: grid; gap: 6px; flex: none; }
+.adminui .side .sfoot .who { display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700; }
+.adminui .side .sfoot .who .av { width: 22px; height: 22px; border-radius: 50%; background: var(--soft); border: 1px solid var(--line); display: grid; place-items: center; font-size: 8px; font-weight: 800; flex: none; }
+.adminui .side .sfoot form { margin: 0; }
+.adminui .side .sfoot .logout { font-size: 9px; font-weight: 700; color: var(--muted); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; background: none; border: 0; padding: 0; font-family: inherit; cursor: pointer; }
+.adminui .side .sfoot .logout svg { width: 11px; height: 11px; }
+
+/* main + topline (pinned) */
+.adminui .main { grid-column: 2; display: flex; flex-direction: column; min-width: 0; min-height: 100vh; }
+.adminui .topline { height: 52px; border-bottom: 1px solid var(--line); background: var(--paper); display: flex; align-items: center; justify-content: space-between; padding: 0 clamp(14px, 2.5vw, 28px); gap: 14px; position: sticky; top: 0; z-index: 10; }
+.adminui .topline .tl-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.adminui .topline .crumb { font-size: 8px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; color: var(--muted); }
+.adminui .topline h1 { font-size: 14px; letter-spacing: -.3px; margin: 2px 0 0; font-weight: 800; display: flex; align-items: center; gap: 10px; min-width: 0; }
+.adminui .topline .acts { display: flex; gap: 8px; align-items: center; }
+.adminui .topline .qadd { display: flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--card); border-radius: 3px; padding: 0 10px; height: 30px; font-size: 10px; font-weight: 700; color: var(--muted); text-decoration: none; }
+.adminui .topline .qadd svg { width: 12px; height: 12px; }
+.adminui .topline .action { display: inline-flex; align-items: center; gap: 7px; min-height: 30px; border: 1px solid var(--ink); background: var(--primary); color: var(--primary-fg); padding: 0 12px; font-size: 10px; font-weight: 700; border-radius: 3px; text-decoration: none; width: auto; }
+.adminui .topline .action svg { width: 12px; height: 12px; }
+.adminui .topline .back { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; color: var(--muted); text-decoration: none; }
+.adminui .topline .back svg { width: 13px; height: 13px; }
+
+/* mobile drawer toggle + scrim */
+.adminui .mtoggle { display: none; width: 36px; height: 36px; border: 1px solid var(--line); background: var(--card); border-radius: 3px; place-items: center; cursor: pointer; flex: none; position: relative; }
+.adminui .mtoggle i, .adminui .mtoggle i::before, .adminui .mtoggle i::after { content: ""; position: absolute; width: 16px; height: 2px; background: var(--ink); }
+.adminui .mtoggle i { position: relative; }
+.adminui .mtoggle i::before { position: absolute; top: -6px; left: 0; }
+.adminui .mtoggle i::after { position: absolute; top: 6px; left: 0; }
+.adminui .scrim { position: fixed; inset: 0; background: rgb(9 11 15 / .3); z-index: 19; display: none; }
+.adminui .scrim.open { display: block; }
+
+/* ═══ INBOX: filter pills + leads ledger ═══ */
+.adminui .fbar { display: flex; align-items: center; gap: 6px; padding: 8px clamp(14px, 2.5vw, 28px); border-bottom: 1px solid var(--line); background: var(--paper); flex-wrap: wrap; position: sticky; top: 52px; z-index: 9; }
+.adminui .fpill { font-size: 9px; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); text-decoration: none; background: var(--card); }
+.adminui .fpill.on { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+.adminui .fbar .count { margin-left: auto; font-size: 9px; color: var(--muted); font-weight: 600; }
+
+.adminui .content { flex: 1; padding: clamp(12px, 2vw, 22px); display: grid; gap: 14px; align-content: start; }
+.adminui .ledger { background: var(--paper); border: 1px solid var(--line); }
+/* NOTE: login wireframe and inbox wireframe BOTH use `.lrow` (standalone
+   files, no clash in Mira's package). Merged here, the inbox rules are
+   scoped `.ledger` so they never touch the login rows. */
+.adminui .ledger .lhead, .adminui .ledger .lrow { display: grid; grid-template-columns: 2.1fr 1.5fr 2.6fr .9fr 1fr .8fr; gap: 12px; align-items: baseline; padding: 8px 14px; }
+.adminui .ledger .lhead { border-bottom: 2px solid var(--ink); font-size: 8px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; color: var(--muted); }
+.adminui .ledger .lrow { border-bottom: 1px solid var(--line); font-size: 11.5px; text-decoration: none; color: inherit; }
+.adminui .ledger .lrow:hover { background: var(--card); }
+.adminui .ledger .lrow:last-child { border-bottom: 0; }
+.adminui .ledger .lrow .nm { font-weight: 800; font-size: 11.5px; }
+.adminui .ledger .lrow .nm small { display: block; font-size: 8.5px; color: var(--muted); font-weight: 600; margin-top: 1px; }
+.adminui .ledger .lrow .ct { font-size: 10px; font-weight: 600; color: var(--muted); line-height: 1.45; }
+.adminui .ledger .lrow .ct b { color: var(--ink); font-weight: 700; display: block; font-size: 10.5px; }
+.adminui .ledger .lrow .msg { font-size: 10px; color: var(--muted); line-height: 1.5; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.adminui .ledger .lrow .svc { font-size: 9px; font-weight: 700; color: var(--muted); }
+.adminui .ledger .lrow .ts { font-size: 9px; color: var(--muted); font-weight: 600; text-align: right; line-height: 1.45; }
+.adminui .ledger .lrow .ts b { color: var(--ink); display: block; }
+
+/* status chips — pipeline states (shared inbox + detail) */
+.adminui .st { display: inline-flex; align-items: center; gap: 5px; font-size: 8px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; border: 1px solid; white-space: nowrap; justify-self: start; }
+.adminui .st i { width: 5px; height: 5px; border-radius: 50%; flex: none; }
+.adminui .st-new { color: var(--ink); border-color: var(--ink); background: var(--card); } .adminui .st-new i { background: var(--ink); }
+.adminui .st-replied { color: var(--st-blue); border-color: var(--st-blue); background: #EAF3FB; } .adminui .st-replied i { background: var(--st-blue); }
+.adminui .st-quoted { color: var(--st-amber); border-color: var(--st-amber); background: #FBF4E4; } .adminui .st-quoted i { background: var(--st-amber); }
+.adminui .st-won { color: var(--st-green); border-color: var(--st-green); background: #E9F5EC; } .adminui .st-won i { background: var(--st-green); }
+.adminui .st-lost { color: var(--st-red); border-color: var(--st-red); background: #FBEDEC; } .adminui .st-lost i { background: var(--st-red); }
+
+/* empty state — ONLY at 0 leads */
+.adminui .empty { border: 1px dashed var(--line); background: var(--paper); padding: 46px 24px; display: grid; place-items: center; gap: 8px; text-align: center; max-width: 520px; margin: 0 auto; width: 100%; }
+.adminui .empty .eic { width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 50%; display: grid; place-items: center; color: var(--muted); }
+.adminui .empty .eic svg { width: 18px; height: 18px; }
+.adminui .empty b { font-size: 13px; }
+.adminui .empty p { font-size: 11px; color: var(--muted); margin: 0; line-height: 1.6; }
+
+/* ═══ LEAD DETAIL — 2-col: brief + notes | pipeline rail ═══ */
+.adminui .dwrap { flex: 1; padding: clamp(12px, 2vw, 22px); display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 16px; align-content: start; }
+.adminui .dcol-l { display: grid; gap: 14px; min-width: 0; align-content: start; }
+.adminui .panel { background: var(--paper); border: 1px solid var(--line); }
+.adminui .phead { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.adminui .phead .pt { font-size: 8px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
+.adminui .phead .when { font-size: 8.5px; color: var(--muted); font-weight: 600; }
+
+/* brief sheet — label-left/value-right rows */
+.adminui .brow { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; padding: 9px 14px; border-bottom: 1px solid var(--line); font-size: 11px; align-items: baseline; }
+.adminui .brow:last-child { border-bottom: 0; }
+.adminui .brow .bl { font-size: 8px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.adminui .brow .bv { font-weight: 600; line-height: 1.55; font-size: 11px; overflow-wrap: anywhere; }
+.adminui .brow .bv a { color: inherit; }
+.adminui .brow .bv.big { font-size: 12.5px; font-weight: 800; letter-spacing: -.2px; }
+.adminui .brow .bv .sub { display: block; font-size: 9px; color: var(--muted); font-weight: 600; margin-top: 1px; }
+
+/* notes ledger — append-only */
+.adminui .note { display: grid; grid-template-columns: 36px 1fr; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.adminui .note:last-of-type { border-bottom: 0; }
+.adminui .note .nwho { display: grid; gap: 4px; justify-items: center; padding-top: 2px; }
+.adminui .note .nwho .av { width: 24px; height: 24px; border-radius: 50%; background: var(--soft); border: 1px solid var(--line); display: grid; place-items: center; font-size: 8px; font-weight: 800; }
+.adminui .note .nwho time { font-size: 7.5px; color: var(--muted); font-weight: 700; text-align: center; line-height: 1.35; }
+.adminui .note .nbody { font-size: 10.5px; line-height: 1.6; color: var(--ink); padding-top: 2px; overflow-wrap: anywhere; }
+.adminui .note .nbody b { font-weight: 800; }
+.adminui .note.sys .nbody { color: var(--muted); }
+.adminui .note .nbody .st-inline { display: inline-flex; align-items: center; gap: 4px; font-size: 8px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); margin-right: 5px; }
+.adminui .note .nbody .st-inline i { width: 5px; height: 5px; border-radius: 50%; flex: none; }
+
+/* composer pinned at notes-panel bottom */
+.adminui .ncomposer { border-top: 2px solid var(--ink); padding: 12px 14px; display: grid; gap: 10px; }
+.adminui .ncomposer textarea { width: 100%; min-height: 56px; border: 0; background: transparent; font-size: 11px; font-weight: 600; color: var(--ink); outline: none; resize: vertical; font-family: inherit; padding: 0; }
+.adminui .ncomposer textarea::placeholder { color: #A8A5A0; font-weight: 500; }
+.adminui .ncomposer .nc-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.adminui .ncomposer .hint { font-size: 8.5px; color: var(--muted); line-height: 1.5; }
+.adminui .ncomposer .action { display: inline-flex; align-items: center; gap: 7px; min-height: 32px; border: 1px solid var(--ink); background: var(--primary); color: var(--primary-fg); padding: 0 12px; font-size: 10px; font-weight: 700; border-radius: 3px; text-decoration: none; cursor: pointer; font-family: inherit; width: auto; }
+.adminui .ncomposer .action svg { width: 12px; height: 12px; }
+
+/* pipeline rail */
+.adminui .dcol-r { display: grid; gap: 14px; align-content: start; }
+.adminui .rail { background: var(--paper); border: 1px solid var(--line); }
+.adminui .rail .rhead { padding: 10px 14px; border-bottom: 1px solid var(--line); font-size: 8px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
+.adminui .steps { display: grid; }
+.adminui .step { display: grid; grid-template-columns: 20px 1fr auto; gap: 10px; align-items: center; padding: 9px 14px; border-bottom: 1px solid var(--line); }
+.adminui .step:last-child { border-bottom: 0; }
+.adminui .step .pip { width: 15px; height: 15px; border: 1.5px solid var(--line); border-radius: 50%; display: grid; place-items: center; background: var(--card); position: relative; }
+.adminui .step .pip.done { border-color: var(--st-green); }
+.adminui .step .pip.done svg { width: 8px; height: 8px; }
+.adminui .step .pip.cur { border-color: var(--ink); background: var(--ink); }
+.adminui .step .pip.cur::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--paper); }
+.adminui .step .pip::before { content: ""; position: absolute; left: 50%; top: -12px; width: 1.5px; height: 11px; background: var(--line); }
+.adminui .step:first-child .pip::before { display: none; }
+.adminui .step.done .pip::before { background: var(--st-green); }
+.adminui .step .sl { font-size: 10.5px; font-weight: 700; }
+.adminui .step.done .sl { color: var(--muted); font-weight: 600; }
+.adminui .step .sl small { display: block; font-size: 7.5px; color: var(--muted); font-weight: 600; letter-spacing: .5px; text-transform: uppercase; margin-top: 1px; }
+.adminui .step .sd { font-size: 8px; color: var(--muted); font-weight: 700; text-align: right; line-height: 1.4; }
+
+/* quick actions */
+.adminui .rail .ract { border-top: 2px solid var(--ink); padding: 10px 14px; display: grid; gap: 7px; }
+.adminui .rail .ract .lbl { font-size: 7.5px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; color: var(--muted); margin-bottom: 1px; }
+.adminui .btnrow { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.adminui .rbtn { border: 1px solid var(--line); background: var(--card); min-height: 30px; border-radius: 3px; font-size: 9.5px; font-weight: 700; color: var(--ink); display: flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none; font-family: inherit; cursor: pointer; padding: 0 6px; }
+.adminui .rbtn:disabled { opacity: .45; cursor: default; }
+.adminui .rbtn.primary { background: var(--primary); border-color: var(--ink); color: var(--primary-fg); }
+.adminui .rbtn.danger { color: var(--st-red); border-color: var(--st-red); background: #FBEDEC; }
+
+/* meta card */
+.adminui .mrow2 { display: grid; grid-template-columns: 1fr auto; gap: 10px; padding: 8px 14px; border-bottom: 1px solid var(--line); font-size: 10px; align-items: baseline; }
+.adminui .mrow2:last-child { border-bottom: 0; }
+.adminui .mrow2 .mk { color: var(--muted); font-weight: 700; font-size: 8.5px; letter-spacing: .4px; }
+.adminui .mrow2 .mv { font-weight: 600; text-align: right; overflow-wrap: anywhere; }
+.adminui .mrow2 .mv a { color: inherit; }
+
+/* ═══ responsive (wireframe verbatim) ═══ */
+@media (max-width: 1050px) {
+  /* inbox: ledger re-grids to 2-col cards, header row hides */
+  .adminui .ledger .lhead { display: none; }
+  .adminui .ledger .lrow { grid-template-columns: 1.6fr 1fr; grid-template-areas: "nm st" "ct ct" "msg msg" "svc ts"; row-gap: 6px; padding: 14px 16px; }
+  .adminui .ledger .lrow .nm { grid-area: nm; } .adminui .ledger .lrow .ct { grid-area: ct; } .adminui .ledger .lrow .msg { grid-area: msg; }
+  .adminui .ledger .lrow .svc { grid-area: svc; } .adminui .ledger .lrow .ts { grid-area: ts; text-align: left; } .adminui .ledger .lrow .st { grid-area: st; justify-self: end; }
+  /* detail: rail stacks above the brief */
+  .adminui .dwrap { grid-template-columns: 1fr; }
+  .adminui .dcol-r { order: -1; }
 }
-
-.login-card h1 {
-  font-size: 22px;
-  margin: 0 0 14px;
+@media (max-width: 900px) {
+  .adminui .shell { grid-template-columns: minmax(0, 1fr); }
+  .adminui .main { grid-column: 1; }
+  /* sidebar becomes the off-canvas drawer (fixed + translateX) */
+  .adminui .side { position: fixed; left: 0; top: 0; bottom: 0; width: 216px; z-index: 20; transform: translateX(-100%); transition: transform .25s; box-shadow: 4px 0 24px rgb(9 11 15 / .08); }
+  .adminui .side.open { transform: none; }
+  .adminui .mtoggle { display: grid !important; }
+  .adminui .topline { padding-left: 14px; padding-right: 14px; }
+  .adminui .topline h1 { font-size: 15px; }
+  .adminui .content { padding: 16px 14px; }
+  .adminui .fpill { padding: 5px 10px; font-size: 9.5px; }
+  .adminui .dwrap { padding: 16px 14px; }
+  .adminui .brow { grid-template-columns: 1fr; gap: 4px; padding: 11px 14px; }
+  .adminui .note { grid-template-columns: 36px 1fr; padding: 12px 14px; }
+  .adminui .rail .ract { padding: 12px 14px; }
+  .adminui .step { padding: 11px 14px; }
 }
-
-.login-error {
-  background: #fbeeee;
-  color: #a33;
-  border: 1px solid #ecc;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 13px;
-  margin: 0 0 10px;
-}
-
-.login-card label {
-  font-size: 12px;
-  color: #6f6a60;
-  margin-top: 8px;
-}
-
-.login-card input {
-  border: 1px solid #d8d2c8;
-  border-radius: 6px;
-  padding: 10px 12px;
-  font: inherit;
-  background: #faf9f6;
-}
-
-.login-card input:focus {
-  outline: 2px solid #1a1a18;
-  outline-offset: -1px;
-}
-
-.login-card button {
-  margin-top: 16px;
-  background: #1a1a18;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 11px 16px;
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.login-card button:disabled {
-  opacity: 0.6;
-  cursor: wait;
-}
-
-/* ── Inbox shell ─────────────────────────────────────────────────── */
-
-.admin-shell {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 40px 24px 80px;
-  min-height: 100vh;
-  background: var(--paper, #faf8f4);
-}
-
-.admin-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 16px;
-  border-bottom: 1px solid #e5e0d8;
-  padding-bottom: 14px;
-  margin-bottom: 10px;
-}
-
-.admin-micro {
-  font-size: 11px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #8a8378;
-  margin: 0 0 4px;
-}
-
-.admin-top h1 {
-  font-size: 26px;
-  margin: 0;
-}
-
-.admin-logout {
-  background: none;
-  border: 1px solid #d8d2c8;
-  border-radius: 6px;
-  padding: 7px 14px;
-  font: inherit;
-  font-size: 13px;
-  cursor: pointer;
-  color: #55504a;
-}
-
-.admin-logout:hover {
-  background: #f0ede6;
-}
-
-.admin-count {
-  font-size: 13px;
-  color: #6f6a60;
-  margin: 0 0 18px;
-}
-
-.admin-empty {
-  border: 1px dashed #d8d2c8;
-  border-radius: 8px;
-  padding: 28px;
-  text-align: center;
-  color: #8a8378;
-  font-size: 14px;
-}
-
-/* ── Lead rows ───────────────────────────────────────────────────── */
-
-.admin-inbox {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.lead-row {
-  background: #fff;
-  border: 1px solid #e5e0d8;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.lead-head {
-  display: grid;
-  grid-template-columns: 1.2fr 2fr auto;
-  gap: 12px;
-  align-items: center;
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  padding: 14px 16px;
-  font: inherit;
-  cursor: pointer;
-}
-
-.lead-who {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.lead-name {
-  font-size: 15px;
-}
-
-.lead-contact {
-  font-size: 12px;
-  color: #6f6a60;
-  word-break: break-word;
-}
-
-.lead-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.lead-msg-preview {
-  font-size: 13px;
-  color: #44403a;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.lead-time {
-  font-size: 11px;
-  color: #8a8378;
-}
-
-.lead-status {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 3px 10px;
-  border-radius: 20px;
-  justify-self: end;
-  white-space: nowrap;
-}
-
-.lead-status.s-new { background: #e8f0e6; color: #2c5e2e; }
-.lead-status.s-replied { background: #e6eef6; color: #2c4e6e; }
-.lead-status.s-quoted { background: #f3ecdf; color: #7a5a12; }
-.lead-status.s-won { background: #e0ecc6; color: #3d5a14; }
-.lead-status.s-lost { background: #f3e2e2; color: #8f2f2f; }
-
-/* ── Detail panel ────────────────────────────────────────────────── */
-
-.lead-detail {
-  border-top: 1px solid #eee8de;
-  padding: 14px 16px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.lead-msg-full {
-  font-size: 14px;
-  white-space: pre-wrap;
-  margin: 0;
-}
-
-.lead-tags {
-  font-size: 12px;
-  color: #7a5a12;
-  background: #f8f3e8;
-  border-radius: 5px;
-  padding: 5px 10px;
-  align-self: flex-start;
-  margin: 0;
-}
-
-.lead-status-form {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-}
-
-.lead-status-form label {
-  color: #6f6a60;
-}
-
-.lead-status-form select {
-  border: 1px solid #d8d2c8;
-  border-radius: 6px;
-  padding: 7px 10px;
-  font: inherit;
-  background: #fff;
-}
-
-.lead-status-form button {
-  border: none;
-  background: #1a1a18;
-  color: #fff;
-  border-radius: 6px;
-  padding: 8px 14px;
-  font: inherit;
-  font-weight: 600;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.lead-notes h3 {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #8a8378;
-  margin: 4px 0 8px;
-}
-
-.note-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.note-list li {
-  background: #faf9f6;
-  border: 1px solid #eee8de;
-  border-radius: 6px;
-  padding: 8px 12px;
-}
-
-.note-list p {
-  margin: 2px 0 0;
-  font-size: 13px;
-  white-space: pre-wrap;
-}
-
-.note-time {
-  font-size: 11px;
-  color: #8a8378;
-}
-
-.note-empty {
-  font-size: 13px;
-  color: #8a8378;
-  margin: 0 0 10px;
-}
-
-.note-form {
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
-}
-
-.note-form textarea {
-  flex: 1;
-  border: 1px solid #d8d2c8;
-  border-radius: 6px;
-  padding: 8px 10px;
-  font: inherit;
-  font-size: 13px;
-  resize: vertical;
-  background: #fff;
-}
-
-.note-form button {
-  border: none;
-  background: #1a1a18;
-  color: #fff;
-  border-radius: 6px;
-  padding: 9px 14px;
-  font: inherit;
-  font-weight: 600;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-@media (max-width: 700px) {
-  .lead-head {
-    grid-template-columns: 1fr auto;
-  }
-  .lead-meta {
-    grid-column: 1 / -1;
-    order: 3;
-  }
-  .note-form {
-    flex-direction: column;
-  }
-  .note-form button {
-    align-self: flex-start;
-  }
+@media (max-width: 760px) {
+  /* login card tightens */
+  .adminui .topstrip { height: 48px; }
+  .adminui .logincard { max-width: 100%; }
+  .adminui .logincard h1 { font-size: 20px; }
+  .adminui .lc-head { padding: 18px 18px 14px; }
+  .adminui .lrow label { padding: 12px 18px 5px; }
+  .adminui .lrow .field { padding: 0 18px 11px; }
+  .adminui .lrow .errmsg { padding: 5px 18px 10px; }
+  .adminui .lc-foot { padding: 12px 18px 15px; }
 }

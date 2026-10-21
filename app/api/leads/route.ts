@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { leadSchema, hashIp, clientIp } from "@/lib/leads";
-import { insertLead, countRecentLeadsByIp } from "@/lib/db";
+import { insertLead, countRecentLeadsByIp, addSystemNote } from "@/lib/db";
 import { notifySlack } from "@/lib/slack";
 
 export const dynamic = "force-dynamic";
@@ -48,6 +48,11 @@ export async function POST(req: Request) {
 
     // fire-and-forget: never blocks or fails the response
     void notifySlack(lead);
+    // ledger baseline entry (Mira's lead-detail wireframe: muted SYS row)
+    void addSystemNote(
+      lead.id,
+      "Lead captured via contact form. Slack notification delivered to #agent-org.",
+    ).catch(() => {});
 
     return NextResponse.json({
       ok: true,

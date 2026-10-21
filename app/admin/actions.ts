@@ -10,7 +10,7 @@ import {
   createSession,
   isLeadStatus,
 } from "@/lib/auth";
-import { setLeadStatus, addLeadNote } from "@/lib/db";
+import { moveLeadStatus, addLeadNote } from "@/lib/db";
 
 /**
  * Admin server actions (S4). Every mutating action re-checks the session
@@ -64,7 +64,7 @@ export async function loginAction(prev: { error?: string } | null, formData: For
   }
   if (!ok) {
     recordFailure(ip);
-    return { error: "That didn't match — check and try again." };
+    return { error: "That password doesn't match. Check caps lock, or contact the studio owner to reset." };
   }
   attempts.delete(ip);
   await createSession();
@@ -82,8 +82,11 @@ export async function setStatusAction(formData: FormData) {
   const id = String(formData.get("id") ?? "");
   const status = String(formData.get("status") ?? "");
   if (!isLeadStatus(status)) return;
-  await setLeadStatus(id, status);
+  // moveLeadStatus also logs the move as a ledger entry ("old → new") so the
+  // notes ledger + pipeline stepper keep honest history (wireframe spec).
+  await moveLeadStatus(id, status);
   revalidatePath("/admin");
+  revalidatePath(`/admin/lead/${id}`);
 }
 
 export async function addNoteAction(formData: FormData) {
@@ -93,4 +96,5 @@ export async function addNoteAction(formData: FormData) {
   if (!note || note.length > 2000) return;
   await addLeadNote(id, note);
   revalidatePath("/admin");
+  revalidatePath(`/admin/lead/${id}`);
 }
