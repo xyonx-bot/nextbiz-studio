@@ -75,6 +75,7 @@ export interface NoteRow {
   id: string;
   lead_id: string;
   note: string;
+  kind: string; // 'note' | 'status' | 'system' (migration 003)
   created_at: Date;
 }
 
@@ -100,6 +101,12 @@ export async function listLeads(): Promise<LeadWithNotes[]> {
   return leads.rows.map((l) => ({ ...l, notes: byLead.get(l.id) ?? [] }));
 }
 
+/** Total lead count (sidebar badge on every admin page). */
+export async function countLeads(): Promise<number> {
+  const { rows } = await getPool().query<{ n: number }>(`SELECT COUNT(*)::int AS n FROM leads`);
+  return rows[0]?.n ?? 0;
+}
+
 /** Single lead + its notes (detail view). */
 export async function getLead(id: string): Promise<LeadWithNotes | null> {
   const lead = await getPool().query<LeadRow>(`SELECT * FROM leads WHERE id = $1`, [id]);
@@ -111,13 +118,34 @@ export async function getLead(id: string): Promise<LeadWithNotes | null> {
   return { ...lead.rows[0], notes: notes.rows };
 }
 
-/** Move a lead through the pipeline. Returns false for unknown status/id. */
-export async function setLeadStatus(id: string, status: string): Promise<boolean> {
-  const r = await getPool().query(
-    `UPDATE leads SET status = $1 WHERE id = $2`,
-    [status, id],
+/** Move a lead through the pipeline. Returns false for unknown status/id.
+ *  Logs the move as a ledger entry ("old → new", kind='status') so the
+ *  pipeline stepper + notes ledger can show stage dates + inline chips
+ *  (Mira's admin lead-detail wireframe). Same-status moves are no-ops. */
+export async function moveLeadStatus(id: string, status: string): Promise<boolean> {
+  const client = getPool();
+  const cur = await client.query<{ status: string }>(
+    `SELECT status FROM leads WHERE id = $1`, [id],
   );
+  if (cur.rows.length === 0) return false;
+  const old = cur.rows[0].status;
+  if (old === status) return true;
+  const r = await client.query(`UPDATE leads SET status = $1 WHERE id = $2`, [status, id]);
+  if ((r.rowCount ?? 0) > 0) {
+    await client.query(
+      `INSERT INTO lead_notes (lead_id, note, kind) VALUES ($1, $2, 'status')`,
+      [id, `${old} → ${status}`],
+    );
+  }
   return (r.rowCount ?? 0) > 0;
+}
+
+/** System ledger entry (lead capture, etc.) — muted SYS rows in the notes ledger. */
+export async function addSystemNote(leadId: string, note: string): Promise<void> {
+  await getPool().query(
+    `INSERT INTO lead_notes (lead_id, note, kind) VALUES ($1, $2, 'system')`,
+    [leadId, note],
+  );
 }
 
 /** Attach a timestamped note. Returns the stored row. */
