@@ -1,9 +1,15 @@
 import { LegalPage } from "@/components/sections/legal";
 import type { LegalDoc } from "@/components/sections/types";
-import doc from "@/lib/seed/legal/refund.json";
+import { getSections } from "@/lib/config";
+import seedDoc from "@/lib/seed/legal/refund.json";
 
 export const metadata = { title: "Refund & Cancellation — NextBiz Studio" };
 
-export default function Page() {
-  return <LegalPage doc={doc as LegalDoc} current="/legal/refund" />;
+// S5: seed ⊕ admin config; DB down/empty → seed fallback.
+export const dynamic = "force-dynamic";
+
+export default async function Page() {
+  const [section] = await getSections("legal/refund");
+  const doc = (section?.content ?? seedDoc) as LegalDoc;
+  return <LegalPage doc={doc} current="/legal/refund" />;
 }

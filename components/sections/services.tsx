@@ -9,8 +9,8 @@ import services from "@/lib/seed/services.json";
 const Placeholder = ({ note }: { note: string }) => <div className="imgph">{note}</div>;
 
 /** 1 · Catalog index — statement + anchor rows */
-export function Catalog() {
-  const c = services.catalog;
+export function Catalog({ content }: { content?: typeof services.catalog }) {
+  const c = content ?? services.catalog;
   return (
     <section className="catalog pad">
       <span className="micro">{c.micro}</span>
@@ -38,10 +38,11 @@ export function Catalog() {
 }
 
 /** 2 · Capability dossiers ×3 */
-export function Dossiers() {
+export function Dossiers({ content }: { content?: typeof services.dossiers }) {
+  const list = content ?? services.dossiers;
   return (
     <>
-      {services.dossiers.map((d) => (
+      {list.map((d) => (
         <section className="dossier pad" id={d.id} key={d.id}>
           <div className="dossier-head">
             <span className="no">{d.no}</span>
@@ -75,8 +76,8 @@ export function Dossiers() {
 }
 
 /** 3 · Meta Proxy spec sheet */
-export function Spec() {
-  const c = services.spec;
+export function Spec({ content }: { content?: typeof services.spec }) {
+  const c = content ?? services.spec;
   return (
     <section className="spec pad" id="meta-proxy">
       <div className="spec-head">
@@ -121,8 +122,8 @@ export function Spec() {
 }
 
 /** 4 · Comparison columns */
-export function Compare() {
-  const c = services.compare;
+export function Compare({ content }: { content?: typeof services.compare }) {
+  const c = content ?? services.compare;
   return (
     <section className="compare pad">
       <span className="micro">{c.micro}</span>
@@ -145,8 +146,8 @@ export function Compare() {
 }
 
 /** 5 · Engagement arc — text timeline */
-export function Arc() {
-  const c = services.arc;
+export function Arc({ content }: { content?: typeof services.arc }) {
+  const c = content ?? services.arc;
   return (
     <section className="arc pad">
       <div className="arc-head">
@@ -170,8 +171,8 @@ export function Arc() {
 }
 
 /** 6 · Route close */
-export function Route() {
-  const c = services.route;
+export function Route({ content }: { content?: typeof services.route }) {
+  const c = content ?? services.route;
   return (
     <section className="route pad">
       <div>

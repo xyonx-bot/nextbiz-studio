@@ -15,8 +15,8 @@ const Placeholder = ({ note, style }: { note: string; style?: React.CSSPropertie
 );
 
 /** 1 · Typographic masthead — ghost word + standfirst + photo + metadata ledger */
-export function AboutMasthead() {
-  const c = about.masthead;
+export function AboutMasthead({ content }: { content?: typeof about.masthead }) {
+  const c = content ?? about.masthead;
   return (
     <section className="masthead pad">
       <span className="micro">{c.micro}</span>
@@ -59,8 +59,8 @@ export function ReadingGrid({ label, index, children }: { label: string; index: 
 }
 
 /** 2 · Story lede — 2-col magazine text with drop cap */
-export function Story() {
-  const c = about.story;
+export function Story({ content }: { content?: typeof about.story }) {
+  const c = content ?? about.story;
   return (
     <section className="block story">
       <h2>{c.h2[0]}<br />{c.h2[1]}</h2>
@@ -73,8 +73,8 @@ export function Story() {
 }
 
 /** 3 · Definition entries — dictionary rows */
-export function Defs() {
-  const c = about.defs;
+export function Defs({ content }: { content?: typeof about.defs }) {
+  const c = content ?? about.defs;
   return (
     <section className="block">
       <h2>{c.h2}</h2>
@@ -95,8 +95,8 @@ export function Defs() {
 }
 
 /** 4 · Method ledger — full-bleed soft band */
-export function Method() {
-  const c = about.method;
+export function Method({ content }: { content?: typeof about.method }) {
+  const c = content ?? about.method;
   return (
     <section className="method pad">
       <div className="reading">
@@ -125,8 +125,8 @@ export function Method() {
 }
 
 /** 5 · Facts strip + text roster */
-export function People() {
-  const c = about.people;
+export function People({ content }: { content?: typeof about.people }) {
+  const c = content ?? about.people;
   return (
     <section className="block" style={{ borderBottom: 0, paddingBottom: 44 }}>
       <h2 style={{ maxWidth: "22ch" }}>{c.h2}</h2>
@@ -160,8 +160,8 @@ export function People() {
 }
 
 /** 7 · Quiet close — text CTA */
-export function AboutClose() {
-  const c = about.close;
+export function AboutClose({ content }: { content?: typeof about.close }) {
+  const c = content ?? about.close;
   return (
     <section className="close pad" style={{ borderTop: "1px solid var(--line)" }}>
       <div>

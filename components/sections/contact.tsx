@@ -13,9 +13,9 @@ import { DeskForm } from "@/components/sections/contact-form";
 import contact from "@/lib/seed/contact.json";
 
 /** 1 · Desk opener — v5 two-section (intro|form, divider, photo+text|channels) */
-export function Desk() {
-  const c = contact.desk;
-  const f = contact.deskForm;
+export function Desk({ content, form }: { content?: typeof contact.desk; form?: typeof contact.deskForm | null }) {
+  const c = content ?? contact.desk;
+  const f = form ?? contact.deskForm;
   return (
     <section className="desk pad">
       {/* Section A: intro | form */}
@@ -33,7 +33,9 @@ export function Desk() {
             WhatsApp us
           </a>
         </div>
-        <DeskForm />
+        {/* brief form lives in Section A's right column (v5). The deskForm
+            section drives it: disabled/removed → the column stays empty. */}
+        {form !== null && <DeskForm content={form ?? undefined} />}
       </div>
       {/* Section B: image+text | channels */}
       <div className="desk-lower">
@@ -64,8 +66,8 @@ export function Desk() {
 }
 
 /** 3 · Response ledger */
-export function ResponseLedger() {
-  const c = contact.response;
+export function ResponseLedger({ content }: { content?: typeof contact.response }) {
+  const c = content ?? contact.response;
   return (
     <section className="response pad">
       <div className="response-head">
@@ -89,8 +91,8 @@ export function ResponseLedger() {
 }
 
 /** 4 · Open FAQ */
-export function Faq() {
-  const c = contact.faq;
+export function Faq({ content }: { content?: typeof contact.faq }) {
+  const c = content ?? contact.faq;
   return (
     <section className="faq pad">
       <div className="faq-head">
@@ -113,8 +115,8 @@ export function Faq() {
 }
 
 /** 5 · Quiet close */
-export function QClose() {
-  const c = contact.qclose;
+export function QClose({ content }: { content?: typeof contact.qclose }) {
+  const c = content ?? contact.qclose;
   return (
     <section className="qclose pad">
       <div>

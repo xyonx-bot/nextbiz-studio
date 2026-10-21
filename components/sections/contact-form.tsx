@@ -10,8 +10,8 @@ import contact from "@/lib/seed/contact.json";
  * Visible inline validation, success panel, friendly error; honeypot field
  * hidden via CSS. Never renders a raw error page.
  */
-export function DeskForm() {
-  const c = contact.deskForm;
+export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
+  const c = content ?? contact.deskForm;
   const f = c.fields;
 
   const [errors, setErrors] = useState<Record<string, string>>({});
