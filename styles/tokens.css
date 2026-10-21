@@ -11,7 +11,7 @@
   --ink:   #090B0F;          /* near-black, blue-tinted */
   --primary: #07090C;        /* button fill (≈ink) */
   --primary-fg: #FBFAF7;     /* text on dark */
-  --soft:  #EFEFF5;          /* card fill / eyebrow bg */
+  --soft:  #F2EEE4;          /* card fill / eyebrow bg — Oct 20: warm sand (was #EFEFF5 cool lavender, Joydip-flagged on live site; sheet synced) */
   --muted: #656970;          /* body gray (token name in sheet: --muted-fg) */
   --muted-fg: #656970;       /* alias — sheet's component CSS uses both */
   --line:  #DDDAD5;          /* hairlines */

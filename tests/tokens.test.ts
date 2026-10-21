@@ -12,6 +12,7 @@ describe("tokens.css matches design-sheet.html", () => {
     ["--paper", "#F9F6F2"],
     ["--ink", "#090B0F"],
     ["--slab", "#1B1D21"],
+    ["--soft", "#F2EEE4"], // Oct 20 fix #1: warm sand (was cool lavender #EFEFF5)
   ];
   for (const [name, hex] of sheetHexes) {
     it(`${name} = ${hex}`, () => {

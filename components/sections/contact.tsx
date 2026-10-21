@@ -1,25 +1,31 @@
 /* ============================================================
-   CONTACT PAGE SECTIONS — ported 1:1 from ~/prototypes/nextbizstudio/contact/wireframe.html (v2)
-   Content: lib/seed/contact.json. DeskForm (client-wired) lives in
-   contact-form.tsx since S3.
+   CONTACT PAGE SECTIONS — ported from ~/workspaces/mira/prototypes/nextbizstudio/contact/wireframe.html
+   v5 TWO-SECTION opener (Oct 20 design-fix bundle, r-nbs-design-fix-oct20):
+   Section A: intro (left) | brief form (right, promoted to top)
+   Section B: photo+text (left) | channels ledger (right).
+   Content: lib/seed/contact.json. DeskForm (client-wired) is embedded
+   in Section A since this bundle — lives in contact-form.tsx since S3.
    ============================================================ */
 import Link from "next/link";
 import { ArrowRight } from "@/components/icons";
 import { CONTACT, WHATSAPP_URL } from "@/lib/content";
+import { DeskForm } from "@/components/sections/contact-form";
 import contact from "@/lib/seed/contact.json";
 
-/** 1 · Desk opener + channels ledger + WhatsApp deep-link (P1.4) */
+/** 1 · Desk opener — v5 two-section (intro|form, divider, photo+text|channels) */
 export function Desk() {
   const c = contact.desk;
+  const f = contact.deskForm;
   return (
     <section className="desk pad">
-      <span className="micro">{c.micro}</span>
-      <div className="desk-head">
-        <div>
+      {/* Section A: intro | form */}
+      <div className="desk-top">
+        <div className="desk-intro">
+          <span className="micro">{c.micro}</span>
           <h1 style={{ marginTop: 18 }}>{c.h1[0]}<br />{c.h1[1]}</h1>
           <p className="lede" style={{ marginTop: 26 }}>{c.lede}</p>
-          {/* WhatsApp click-to-chat — mobile opens the app, desktop opens
-              web.whatsapp.com; number is env-driven (placeholder till S6) */}
+          {/* WhatsApp click-to-chat (P1.4, S3) — env-driven wa.me deep-link.
+              v5 wireframe doesn't draw it; S3 spec keeps it on the page. */}
           <a className="action wa-link" href={WHATSAPP_URL} target="_blank" rel="noreferrer">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
@@ -27,15 +33,31 @@ export function Desk() {
             WhatsApp us
           </a>
         </div>
-        <div className="channels">
-          {c.channels.map((ch) => (
-            <div className="channel" key={ch.ch}>
-              <span className="ch">{ch.ch}</span>
-              <span className="val">{ch.val}<small>{ch.sub}</small></span>
-              <span className="note">{ch.note[0]}<br />{ch.note[1]}</span>
-            </div>
-          ))}
+        <DeskForm />
+      </div>
+      {/* Section B: image+text | channels */}
+      <div className="desk-lower">
+        <div className="desk-reassure">
+          <div className="form-photo"><div className="imgph">{f.photoNote}</div></div>
+          <p className="reassure-ask">{f.ask[0]}<br />{f.ask[1]}</p>
+          <p className="reassure-copy">{f.copy}</p>
+          <p className="form-note"><b>Your details stay private.</b> Used only to reply to this enquiry — see the <u>Privacy Policy</u>. No lists, no spam, no sharing.</p>
         </div>
+        <aside className="desk-side">
+          <div className="side-head">
+            <span className="micro">{c.sideMicro}</span>
+            <div className="channels">
+              {c.channels.map((ch) => (
+                <div className="channel" key={ch.ch}>
+                  <span className="ch">{ch.ch}</span>
+                  <span className="val">{ch.val}<small>{ch.sub}</small></span>
+                  <span className="note">{ch.note[0]}<br />{ch.note[1]}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <p className="side-ask">{c.sideAsk[0]}<br />{c.sideAsk[1]}<br />{c.sideAsk[2]}</p>
+        </aside>
       </div>
     </section>
   );
