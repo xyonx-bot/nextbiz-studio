@@ -43,6 +43,15 @@ test.describe("configurator uploads + drag (S5-10)", () => {
 
   test("photo swap through the UI: Replace → upload → Save → public renders the real photo", async ({ page }) => {
     await login(page);
+    // CI runs without R2 env — the server answers 503 and this path can't be
+    // exercised there; it runs fully on the VM and against prod. A text/plain
+    // probe distinguishes: 503 = no R2 env (skip), 400 = configured, continue.
+    const probe = await page.request.post("/api/config/upload", {
+      multipart: { file: { name: "probe.txt", mimeType: "text/plain", buffer: Buffer.from("probe") } },
+    });
+    if (probe.status() === 503) {
+      test.skip(true, "no R2 env on this server — upload path is covered on the VM/prod");
+    }
     await page.goto("/admin/pages?p=projects");
     await page.click(".srow[data-key=entries]");
 
