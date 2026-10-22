@@ -145,6 +145,7 @@ h2 {
 /* S5-10 photo slots: when a section's content carries an uploaded photo URL
    (admin Pages configurator → CDN), the slot renders the real image inside
    the same .imgph box so every existing per-slot height/rounding rule
-   applies. Unset → placeholder box as before (page never breaks). */
-.imgph.realimg-box { padding: 0; display: block; font-size: 0; }
-.imgph.realimg-box img { width: 100%; height: 100%; object-fit: cover; display: block; }
+   applies. The box clips its image to the slot's own radius (hero .ph is
+   28/28/28/90, qimg 25/25/70/25, proj cards 9px…); unset → placeholder. */
+.imgph.realimg-box { padding: 0; display: block; font-size: 0; overflow: hidden; }
+.imgph.realimg-box img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: inherit; }

@@ -117,6 +117,22 @@ test.describe("configurator uploads + drag (S5-10)", () => {
     const heroImg = page.locator(".hero-visual img").first();
     await expect(heroImg).toBeVisible();
     expect(await heroImg.getAttribute("src")).toContain("cdn.joyverse.fun");
+    // the real image clips to the hero slot's rounded geometry (28/28/28/90)
+    const clip = await page.evaluate(() => {
+      const box = document.querySelector(".hero-visual .realimg-box");
+      const img = document.querySelector(".hero-visual .realimg-box img");
+      if (!box || !img) return null;
+      const cs = getComputedStyle(box);
+      const ir = getComputedStyle(img);
+      return {
+        overflow: cs.overflow,
+        boxRadius: cs.borderRadius,
+        imgRadius: ir.borderRadius,
+      };
+    });
+    expect(clip?.overflow).toBe("hidden");
+    expect(clip?.boxRadius).not.toBe("0px");
+    expect(clip?.imgRadius).toBe(clip?.boxRadius);
 
     // revert — placeholder spec text back on the public hero
     const rows = (await (await page.request.get("/api/config/pages/home/sections")).json()).sections;
