@@ -78,28 +78,28 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
              aria-hidden="true" style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }} />
 
       <div className="sheet-rows">
-        <div className="f-row">
+        <div className={`f-row${errors.name ? " err" : ""}`}>
           <div className="lab">{f.name.label}<small>{f.name.hint}</small></div>
           <div className="field">
             <input type="text" name="name" placeholder={f.name.placeholder} required />
             {errors.name && <p className="f-error">{errors.name}</p>}
           </div>
         </div>
-        <div className="f-row">
+        <div className={`f-row${errors.phone ? " err" : ""}`}>
           <div className="lab">{f.phone.label}<small>{f.phone.hint}</small></div>
           <div className="field">
             <input type="tel" name="phone" placeholder={f.phone.placeholder} />
             {errors.phone && <p className="f-error">{errors.phone}</p>}
           </div>
         </div>
-        <div className="f-row">
+        <div className={`f-row${errors.email ? " err" : ""}`}>
           <div className="lab">{f.email.label}<small>{f.email.hint}</small></div>
           <div className="field">
             <input type="email" name="email" placeholder={f.email.placeholder} />
             {errors.email && <p className="f-error">{errors.email}</p>}
           </div>
         </div>
-        <div className="f-row">
+        <div className={`f-row${errors.service ? " err" : ""}`}>
           <div className="lab">{f.service.label}<small>{f.service.hint}</small></div>
           <div className="field">
             <select name="service" defaultValue="">
@@ -108,7 +108,7 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
             </select>
           </div>
         </div>
-        <div className="f-row">
+        <div className={`f-row${errors.budget ? " err" : ""}`}>
           <div className="lab">{f.budget.label}<small>{f.budget.hint}</small></div>
           <div className="field">
             <select name="budget" defaultValue="">
@@ -117,7 +117,7 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
             </select>
           </div>
         </div>
-        <div className="f-row">
+        <div className={`f-row${errors.message ? " err" : ""}`}>
           <div className="lab">{f.brief.label}<small>{f.brief.hint}</small></div>
           <div className="field">
             <textarea name="brief" placeholder={f.brief.placeholder} required />
