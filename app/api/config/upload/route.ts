@@ -60,10 +60,15 @@ export async function POST(req: Request) {
     ?? `https://${accountId}.r2.cloudflarestorage.com`;
   const r2 = new AwsClient({ accessKeyId: keyId, secretAccessKey: secret, service: "s3" });
   const body = new Uint8Array(await file.arrayBuffer());
+  // R2's S3 API 411s on chunked PUTs — aws4fetch drops Content-Length for
+  // larger buffered bodies, so pin it explicitly (small files got it for free)
   const put = await r2.fetch(`${endpoint}/${bucket}/${objectKey}`, {
     method: "PUT",
     body,
-    headers: { "Content-Type": file.type },
+    headers: {
+      "Content-Type": file.type,
+      "Content-Length": String(body.byteLength),
+    },
   });
   if (!put.ok) {
     return NextResponse.json({ error: `CDN write failed (${put.status})` }, { status: 502 });
