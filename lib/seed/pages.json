@@ -6,15 +6,42 @@
       "navOrder": 1,
       "path": "/",
       "sections": [
-        { "key": "hero", "label": "Hero" },
-        { "key": "partners", "label": "Partners marquee" },
-        { "key": "about", "label": "Intro strip" },
-        { "key": "services", "label": "Services grid" },
-        { "key": "work", "label": "Work showcase" },
-        { "key": "industries", "label": "Industries band" },
-        { "key": "testimonial", "label": "Testimonial" },
-        { "key": "team", "label": "Team" },
-        { "key": "contactBand", "label": "Contact band" }
+        {
+          "key": "hero",
+          "label": "Hero"
+        },
+        {
+          "key": "partners",
+          "label": "Partners marquee"
+        },
+        {
+          "key": "about",
+          "label": "Intro strip"
+        },
+        {
+          "key": "services",
+          "label": "Services grid"
+        },
+        {
+          "key": "work",
+          "label": "Work showcase"
+        },
+        {
+          "key": "industries",
+          "label": "Industries"
+        },
+        {
+          "key": "testimonial",
+          "label": "Testimonials"
+        },
+        {
+          "key": "team",
+          "label": "Team"
+        },
+        {
+          "key": "contactBand",
+          "label": "Contact band"
+        }
       ]
     },
     {
@@ -23,12 +50,30 @@
       "navOrder": 2,
       "path": "/about",
       "sections": [
-        { "key": "masthead", "label": "Masthead" },
-        { "key": "story", "label": "Story" },
-        { "key": "defs", "label": "Definitions" },
-        { "key": "method", "label": "Method ledger" },
-        { "key": "people", "label": "People roster" },
-        { "key": "close", "label": "Close" }
+        {
+          "key": "masthead",
+          "label": "Masthead"
+        },
+        {
+          "key": "story",
+          "label": "Story"
+        },
+        {
+          "key": "defs",
+          "label": "Definitions"
+        },
+        {
+          "key": "method",
+          "label": "Method ledger"
+        },
+        {
+          "key": "people",
+          "label": "People roster"
+        },
+        {
+          "key": "close",
+          "label": "Close"
+        }
       ]
     },
     {
@@ -37,12 +82,30 @@
       "navOrder": 3,
       "path": "/services",
       "sections": [
-        { "key": "catalog", "label": "Catalog index" },
-        { "key": "dossiers", "label": "Capability dossiers" },
-        { "key": "spec", "label": "Meta Proxy spec sheet" },
-        { "key": "compare", "label": "A/B compare" },
-        { "key": "arc", "label": "Engagement arc" },
-        { "key": "route", "label": "Route close" }
+        {
+          "key": "catalog",
+          "label": "Catalog index"
+        },
+        {
+          "key": "dossiers",
+          "label": "Capability dossiers"
+        },
+        {
+          "key": "spec",
+          "label": "Meta Proxy spec sheet"
+        },
+        {
+          "key": "compare",
+          "label": "A/B compare"
+        },
+        {
+          "key": "arc",
+          "label": "Engagement arc"
+        },
+        {
+          "key": "route",
+          "label": "Route close"
+        }
       ]
     },
     {
@@ -51,10 +114,22 @@
       "navOrder": 4,
       "path": "/projects",
       "sections": [
-        { "key": "register", "label": "Volume register" },
-        { "key": "entries", "label": "Case entries" },
-        { "key": "process", "label": "Process notes" },
-        { "key": "compass", "label": "Compass close" }
+        {
+          "key": "register",
+          "label": "Volume register"
+        },
+        {
+          "key": "entries",
+          "label": "Case entries"
+        },
+        {
+          "key": "process",
+          "label": "Process notes"
+        },
+        {
+          "key": "compass",
+          "label": "Compass close"
+        }
       ]
     },
     {
@@ -63,11 +138,26 @@
       "navOrder": 5,
       "path": "/contact",
       "sections": [
-        { "key": "desk", "label": "Request desk opener" },
-        { "key": "deskForm", "label": "The brief form" },
-        { "key": "response", "label": "Response ledger" },
-        { "key": "faq", "label": "Open FAQ" },
-        { "key": "qclose", "label": "Quiet close" }
+        {
+          "key": "desk",
+          "label": "Request desk opener"
+        },
+        {
+          "key": "deskForm",
+          "label": "The brief form"
+        },
+        {
+          "key": "response",
+          "label": "Response ledger"
+        },
+        {
+          "key": "faq",
+          "label": "Open FAQ"
+        },
+        {
+          "key": "qclose",
+          "label": "Quiet close"
+        }
       ]
     },
     {
@@ -75,28 +165,48 @@
       "title": "Privacy Policy",
       "navOrder": 6,
       "path": "/legal/privacy",
-      "sections": [{ "key": "doc", "label": "Legal document" }]
+      "sections": [
+        {
+          "key": "doc",
+          "label": "Legal document"
+        }
+      ]
     },
     {
       "key": "legal/terms",
       "title": "Terms & Conditions",
       "navOrder": 7,
       "path": "/legal/terms",
-      "sections": [{ "key": "doc", "label": "Legal document" }]
+      "sections": [
+        {
+          "key": "doc",
+          "label": "Legal document"
+        }
+      ]
     },
     {
       "key": "legal/refund",
       "title": "Refund & Cancellation",
       "navOrder": 8,
       "path": "/legal/refund",
-      "sections": [{ "key": "doc", "label": "Legal document" }]
+      "sections": [
+        {
+          "key": "doc",
+          "label": "Legal document"
+        }
+      ]
     },
     {
       "key": "legal/cookie",
       "title": "Cookie Policy",
       "navOrder": 9,
       "path": "/legal/cookie",
-      "sections": [{ "key": "doc", "label": "Legal document" }]
+      "sections": [
+        {
+          "key": "doc",
+          "label": "Legal document"
+        }
+      ]
     }
   ]
 }
