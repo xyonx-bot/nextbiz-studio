@@ -261,7 +261,9 @@ test.describe("admin auth + inbox + pipeline (S4, Mira redesign)", () => {
     await login(page);
     await expect(page.locator(".side .sbrand")).toHaveText(/Studio Desk/);
     await expect(page.locator(".side nav a.on")).toContainText("Leads");
-    await expect(page.locator(".side nav .nnav")).toHaveCount(2); // Pages + Settings (S5 placeholders)
+    // Pages is a real nav target since S5-8 (configurator live); Settings stays a placeholder
+    await expect(page.locator(".side nav a[href='/admin/pages']")).toContainText("Pages");
+    await expect(page.locator(".side nav .nnav")).toHaveCount(1);
     await expect(page.locator(".fbar .fpill")).toHaveCount(6); // All + 5 statuses
     await expect(page.locator(".lhead span")).toHaveCount(6); // ledger columns
 

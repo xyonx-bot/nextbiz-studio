@@ -103,7 +103,7 @@ export async function getSections(pageKey: string): Promise<ResolvedSection[]> {
   try {
     const { rows } = await getPool().query<SectionRow>(
       `SELECT section_key, sort_order, enabled, content
-         FROM page_sections WHERE page_key = $1 ORDER BY sort_order ASC`,
+         FROM page_sections WHERE page_key = $1 AND removed = false ORDER BY sort_order ASC`,
       [pageKey],
     );
     if (rows.length === 0) return sectionsFromSeed(pageKey);
@@ -122,6 +122,21 @@ export async function getSections(pageKey: string): Promise<ResolvedSection[]> {
   } catch {
     return sectionsFromSeed(pageKey);
   }
+}
+
+/** Seed default ⊕ a row's stored override for ONE section — what the admin
+ *  editor shows and saves (write model = wholesale replace of this object). */
+export function seedContentFor(
+  pageKey: string,
+  sectionKey: string,
+  override: unknown,
+): Record<string, unknown> {
+  const seed = SEEDS[pageKey];
+  const base = seed ? seed[sectionKey] : undefined;
+  const ov = isPlainObject(override) ? override : undefined;
+  if (base === undefined) return ov ?? {};
+  if (ov === undefined) return base as Record<string, unknown>;
+  return deepMerge(base as Record<string, unknown>, ov);
 }
 
 /** Materialize a page's seed sections into page_sections. Only runs when
@@ -151,28 +166,42 @@ export async function ensurePageRows(pageKey: string): Promise<void> {
   }
 }
 
-/** Admin view: rows (with ids) for one page, materializing on first touch. */
+/** Admin view: on-page rows (with ids) for one page, materializing on first
+ *  touch. Removed rows are excluded — they show in the UI's registry. */
 export async function getPageRows(pageKey: string): Promise<SectionRow[]> {
   const inv = PAGE_BY_KEY[pageKey];
   if (!inv) throw new Error(`Unknown page: ${pageKey}`);
   await ensurePageRows(pageKey);
   const { rows } = await getPool().query<SectionRow>(
     `SELECT id, section_key, sort_order, enabled, content
-       FROM page_sections WHERE page_key = $1 ORDER BY sort_order ASC`,
+       FROM page_sections WHERE page_key = $1 AND removed = false ORDER BY sort_order ASC`,
     [pageKey],
   );
   return rows;
 }
 
-/** Add a section (from the page's inventory) at the end. 409 if present. */
+/** Add (or re-add) a section from the page's inventory at the end.
+ *  Re-adding a soft-removed row reactivates it with its content PRESERVED
+ *  (wireframe rule: "removed sections can be re-added, content preserved"). */
 export async function addSection(pageKey: string, sectionKey: string): Promise<SectionRow | null> {
   const inv = PAGE_BY_KEY[pageKey];
   if (!inv || !inv.sections.some((s) => s.key === sectionKey)) return null;
   await ensurePageRows(pageKey);
+  // reactivate a previously removed row first (content survives)
+  const { rows: back } = await getPool().query<SectionRow>(
+    `UPDATE page_sections
+       SET removed = false, enabled = true,
+           sort_order = (SELECT COALESCE(MAX(sort_order), 0) + 10
+                           FROM page_sections WHERE page_key = $1 AND removed = false)
+     WHERE page_key = $1 AND section_key = $2 AND removed = true
+     RETURNING id, section_key, sort_order, enabled, content`,
+    [pageKey, sectionKey],
+  );
+  if (back[0]) return back[0];
   try {
     const { rows } = await getPool().query<SectionRow>(
       `INSERT INTO page_sections (page_key, section_key, sort_order, enabled, content)
-       VALUES ($1, $2, (SELECT COALESCE(MAX(sort_order), 0) + 10 FROM page_sections WHERE page_key = $1), true, NULL)
+       VALUES ($1, $2, (SELECT COALESCE(MAX(sort_order), 0) + 10 FROM page_sections WHERE page_key = $1 AND removed = false), true, NULL)
        RETURNING id, section_key, sort_order, enabled, content`,
       [pageKey, sectionKey],
     );
@@ -216,8 +245,13 @@ export async function updateSection(
   return rows[0] ?? null;
 }
 
-/** Remove a section row entirely (re-add restores seed defaults). */
+/** Remove = soft: flip `removed`, keep the row + content so a re-add from
+ *  the registry restores everything (wireframe: hidden ≠ removed; removed
+ *  sections land in the registry, content preserved). */
 export async function deleteSection(id: string): Promise<boolean> {
-  const r = await getPool().query(`DELETE FROM page_sections WHERE id = $1`, [id]);
+  const r = await getPool().query(
+    `UPDATE page_sections SET removed = true, updated_at = now() WHERE id = $1`,
+    [id],
+  );
   return (r.rowCount ?? 0) > 0;
 }
