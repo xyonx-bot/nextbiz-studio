@@ -37,10 +37,14 @@ export function Hero({ content }: { content?: typeof homeContent.hero }) {
       </div>
       <div className="hero-visual">
         <div className="slabph" aria-hidden />
-        <Placeholder
-          className="ph"
-          note={c.imageNote}
-        />
+        {c.photo ? (
+          <div className="imgph realimg-box ph"><img src={c.photo} alt={String(c.imageNote ?? "")} /></div>
+        ) : (
+          <Placeholder
+            className="ph"
+            note={c.imageNote}
+          />
+        )}
         <span className="scribble hero-note">{c.scribble.map((l: string, i: number) => <span key={i}>{l}<br /></span>)}</span>
       </div>
     </section>
@@ -131,7 +135,11 @@ export function ServicesSplit({ content }: { content?: typeof homeContent.servic
         ))}
       </div>
       <div className="svc-photo">
-        <Placeholder className="ph" note={c.imageNote} />
+        {c.photo ? (
+          <div className="imgph realimg-box ph"><img src={c.photo} alt={String(c.imageNote ?? "")} /></div>
+        ) : (
+          <Placeholder className="ph" note={c.imageNote} />
+        )}
         <div className="photo-card">{c.card.map((l: string, i: number) => <span key={i}>{l}<br /></span>)}<sup>™</sup></div>
         <div className="sticky scribble">{c.sticky.map((l: string, i: number) => <span key={i}>{l}<br /></span>)}</div>
       </div>
@@ -153,9 +161,13 @@ export function Work({ content }: { content?: typeof homeContent.work }) {
         </div>
       </div>
       <div className="proj-grid">
-        {c.items.map((p) => (
-          <Link className="proj" key={p.name} href="/projects" style={{ display: "block" }}>
+      {c.items.map((p) => (
+        <Link className="proj" key={p.name} href="/projects" style={{ display: "block" }}>
+          {p.photo ? (
+            <div className="imgph realimg-box ph"><img src={p.photo} alt={String(p.note ?? "")} /></div>
+          ) : (
             <Placeholder className="ph" note={p.note} />
+          )}
             <h3>{p.name} <ArrowUpRight /></h3>
             <p>{p.tags}</p>
           </Link>
@@ -219,7 +231,11 @@ export function Testimonial({ content }: { content?: typeof homeContent.testimon
         </div>
       </div>
       <div className="qimg">
-        <Placeholder note={c.imageNote} />
+        {c.photo ? (
+          <div className="imgph realimg-box"><img src={c.photo} alt={String(c.imageNote ?? "")} /></div>
+        ) : (
+          <Placeholder note={c.imageNote} />
+        )}
         <span className="scribble">{c.scribble.map((l: string, i: number) => <span key={i}>{l}<br /></span>)}</span>
       </div>
     </section>
@@ -272,7 +288,11 @@ export function ContactBand({ content }: { content?: typeof homeContent.contactB
         <span><small>Call Any Time</small>{CONTACT.phoneDisplay}</span>
       </Link>
       <div className="cimg">
-        <Placeholder note={c.imageNote} />
+        {c.photo ? (
+          <div className="imgph realimg-box"><img src={c.photo} alt={String(c.imageNote ?? "")} /></div>
+        ) : (
+          <Placeholder note={c.imageNote} />
+        )}
         <span className="scribble">{c.scribble.map((l: string, i: number) => <span key={i}>{l}<br /></span>)}</span>
       </div>
     </section>
