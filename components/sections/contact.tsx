@@ -40,7 +40,13 @@ export function Desk({ content, form }: { content?: typeof contact.desk; form?: 
       {/* Section B: image+text | channels */}
       <div className="desk-lower">
         <div className="desk-reassure">
-          <div className="form-photo"><div className="imgph">{f.photoNote}</div></div>
+          <div className="form-photo">
+            {f.photo ? (
+              <div className="imgph realimg-box"><img src={f.photo} alt={String(f.photoNote ?? "")} /></div>
+            ) : (
+              <div className="imgph">{f.photoNote}</div>
+            )}
+          </div>
           <p className="reassure-ask">{f.ask[0]}<br />{f.ask[1]}</p>
           <p className="reassure-copy">{f.copy}</p>
           <p className="form-note"><b>Your details stay private.</b> Used only to reply to this enquiry — see the <u>Privacy Policy</u>. No lists, no spam, no sharing.</p>

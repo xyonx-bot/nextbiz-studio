@@ -29,7 +29,11 @@ export function AboutMasthead({ content }: { content?: typeof about.masthead }) 
         <p className="body-copy standfirst-copy">{c.standfirst}</p>
         <div>
           <div className="stand-photo">
-            <Placeholder note={c.photoNote} />
+            {c.photo ? (
+              <div className="imgph realimg-box"><img src={c.photo} alt={String(c.photoNote ?? "")} /></div>
+            ) : (
+              <Placeholder note={c.photoNote} />
+            )}
           </div>
           <dl className="ledger">
             {c.ledger.map((r) => (
@@ -132,7 +136,11 @@ export function People({ content }: { content?: typeof about.people }) {
       <h2 style={{ maxWidth: "22ch" }}>{c.h2}</h2>
       <p className="body-copy" style={{ maxWidth: "56ch" }}>{c.lede}</p>
       <div className="team-photo-accent">
-        <Placeholder note={c.photoNote} />
+        {c.photo ? (
+          <div className="imgph realimg-box"><img src={c.photo} alt={String(c.photoNote ?? "")} /></div>
+        ) : (
+          <Placeholder note={c.photoNote} />
+        )}
       </div>
       <div className="facts">
         {c.facts.map((f, i) => (

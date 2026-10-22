@@ -420,3 +420,8 @@
 @media (max-width: 900px) {
   .adminui .pagescontent { padding: 14px; }
 }
+
+/* drag-to-reorder states (grip affordance) */
+.adminui .srow.dragging { opacity: 0.35; }
+.adminui .srow.dropover { box-shadow: inset 0 3px 0 var(--ink); }
+.adminui .frow .uperr { color: var(--red); font-weight: 700; display: block; margin-top: 2px; }

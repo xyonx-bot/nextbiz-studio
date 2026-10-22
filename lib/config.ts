@@ -111,7 +111,12 @@ export async function getSections(pageKey: string): Promise<ResolvedSection[]> {
     for (const r of rows) {
       if (!r.enabled) continue;
       const base = seed[r.section_key];
-      const override = isPlainObject(r.content) ? r.content : undefined;
+      let override = r.content !== null && typeof r.content === "object" ? r.content : undefined;
+      // list-shaped sections: only an ARRAY override is meaningful — a junk
+      // object override would corrupt the list, so the seed wins instead
+      if (Array.isArray(base) && override !== undefined && !Array.isArray(override)) {
+        override = undefined;
+      }
       const content =
         base !== undefined
           ? deepMerge(base, override)
@@ -125,18 +130,23 @@ export async function getSections(pageKey: string): Promise<ResolvedSection[]> {
 }
 
 /** Seed default ⊕ a row's stored override for ONE section — what the admin
- *  editor shows and saves (write model = wholesale replace of this object). */
+ *  editor shows and saves (write model = wholesale replace of this value).
+ *  List-shaped sections (e.g. projects.entries) carry an ARRAY as content. */
 export function seedContentFor(
   pageKey: string,
   sectionKey: string,
   override: unknown,
-): Record<string, unknown> {
+): Record<string, unknown> | unknown[] {
   const seed = SEEDS[pageKey];
   const base = seed ? seed[sectionKey] : undefined;
-  const ov = isPlainObject(override) ? override : undefined;
-  if (base === undefined) return ov ?? {};
-  if (ov === undefined) return base as Record<string, unknown>;
-  return deepMerge(base as Record<string, unknown>, ov);
+  let ov = override !== null && typeof override === "object" ? override : undefined;
+  if (Array.isArray(base) && ov !== undefined && !Array.isArray(ov)) {
+    ov = undefined; // same guard as getSections: junk object on a list section
+  }
+  if (base === undefined) return (ov ?? {}) as Record<string, unknown> | unknown[];
+  if (ov === undefined) return base as Record<string, unknown> | unknown[];
+  return deepMerge(base as Record<string, unknown>, ov as Record<string, unknown>) as
+    Record<string, unknown> | unknown[];
 }
 
 /** Materialize a page's seed sections into page_sections. Only runs when
@@ -220,10 +230,15 @@ export async function updateSection(
   const vals: unknown[] = [];
   const push = (v: unknown) => `$${vals.push(v)}`;
   if (patch.content !== undefined) {
-    if (typeof patch.content !== "object" || patch.content === null || Array.isArray(patch.content)) {
-      throw new Error("content must be a JSON object");
+    if (patch.content === null) {
+      // null = clear the override (revert to seed) — used by tests and a
+      // future "reset section" affordance
+      sets.push(`content = NULL`);
+    } else if (typeof patch.content !== "object") {
+      throw new Error("content must be a JSON object, array, or null to reset");
+    } else {
+      sets.push(`content = ${push(JSON.stringify(patch.content))}::jsonb`);
     }
-    sets.push(`content = ${push(JSON.stringify(patch.content))}::jsonb`);
   }
   if (patch.sortOrder !== undefined) {
     if (typeof patch.sortOrder !== "number" || !Number.isFinite(patch.sortOrder)) {

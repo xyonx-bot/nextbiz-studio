@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GripVertical, ArrowUp, ArrowDown, Pencil, Plus } from "./icons";
@@ -25,7 +25,7 @@ export type Row = {
   label: string;
   sortOrder: number;
   enabled: boolean;
-  content: Record<string, unknown>;
+  content: Record<string, unknown> | unknown[];
 };
 
 type Content = Record<string, unknown>;
@@ -34,9 +34,11 @@ const IMAGE_KEYS = new Set(["src", "img", "image", "photo", "portrait", "logo", 
 const IMG_EXT = /\.(png|jpe?g|webp|avif|gif|svg)(\?|#|$)/i;
 
 function isImageField(key: string, value: unknown): boolean {
-  if (typeof value !== "string" || !value) return false;
+  if (typeof value !== "string") return false;
   const k = key.toLowerCase();
   if (k.includes("note") || k.includes("caption") || k.startsWith("alt")) return false;
+  // empty `photo`-style keys still get the image control (Replace to set one)
+  if (!value) return IMAGE_KEYS.has(k);
   return IMAGE_KEYS.has(k) || IMG_EXT.test(value);
 }
 
@@ -45,7 +47,7 @@ function isImageAsset(value: unknown): boolean {
 }
 
 /** first meaningful string for the ledger preview (bold lead, per wireframe) */
-function previewOf(content: Content): { lead: string; rest: string } {
+function previewOf(content: Record<string, unknown> | unknown[]): { lead: string; rest: string } {
   const counts: string[] = [];
   let lead = "";
   let rest = "";
@@ -116,12 +118,18 @@ export function PagesConfigurator({
   const router = useRouter();
   const [rows, setRows] = useState<Row[]>(sections);
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [draft, setDraft] = useState<Content | null>(null);
+  const [draft, setDraft] = useState<Content | unknown[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
   const [err, setErr] = useState("");
   const [addOpen, setAddOpen] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  // drag-to-reorder (grip affordance, wireframe: "drag AND ↑↓ buttons")
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [overId, setOverId] = useState<string | null>(null);
+  // refs mirror the state so the full dragstart→dragover→drop sequence works
+  // even when the events land in the same tick (React state is async)
+  const dragRef = useRef<string | null>(null);
 
   // authoritative sync after router.refresh() (server recomputes merged rows)
   useEffect(() => setRows(sections), [sections]);
@@ -247,6 +255,41 @@ export function PagesConfigurator({
     }
   }
 
+  /** grip-drag reorder: move the dragged row to the drop target's index,
+   *  resequence sort orders (i+1)*10, PATCH every changed row in parallel;
+   *  full rollback + inline error if any write fails. */
+  async function dropOn(targetId: string) {
+    const dragged = dragRef.current;
+    const from = rows.findIndex((r) => r.id === dragged);
+    const to = rows.findIndex((r) => r.id === targetId);
+    dragRef.current = null;
+    setDragId(null);
+    setOverId(null);
+    if (!dragged || dragged === targetId || from < 0 || to < 0) return;
+    const before = rows;
+    const next = rows.slice();
+    const [moved] = next.splice(from, 1);
+    next.splice(to, 0, moved);
+    const resequenced = next.map((r, i) => ({ ...r, sortOrder: (i + 1) * 10 }));
+    setRows(resequenced);
+    setBusy(true);
+    const changed = resequenced.filter(
+      (r) => before.find((b) => b.id === r.id)?.sortOrder !== r.sortOrder,
+    );
+    const results = await Promise.all(
+      changed.map((r) =>
+        api(`/api/config/pages/${pageKey}/sections/${r.id}`, "PATCH", { sortOrder: r.sortOrder }),
+      ),
+    );
+    setBusy(false);
+    if (results.some((x) => !x.ok)) {
+      setRows(before);
+      setErr("Reorder didn't save — restored the previous order.");
+      return;
+    }
+    router.refresh();
+  }
+
   /* ── page picker chip bar ─────────────────────────────────────── */
   const countText = legalLocked
     ? "1 section · structure locked"
@@ -276,9 +319,30 @@ export function PagesConfigurator({
               return (
                 <div
                   key={r.id}
-                  className={`srow${selectedId === r.id ? " sel" : ""}${r.enabled ? "" : " off"}`}
+                  className={`srow${selectedId === r.id ? " sel" : ""}${r.enabled ? "" : " off"}${dragId === r.id ? " dragging" : ""}${overId === r.id && dragId !== r.id ? " dropover" : ""}`}
                   data-key={r.key}
                   data-status={r.enabled ? "live" : "hidden"}
+                  draggable={!legalLocked}
+                  onDragStart={(e) => {
+                    if (legalLocked) return;
+                    dragRef.current = r.id;
+                    setDragId(r.id);
+                    e.dataTransfer.effectAllowed = "move";
+                  }}
+                  onDragOver={(e) => {
+                    if (!dragRef.current) return;
+                    e.preventDefault();
+                    if (r.id !== dragRef.current) setOverId(r.id);
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    void dropOn(r.id);
+                  }}
+                  onDragEnd={() => {
+                    dragRef.current = null;
+                    setDragId(null);
+                    setOverId(null);
+                  }}
                   onClick={() => select(r)}
                 >
                   <span className="grip"><GripVertical /></span>
@@ -532,7 +596,11 @@ type Edit =
   | { type: "removeItem"; index: number }
   | { type: "addItem"; tpl: unknown };
 
-function applyEdit(root: Content, path: (string | number)[], edit: Edit): Content {
+function applyEdit(
+  root: Record<string, unknown> | unknown[],
+  path: (string | number)[],
+  edit: Edit,
+): Record<string, unknown> | unknown[] {
   const next = clone(root);
   let cur: unknown = next;
   for (let i = 0; i < path.length - 1; i++) {
@@ -553,11 +621,15 @@ function FieldTree({
   content,
   onChange,
 }: {
-  content: Content;
-  onChange: (next: Content) => void;
+  content: Record<string, unknown> | unknown[];
+  onChange: (next: Record<string, unknown> | unknown[]) => void;
 }) {
   const mutate = (path: (string | number)[], edit: Edit) =>
     onChange(applyEdit(content, path, edit));
+  // list-shaped sections (entries etc.) render their item rows at the root
+  if (Array.isArray(content)) {
+    return <Node label="items" value={content} path={[]} mutate={mutate} />;
+  }
   return (
     <>
       {Object.entries(content).map(([key, value]) => (
@@ -579,26 +651,7 @@ function Node({
   mutate: (path: (string | number)[], edit: Edit) => void;
 }) {
   if (isImageField(label, value)) {
-    const v = value as string;
-    const file = v.split("/").pop() ?? v;
-    return (
-      <div className="frow">
-        <label>{label}</label>
-        <div className="imgfield">
-          {isImageAsset(v) && /^https?:\/\//.test(v) ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={v} alt="" className="thumb" style={{ objectFit: "cover" }} />
-          ) : (
-            <span className="thumb">IMAGE<br />{file.slice(0, 14)}</span>
-          )}
-          <div className="imeta">
-            <b>{file}</b>
-            <small>Replace swaps this live on save — uploads go to the studio CDN. Uploads aren't enabled yet (foundation gap) — edit the URL value in the source config or ask Kira to enable uploads.</small>
-          </div>
-          <button type="button" className="btn ghost" disabled title="Uploads not enabled yet — ask Kira">Replace…</button>
-        </div>
-      </div>
-    );
+    return <ImageField label={label} value={value as string} path={path} mutate={mutate} />;
   }
 
   if (value === null || typeof value !== "object") {
@@ -675,6 +728,91 @@ function Node({
         {Object.entries(obj).map(([k, v]) => (
           <Node key={k} label={k} value={v} path={[...path, k]} mutate={mutate} />
         ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══ image field (S5-10) — Replace… uploads to the studio CDN and stores
+ * the public URL in the section's content; Save section persists it and the
+ * public page swaps the placeholder for the real photo. 5 MB cap, image
+ * mimetypes only — mirrored server-side at /api/config/upload. */
+function ImageField({
+  label,
+  value,
+  path,
+  mutate,
+}: {
+  label: string;
+  value: string;
+  path: (string | number)[];
+  mutate: (path: (string | number)[], edit: Edit) => void;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState("");
+  const input = useRef<HTMLInputElement>(null);
+  const file = value ? (value.split("/").pop() ?? value) : "";
+
+  async function pick(f: File) {
+    setErr("");
+    if (f.size > 5 * 1024 * 1024) {
+      setErr("Image must be under 5 MB.");
+      return;
+    }
+    setBusy(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", f);
+      const res = await fetch("/api/config/upload", { method: "POST", body: fd });
+      const data = (await res.json().catch(() => null)) as { url?: string; error?: string } | null;
+      if (!res.ok || !data?.url) {
+        setErr(data?.error ?? "Upload failed — try again.");
+      } else {
+        mutate(path, { type: "set", value: data.url }); // staged — Save section persists
+      }
+    } catch {
+      setErr("Upload failed — network error.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="frow">
+      <label>{label}</label>
+      <div className="imgfield">
+        {value && isImageAsset(value) && /^https?:\/\//.test(value) ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={value} alt="" className="thumb" style={{ objectFit: "cover" }} />
+        ) : (
+          <span className="thumb">NO IMAGE<br />yet</span>
+        )}
+        <div className="imeta">
+          <b>{file || "placeholder shown on the site"}</b>
+          <small>
+            Replace uploads to the studio CDN (cdn.joyverse.fun) and stages the URL here —
+            <b> Save section</b> swaps it live on the public page, no redeploy.
+            {err && <span className="uperr">{err}</span>}
+          </small>
+        </div>
+        <input
+          ref={input}
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/avif,image/gif"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            const f = e.target.files?.[0];
+            if (f) void pick(f);
+            e.target.value = "";
+          }}
+        />
+        <button
+          type="button"
+          className="btn ghost"
+          disabled={busy}
+          data-testid="replace-image"
+          onClick={() => input.current?.click()}
+        >{busy ? "Uploading…" : "Replace…"}</button>
       </div>
     </div>
   );

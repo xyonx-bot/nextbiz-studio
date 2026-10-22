@@ -61,7 +61,11 @@ export function Entries({ content }: { content?: typeof projects.entries }) {
             ))}
           </div>
           <div className="entry-photo">
-            <div className="imgph">{e.photoNote}</div>
+            {e.photo ? (
+              <div className="imgph realimg-box"><img src={e.photo} alt={String(e.photoNote ?? "")} /></div>
+            ) : (
+              <div className="imgph">{e.photoNote}</div>
+            )}
             <div className="photo-caption"><span>{e.fig}</span><span>{e.figRight}</span></div>
           </div>
           <div className="entry-brief">

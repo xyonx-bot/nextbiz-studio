@@ -1,6 +1,16 @@
 {
   "page": "home",
-  "sectionOrder": ["hero", "partners", "about", "services", "work", "industries", "testimonial", "team", "contactBand"],
+  "sectionOrder": [
+    "hero",
+    "partners",
+    "about",
+    "services",
+    "work",
+    "industries",
+    "testimonial",
+    "team",
+    "contactBand"
+  ],
   "hero": {
     "eyebrow": "Creative Ideas That Inspire Growth",
     "h1a": "Your Digital Team,",
@@ -9,18 +19,43 @@
     "ctaPrimary": "Get Started",
     "ctaWatch": "Watch Demo",
     "imageNote": "HERO IMAGE 1200×1008 · creative director in a sunlit studio · warm grade · object-cover · radius 28/28/28/90",
-    "scribble": ["Ideas", "become", "impact."]
+    "scribble": [
+      "Ideas",
+      "become",
+      "impact."
+    ]
   },
   "partners": {
     "eyebrow": "One Studio, Different Needs",
     "items": [
-      { "label": "STARTUPS", "strong": true },
-      { "label": "SMALL BUSINESSES", "strong": false },
-      { "label": "TEAMS", "strong": true },
-      { "label": "PRODUCTS", "strong": false },
-      { "label": "BRANDS", "strong": true },
-      { "label": "DIGITAL", "strong": false },
-      { "label": "IDEAS", "strong": true }
+      {
+        "label": "STARTUPS",
+        "strong": true
+      },
+      {
+        "label": "SMALL BUSINESSES",
+        "strong": false
+      },
+      {
+        "label": "TEAMS",
+        "strong": true
+      },
+      {
+        "label": "PRODUCTS",
+        "strong": false
+      },
+      {
+        "label": "BRANDS",
+        "strong": true
+      },
+      {
+        "label": "DIGITAL",
+        "strong": false
+      },
+      {
+        "label": "IDEAS",
+        "strong": true
+      }
     ]
   },
   "about": {
@@ -30,11 +65,28 @@
     "imageNote": "ABOUT IMAGE 1008×1104 · NextBiz Studio creative strategist · portrait · radius 24/24/24/80",
     "ctaMore": "More About Us",
     "steps": [
-      { "n": "01", "text": "PLAN — Understand the idea, goals, audience, and requirements.", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polygon points=\"16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76\"/></svg>" },
-      { "n": "02", "text": "BUILD — Turn the direction into a real digital experience.", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"6\" width=\"20\" height=\"8\" rx=\"1\"/><path d=\"M17 14v7M7 14v7M17 3v3M7 3v3M10 14l2-6 2 6\"/></svg>" },
-      { "n": "03", "text": "IMPROVE — Review, test, refine, and make the details better.", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"4\" y1=\"21\" x2=\"4\" y2=\"14\"/><line x1=\"4\" y1=\"10\" x2=\"4\" y2=\"3\"/><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"3\"/><line x1=\"20\" y1=\"21\" x2=\"20\" y2=\"16\"/><line x1=\"20\" y1=\"12\" x2=\"20\" y2=\"3\"/><line x1=\"1\" y1=\"14\" x2=\"7\" y2=\"14\"/><line x1=\"9\" y1=\"8\" x2=\"15\" y2=\"8\"/><line x1=\"17\" y1=\"16\" x2=\"23\" y2=\"16\"/></svg>" },
-      { "n": "04", "text": "ITERATE — Launch, learn, and keep improving as needed.", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"23 4 23 10 17 10\"/><polyline points=\"1 20 1 14 7 14\"/><path d=\"M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15\"/></svg>" }
-    ]
+      {
+        "n": "01",
+        "text": "PLAN — Understand the idea, goals, audience, and requirements.",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polygon points=\"16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76\"/></svg>"
+      },
+      {
+        "n": "02",
+        "text": "BUILD — Turn the direction into a real digital experience.",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"2\" y=\"6\" width=\"20\" height=\"8\" rx=\"1\"/><path d=\"M17 14v7M7 14v7M17 3v3M7 3v3M10 14l2-6 2 6\"/></svg>"
+      },
+      {
+        "n": "03",
+        "text": "IMPROVE — Review, test, refine, and make the details better.",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"4\" y1=\"21\" x2=\"4\" y2=\"14\"/><line x1=\"4\" y1=\"10\" x2=\"4\" y2=\"3\"/><line x1=\"12\" y1=\"21\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"3\"/><line x1=\"20\" y1=\"21\" x2=\"20\" y2=\"16\"/><line x1=\"20\" y1=\"12\" x2=\"20\" y2=\"3\"/><line x1=\"1\" y1=\"14\" x2=\"7\" y2=\"14\"/><line x1=\"9\" y1=\"8\" x2=\"15\" y2=\"8\"/><line x1=\"17\" y1=\"16\" x2=\"23\" y2=\"16\"/></svg>"
+      },
+      {
+        "n": "04",
+        "text": "ITERATE — Launch, learn, and keep improving as needed.",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"23 4 23 10 17 10\"/><polyline points=\"1 20 1 14 7 14\"/><path d=\"M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15\"/></svg>"
+      }
+    ],
+    "photo": ""
   },
   "services": {
     "eyebrow": "Our Services",
@@ -42,15 +94,50 @@
     "h2b": "Into Impact.",
     "lede": "We bring digital solutions, marketing and growth support together so businesses can get the right help without building a full in-house team.",
     "cta": "Explore Our Services",
-    "scribble": ["Strategy", "Design", "Technology", "Growth", "Together"],
+    "scribble": [
+      "Strategy",
+      "Design",
+      "Technology",
+      "Growth",
+      "Together"
+    ],
     "imageNote": "STILL-LIFE IMAGE 1408×912 · brand strategy workspace · radius 28/28/28/65",
-    "card": ["Good", "Brands", "Better", "People"],
-    "sticky": ["Ideas", "that", "work!"],
+    "card": [
+      "Good",
+      "Brands",
+      "Better",
+      "People"
+    ],
+    "sticky": [
+      "Ideas",
+      "that",
+      "work!"
+    ],
     "items": [
-      { "n": "01", "title": "Web & Digital Products", "blurb": "Modern websites, web applications, digital platforms and interfaces built around your workflow.", "href": "/services#c01" },
-      { "n": "02", "title": "Marketing & Growth", "blurb": "Social media, ad creation, campaigns, marketing creatives and simpler advertising workflows.", "href": "/services#c02" },
-      { "n": "03", "title": "WhatsApp & Meta Solutions", "blurb": "Practical communication and conversational workflows built around Meta platforms.", "href": "/services#c03" },
-      { "n": "04", "title": "Marketing Tech & Meta Proxy", "blurb": "A product we are bringing to market to simplify WABA infrastructure, storage and WhatsApp workflows.", "href": "/services#meta-proxy" }
+      {
+        "n": "01",
+        "title": "Web & Digital Products",
+        "blurb": "Modern websites, web applications, digital platforms and interfaces built around your workflow.",
+        "href": "/services#c01"
+      },
+      {
+        "n": "02",
+        "title": "Marketing & Growth",
+        "blurb": "Social media, ad creation, campaigns, marketing creatives and simpler advertising workflows.",
+        "href": "/services#c02"
+      },
+      {
+        "n": "03",
+        "title": "WhatsApp & Meta Solutions",
+        "blurb": "Practical communication and conversational workflows built around Meta platforms.",
+        "href": "/services#c03"
+      },
+      {
+        "n": "04",
+        "title": "Marketing Tech & Meta Proxy",
+        "blurb": "A product we are bringing to market to simplify WABA infrastructure, storage and WhatsApp workflows.",
+        "href": "/services#meta-proxy"
+      }
     ]
   },
   "work": {
@@ -60,9 +147,21 @@
     "lede": "A selection of our recent work, crafted with passion and purpose.",
     "cta": "View All Projects",
     "items": [
-      { "name": "NextGen", "tags": "Web Design · Branding", "note": "NEXTGEN · hero image · object 70% 45%" },
-      { "name": "Harmony", "tags": "Digital Marketing", "note": "HARMONY · about image · object 50% 24%" },
-      { "name": "Velora", "tags": "Brand Identity", "note": "VELORA · still-life · object-center" }
+      {
+        "name": "NextGen",
+        "tags": "Web Design · Branding",
+        "note": "NEXTGEN · hero image · object 70% 45%"
+      },
+      {
+        "name": "Harmony",
+        "tags": "Digital Marketing",
+        "note": "HARMONY · about image · object 50% 24%"
+      },
+      {
+        "name": "Velora",
+        "tags": "Brand Identity",
+        "note": "VELORA · still-life · object-center"
+      }
     ]
   },
   "industries": {
@@ -70,14 +169,36 @@
     "h2a": "Ambitious Brands.",
     "h2b": "Bold Ideas.",
     "lede": "From startups to global companies, we partner with businesses that believe in the power of creativity to drive real change.",
-    "panelLines": ["Different", "Industries.", "Same Mission."],
+    "panelLines": [
+      "Different",
+      "Industries.",
+      "Same Mission."
+    ],
     "items": [
-      { "label": "Technology", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"16 18 22 12 16 6 8 6 2 12 8 18 16 18\"/></svg>" },
-      { "label": "Health & Wellness", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"22 12h-4l-3 9L9 3l-3 9H2\"/></svg>" },
-      { "label": "Real Estate", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"2\" width=\"16\" height=\"20\" rx=\"2\"/><line x1=\"9\" y1=\"22\" x2=\"9\" y2=\"16\"/><line x1=\"15\" y1=\"22\" x2=\"15\" y2=\"16\"/><line x1=\"9\" y1=\"12\" x2=\"15\" y2=\"12\"/></svg>" },
-      { "label": "Consumer Brands", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z\"/><line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"/><path d=\"M16 10a4 4 0 0 1-8 0\"/></svg>" },
-      { "label": "Education", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"22\" y1=\"10\" x2=\"6\" y2=\"10\"/><line x1=\"22\" y1=\"10\" x2=\"12\" y2=\"18\"/><line x1=\"6\" y1=\"10\" x2=\"12\" y2=\"18\"/><line x1=\"12\" y1=\"2\" x2=\"12\" y2=\"10\"/><line x1=\"12\" y1=\"2\" x2=\"6\" y2=\"10\"/><line x1=\"12\" y1=\"2\" x2=\"18\" y2=\"10\"/></svg>" },
-      { "label": "and More", "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"13.5\" cy=\"6.5\" r=\".5\"/><circle cx=\"17.5\" cy=\"10.5\" r=\".5\"/><circle cx=\"8.5\" cy=\"7.5\" r=\".5\"/><circle cx=\"6.5\" cy=\"12.5\" r=\".5\"/><path d=\"M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.465-1.118a1.66 1.66 0 0 1-.465-1.695c.18-.625.79-1.075 1.46-1.075H16c3.31 0 6-2.69 6-6 0-4.5-4.5-8-10-8z\"/></svg>" }
+      {
+        "label": "Technology",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><polyline points=\"16 18 22 12 16 6 8 6 2 12 8 18 16 18\"/></svg>"
+      },
+      {
+        "label": "Health & Wellness",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"22 12h-4l-3 9L9 3l-3 9H2\"/></svg>"
+      },
+      {
+        "label": "Real Estate",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"4\" y=\"2\" width=\"16\" height=\"20\" rx=\"2\"/><line x1=\"9\" y1=\"22\" x2=\"9\" y2=\"16\"/><line x1=\"15\" y1=\"22\" x2=\"15\" y2=\"16\"/><line x1=\"9\" y1=\"12\" x2=\"15\" y2=\"12\"/></svg>"
+      },
+      {
+        "label": "Consumer Brands",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z\"/><line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"/><path d=\"M16 10a4 4 0 0 1-8 0\"/></svg>"
+      },
+      {
+        "label": "Education",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><line x1=\"22\" y1=\"10\" x2=\"6\" y2=\"10\"/><line x1=\"22\" y1=\"10\" x2=\"12\" y2=\"18\"/><line x1=\"6\" y1=\"10\" x2=\"12\" y2=\"18\"/><line x1=\"12\" y1=\"2\" x2=\"12\" y2=\"10\"/><line x1=\"12\" y1=\"2\" x2=\"6\" y2=\"10\"/><line x1=\"12\" y1=\"2\" x2=\"18\" y2=\"10\"/></svg>"
+      },
+      {
+        "label": "and More",
+        "icon": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"13.5\" cy=\"6.5\" r=\".5\"/><circle cx=\"17.5\" cy=\"10.5\" r=\".5\"/><circle cx=\"8.5\" cy=\"7.5\" r=\".5\"/><circle cx=\"6.5\" cy=\"12.5\" r=\".5\"/><path d=\"M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.465-1.118a1.66 1.66 0 0 1-.465-1.695c.18-.625.79-1.075 1.46-1.075H16c3.31 0 6-2.69 6-6 0-4.5-4.5-8-10-8z\"/></svg>"
+      }
     ]
   },
   "testimonial": {
@@ -87,7 +208,12 @@
     "role": "CEO, NextGen",
     "stars": 5,
     "imageNote": "CLIENT IMAGE · hero image reuse · object 60% 28% · radius 25/25/70/25",
-    "scribble": ["Real", "People.", "Real", "Impact."]
+    "scribble": [
+      "Real",
+      "People.",
+      "Real",
+      "Impact."
+    ]
   },
   "team": {
     "eyebrow": "Our Team",
@@ -96,13 +222,31 @@
     "lede": "A diverse team of creatives, strategists, and builders united by a simple belief — great work happens when great people work together.",
     "cta": "Meet Our Team",
     "imageNote": "TEAM IMAGE 1408×800 · NextBiz Studio team, wide group shot · radius 18/18/18/55",
-    "scribble": ["Great", "People", "Better", "Brands"],
+    "scribble": [
+      "Great",
+      "People",
+      "Better",
+      "Brands"
+    ],
     "members": [
-      { "name": "Alex Morgan", "role": "Creative Director" },
-      { "name": "Priya Shah", "role": "Project Manager" },
-      { "name": "Daniel Kim", "role": "Lead Developer" },
-      { "name": "Sophia Lee", "role": "Marketing Specialist" }
-    ]
+      {
+        "name": "Alex Morgan",
+        "role": "Creative Director"
+      },
+      {
+        "name": "Priya Shah",
+        "role": "Project Manager"
+      },
+      {
+        "name": "Daniel Kim",
+        "role": "Lead Developer"
+      },
+      {
+        "name": "Sophia Lee",
+        "role": "Marketing Specialist"
+      }
+    ],
+    "photo": ""
   },
   "contactBand": {
     "h2a": "Have a project",
@@ -110,6 +254,11 @@
     "text": "Whether you're starting fresh or looking to scale, we'd love to hear about your ideas.",
     "cta": "Start a Conversation",
     "imageNote": "PLANNING DESK · still-life · opacity .7 · bleeds to right edge",
-    "scribble": ["Good", "Ideas", "Start", "Here"]
+    "scribble": [
+      "Good",
+      "Ideas",
+      "Start",
+      "Here"
+    ]
   }
 }
