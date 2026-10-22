@@ -97,3 +97,75 @@ test("fix 4: favicon links declared in head", async ({ page }) => {
   expect(links).toContainEqual({ rel: "icon", href: "/favicon.ico" });
   expect(links.some((l) => l.rel === "apple-touch-icon" && l.href === "/favicons/apple-touch-icon.png")).toBe(true);
 });
+
+test("v5.1 input affordance: boxed controls, ghost placeholders, red error boxes", async ({ page }) => {
+  await page.goto("/contact");
+
+  const cs = await page.evaluate(() => {
+    const input = document.querySelector<HTMLInputElement>('.f-row input[name="name"]');
+    const select = document.querySelector<HTMLSelectElement>('.f-row select[name="service"]');
+    const textarea = document.querySelector<HTMLTextAreaElement>('.f-row textarea[name="brief"]');
+    if (!input || !select || !textarea) return null;
+    const i = getComputedStyle(input);
+    return {
+      inputBorder: `${i.borderTopWidth} ${i.borderTopStyle}`,
+      inputBg: i.backgroundColor,
+      inputRadius: i.borderRadius,
+      inputPad: i.padding,
+      placeholder: getComputedStyle(input, "::placeholder").color,
+      selectBgImage: getComputedStyle(select).backgroundImage.includes("svg") || getComputedStyle(select).backgroundImage.includes("data:"),
+      selectGhost: getComputedStyle(select).color,
+      textareaMinH: getComputedStyle(textarea).minHeight,
+      selectPadRight: getComputedStyle(select).paddingRight,
+      fieldMinH: getComputedStyle(input.closest(".field")!).minHeight,
+    };
+  });
+  expect(cs).not.toBeNull();
+  // boxed control: card bg + visible 1px border + 3px radius, cell min-height 48
+  expect(cs!.inputBorder).toBe("1px solid");
+  expect(cs!.inputBg).toBe("rgb(253, 252, 249)");
+  expect(cs!.inputRadius).toBe("3px");
+  // the 48px field-cell height is desktop geometry — the ≤1050 block
+  // collapses the cell; the box itself stays identical
+  if ((page.viewportSize()?.width ?? 1440) >= 1050) {
+    expect(cs!.fieldMinH).toBe("48px");
+  }
+  expect(cs!.inputPad).toBe("9px 10px");
+  // placeholders read as ghost example text — never as entered values
+  expect(cs!.placeholder).toBe("rgb(168, 163, 154)");
+  // selects: boxed too, with the ink chevron + prompt in ghost color
+  expect(cs!.selectBgImage).toBe(true);
+  expect(cs!.selectGhost).toBe("rgb(168, 163, 154)");
+  expect(cs!.selectPadRight).toBe("30px");
+  expect(cs!.textareaMinH).toBe("72px");
+
+  // empty submit → red label + red box border + inline message
+  await page.click(".f-submit");
+  await expect(page.locator(".f-error").first()).toBeVisible();
+  const errBox = await page.evaluate(() => {
+    const row = document.querySelector(".f-row.err");
+    const input = row?.querySelector("input");
+    const lab = row?.querySelector(".lab");
+    if (!row || !input || !lab) return null;
+    return {
+      inputBorder: getComputedStyle(input).borderTopColor,
+      labColor: getComputedStyle(lab).color,
+    };
+  });
+  expect(errBox).not.toBeNull();
+  expect(errBox!.inputBorder).toBe("rgb(179, 38, 30)");
+  expect(errBox!.labColor).toBe("rgb(179, 38, 30)");
+
+  // focus is unmistakable: ink border + inset underline
+  // (on a NON-errored field — error boxes keep their red border by design)
+  const focusStyle = await page.evaluate(() => {
+    // phone+email both carry the 'one way to reach you' error on empty
+    // submit, so prove focus on a clean control: the service select
+    const sel = document.querySelector<HTMLSelectElement>('.f-row:not(.err) select')!;
+    sel.focus();
+    const i = getComputedStyle(sel);
+    return { border: i.borderTopColor, shadow: i.boxShadow };
+  });
+  expect(focusStyle.border).toBe("rgb(9, 11, 15)");
+  expect(focusStyle.shadow).toContain("inset");
+});

@@ -77,7 +77,7 @@
       "phone": {
         "label": "Phone / WhatsApp",
         "hint": "Optional — speeds things up",
-        "placeholder": "+91 …"
+        "placeholder": "e.g. +91 98300 12345"
       },
       "email": {
         "label": "Email",
@@ -110,7 +110,7 @@
       "brief": {
         "label": "The brief",
         "hint": "What are you building? What does success look like?",
-        "placeholder": "A few honest lines beat a polished document — tell us where you are and where you want to be."
+        "placeholder": "e.g. A simple site for our bakery — 5 pages, a menu we can update ourselves, WhatsApp for orders."
       }
     },
     "checkText": "Send me occasional studio updates — launches, notes, no spam. See the Privacy Policy.",

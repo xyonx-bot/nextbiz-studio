@@ -40,15 +40,24 @@
 /* ═══ 2 · THE BRIEF SHEET — label above ink-ruled sheet; v5 compact scale ═══ */
 .form-sheet > .micro { display: block; margin-bottom: 4px; }
 .sheet-rows { border-top: 2px solid var(--ink); }
+/* form rows — v5.1 input affordance (Joydip's UX catch, Mira spec Oct 22):
+   every control visibly boxed (card bg + line border + radius), focus
+   unmistakable (ink border + inset underline), placeholders read as ghost
+   example text — never as pre-filled values. */
 .f-row { display: grid; grid-template-columns: 150px 1fr; border-bottom: 1px solid var(--line); }
 .f-row .lab { padding: 10px 14px 10px 0; font-size: 9px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); border-right: 1px solid var(--line); display: grid; align-content: center; gap: 3px; }
-.f-row .lab small { font-size: 8.5px; font-weight: 600; letter-spacing: .4px; text-transform: none; opacity: .8; line-height: 1.45; }
-.f-row .field { padding: 4px 0 4px 14px; display: grid; align-content: center; min-height: 44px; }
-.f-row input, .f-row select, .f-row textarea { border: 0; background: transparent; font-size: 13px; font-weight: 600; color: var(--ink); width: 100%; outline: none; padding: 8px 0; font-family: inherit; appearance: none; -webkit-appearance: none; }
-.f-row input::placeholder, .f-row textarea::placeholder { color: #8A8782; font-weight: 500; }
-.f-row select:has(option:checked[value=""]) { color: #8A8782; font-weight: 500; }
-.f-row textarea { resize: vertical; min-height: 64px; padding-top: 10px; }
-.f-row .field:focus-within { background: var(--card); }
+.f-row .lab small { font-size: 9px; font-weight: 600; letter-spacing: .4px; text-transform: none; opacity: .75; line-height: 1.5; }
+.f-row .field { padding: 8px 12px 8px 14px; display: grid; align-content: center; min-height: 48px; }
+.f-row input, .f-row select, .f-row textarea { border: 1px solid var(--line); background: var(--card); border-radius: 3px; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--ink); width: 100%; outline: none; padding: 9px 10px; appearance: none; -webkit-appearance: none; }
+.f-row input:focus, .f-row select:focus, .f-row textarea:focus { border-color: var(--ink); box-shadow: inset 0 -2px 0 var(--ink); }
+.f-row select { background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23090B0F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 30px; }
+.f-row input::placeholder, .f-row textarea::placeholder { color: #A8A39A; font-weight: 500; }
+.f-row select:has(option:checked[value=""]) { color: #A8A39A; font-weight: 500; }
+.f-row textarea { resize: vertical; min-height: 72px; padding: 10px; }
+.f-row .field:focus-within { background: transparent; }
+/* v5.1 error state — red label + red box border + inline friendly message */
+.f-row.err .lab { color: #B3261E; }
+.f-row.err input, .f-row.err select, .f-row.err textarea { border-color: #B3261E; }
 .f-split { display: grid; grid-template-columns: 1fr 1fr; }
 .f-split .col { border-right: 1px solid var(--line); }
 .f-split .col:last-child { border-right: 0; }
