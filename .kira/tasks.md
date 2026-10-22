@@ -97,5 +97,6 @@ Bonus: DB backup pipeline LIVE — scripts/db-backup.py → joyverse-user-data/b
 | S5-5 | 9 public pages compose via getSections (force-dynamic) | feat/s5-configurator-foundation | done |
 | S5-6 | /api/config CRUD routes (self-gated 401) + revalidatePath | feat/s5-configurator-foundation | done |
 | S5-7 | E2E config spec (8 checks, self-cleaning) + unit 40 | feat/s5-configurator-foundation | done (251 e2e fresh-DB) |
-| S5-8 | Admin Pages UI — Mira wireframe request open (r-nbs-pages-wireframe-request) | — | blocked-on-design |
-| S5-9 | Ship foundation → deploy e3e6bd8 → verify live | — | CI in flight |
+| S5-8 | Admin Pages UI — 1:1 port of Mira's pages wireframe (chip bar, ledger, schema editor, structure card, registry+sheet, legal lock, soft-remove 005) | feat/s5-admin-pages-ui | done (2ecb1fa→fac6e1b) |
+| S5-9 | Ship foundation → deploy e3e6bd8 → verify live | — | done (CI success, live-verified) |
+| S5-10 | Foundation gap: image uploads (R2/CDN route + image field type) — editor shows read-only controls until then | — | backlog |
