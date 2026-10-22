@@ -127,6 +127,25 @@ test.describe("configurator uploads + drag (S5-10)", () => {
     await expect(page.locator(".hero-visual .imgph")).toContainText("HERO IMAGE");
   });
 
+  test("large images (2 MB) upload — the aws4fetch Content-Length regression stays fixed", async ({ page }) => {
+    await login(page);
+    const probe = await page.request.post("/api/config/upload", {
+      multipart: { file: { name: "probe.txt", mimeType: "text/plain", buffer: Buffer.from("probe") } },
+    });
+    if (probe.status() === 503) {
+      test.skip(true, "no R2 env on this server — upload path is covered on the VM/prod");
+    }
+    // R2 411s chunked PUTs; without an explicit Content-Length, aws4fetch
+    // dropped it for large buffered bodies → real photos 502'd (Joydip hit it)
+    const big = Buffer.alloc(2 * 1024 * 1024, 0xab);
+    const res = await page.request.post("/api/config/upload", {
+      multipart: { file: { name: "big.png", mimeType: "image/png", buffer: big } },
+    });
+    expect(res.status()).toBe(201);
+    const body = (await res.json()) as { url?: string };
+    expect(String(body.url)).toContain("https://");
+  });
+
   test("upload guard: non-image rejected with a friendly error, page intact", async ({ page }) => {
     await login(page);
     await page.request
