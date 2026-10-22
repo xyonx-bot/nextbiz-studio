@@ -23,7 +23,8 @@
       "Ideas",
       "become",
       "impact."
-    ]
+    ],
+    "photo": ""
   },
   "partners": {
     "eyebrow": "One Studio, Different Needs",
@@ -138,7 +139,8 @@
         "blurb": "A product we are bringing to market to simplify WABA infrastructure, storage and WhatsApp workflows.",
         "href": "/services#meta-proxy"
       }
-    ]
+    ],
+    "photo": ""
   },
   "work": {
     "eyebrow": "Selected Work",
@@ -150,17 +152,20 @@
       {
         "name": "NextGen",
         "tags": "Web Design · Branding",
-        "note": "NEXTGEN · hero image · object 70% 45%"
+        "note": "NEXTGEN · hero image · object 70% 45%",
+        "photo": ""
       },
       {
         "name": "Harmony",
         "tags": "Digital Marketing",
-        "note": "HARMONY · about image · object 50% 24%"
+        "note": "HARMONY · about image · object 50% 24%",
+        "photo": ""
       },
       {
         "name": "Velora",
         "tags": "Brand Identity",
-        "note": "VELORA · still-life · object-center"
+        "note": "VELORA · still-life · object-center",
+        "photo": ""
       }
     ]
   },
@@ -213,7 +218,8 @@
       "People.",
       "Real",
       "Impact."
-    ]
+    ],
+    "photo": ""
   },
   "team": {
     "eyebrow": "Our Team",
@@ -259,6 +265,7 @@
       "Ideas",
       "Start",
       "Here"
-    ]
+    ],
+    "photo": ""
   }
 }

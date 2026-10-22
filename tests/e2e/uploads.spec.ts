@@ -94,6 +94,39 @@ test.describe("configurator uploads + drag (S5-10)", () => {
     await expect(page.locator("main .entry-photo img")).toHaveCount(0); // placeholder back
   });
 
+  test("hero photo swap (the reported gap): hero editor has the upload option and the public hero renders it", async ({ page }) => {
+    await login(page);
+    const probe = await page.request.post("/api/config/upload", {
+      multipart: { file: { name: "probe.txt", mimeType: "text/plain", buffer: Buffer.from("probe") } },
+    });
+    if (probe.status() === 503) {
+      test.skip(true, "no R2 env on this server — upload path is covered on the VM/prod");
+    }
+    await page.goto("/admin/pages"); // home
+    await page.click(".srow[data-key=hero]");
+    // hero's photo field sits at the content root (imageNote stays the editable spec text)
+    const photoRow = page.locator(".frow", { has: page.locator("label", { hasText: /^photo$/ }) }).first();
+    await expect(photoRow.locator("[data-testid=replace-image]")).toBeEnabled();
+    await photoRow.locator("input[type=file]").setInputFiles(FIXTURE);
+    await expect(photoRow.locator(".imgfield .imeta > b"))
+      .not.toHaveText("placeholder shown on the site", { timeout: 20000 });
+    await page.click("[data-testid=save-section]");
+    await expect(page.locator(".pfoot .ok")).toContainText("Saved — live on site");
+
+    await page.goto("/");
+    const heroImg = page.locator(".hero-visual img").first();
+    await expect(heroImg).toBeVisible();
+    expect(await heroImg.getAttribute("src")).toContain("cdn.joyverse.fun");
+
+    // revert — placeholder spec text back on the public hero
+    const rows = (await (await page.request.get("/api/config/pages/home/sections")).json()).sections;
+    const heroRow = rows.find((r: { section_key: string }) => r.section_key === "hero");
+    await page.request.patch(`/api/config/pages/home/sections/${heroRow.id}`, { data: { content: null } });
+    await page.goto("/");
+    await expect(page.locator(".hero-visual img")).toHaveCount(0);
+    await expect(page.locator(".hero-visual .imgph")).toContainText("HERO IMAGE");
+  });
+
   test("upload guard: non-image rejected with a friendly error, page intact", async ({ page }) => {
     await login(page);
     await page.request

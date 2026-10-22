@@ -96,7 +96,13 @@ export function Spec({ content }: { content?: typeof services.spec }) {
       <div className="spec-body">
         <div>
           <p className="spec-lede">{c.lede}</p>
-          <div className="spec-photo"><Placeholder note={c.photoNote} /></div>
+          <div className="spec-photo">
+            {c.photo ? (
+              <div className="imgph realimg-box"><img src={c.photo} alt={String(c.photoNote ?? "")} /></div>
+            ) : (
+              <Placeholder note={c.photoNote} />
+            )}
+          </div>
           <div className="body-copy">
             {c.copy.map((p, i) => <p key={i}>{p}</p>)}
           </div>
