@@ -99,4 +99,4 @@ Bonus: DB backup pipeline LIVE — scripts/db-backup.py → joyverse-user-data/b
 | S5-7 | E2E config spec (8 checks, self-cleaning) + unit 40 | feat/s5-configurator-foundation | done (251 e2e fresh-DB) |
 | S5-8 | Admin Pages UI — 1:1 port of Mira's pages wireframe (chip bar, ledger, schema editor, structure card, registry+sheet, legal lock, soft-remove 005) | feat/s5-admin-pages-ui | done (2ecb1fa→fac6e1b) |
 | S5-9 | Ship foundation → deploy e3e6bd8 → verify live | — | done (CI success, live-verified) |
-| S5-10 | Foundation gap: image uploads (R2/CDN route + image field type) — editor shows read-only controls until then | — | backlog |
+| S5-10 | Image uploads: /api/config/upload → CDN R2, editor Replace functional, photo slots render real imgs, grip DnD reorder (wireframe miss) + array-content round-trip + content:null revert op | feat/s5-uploads-drag | done (a20f24d→8577931, e909d29) |
