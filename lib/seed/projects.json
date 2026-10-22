@@ -1,20 +1,64 @@
 {
   "page": "projects",
-  "sectionOrder": ["register", "entries", "process", "compass"],
+  "sectionOrder": [
+    "register",
+    "entries",
+    "process",
+    "compass"
+  ],
   "register": {
     "micro": "Selected work · Projects · Volume 01",
-    "h1": ["Work in", "the making."],
+    "h1": [
+      "Work in",
+      "the making."
+    ],
     "lede": "A working collection of ideas carried into the world — digital experiences, campaign systems and identities with a point of view. Honest about what's demo and what's live.",
     "meta": [
-      { "k": "Entries", "v": "03 in this volume · more in progress" },
-      { "k": "Kind", "v": "Concept demos — real client work follows" },
-      { "k": "Next volume", "v": "Client projects, as they launch" }
+      {
+        "k": "Entries",
+        "v": "03 in this volume · more in progress"
+      },
+      {
+        "k": "Kind",
+        "v": "Concept demos — real client work follows"
+      },
+      {
+        "k": "Next volume",
+        "v": "Client projects, as they launch"
+      }
     ],
-    "cols": ["No.", "Project", "Type", "Year", "Status"],
+    "cols": [
+      "No.",
+      "Project",
+      "Type",
+      "Year",
+      "Status"
+    ],
     "rows": [
-      { "no": "01", "name": "NextGen", "type": "Identity · Web Design · Launch", "year": "2026", "status": "Concept", "href": "#p01" },
-      { "no": "02", "name": "Harmony", "type": "Digital Marketing · Campaigns", "year": "2026", "status": "Concept", "href": "#p02" },
-      { "no": "03", "name": "Velora", "type": "Brand System · Guidelines", "year": "2026", "status": "Concept", "href": "#p03" }
+      {
+        "no": "01",
+        "name": "NextGen",
+        "type": "Identity · Web Design · Launch",
+        "year": "2026",
+        "status": "Concept",
+        "href": "#p01"
+      },
+      {
+        "no": "02",
+        "name": "Harmony",
+        "type": "Digital Marketing · Campaigns",
+        "year": "2026",
+        "status": "Concept",
+        "href": "#p02"
+      },
+      {
+        "no": "03",
+        "name": "Velora",
+        "type": "Brand System · Guidelines",
+        "year": "2026",
+        "status": "Concept",
+        "href": "#p03"
+      }
     ],
     "note": "These entries are concept demonstrations of how we approach work — structure, process and outcome. Client case studies arrive in Volume 02 as projects go live."
   },
@@ -26,10 +70,22 @@
       "h2": "NextGen",
       "badge": "Concept demo",
       "meta": [
-        { "k": "Client", "v": "Technology startup" },
-        { "k": "Scope", "v": "Naming · Identity · Website" },
-        { "k": "Timeline", "v": "6 weeks" },
-        { "k": "Delivered", "v": "Launch-ready" }
+        {
+          "k": "Client",
+          "v": "Technology startup"
+        },
+        {
+          "k": "Scope",
+          "v": "Naming · Identity · Website"
+        },
+        {
+          "k": "Timeline",
+          "v": "6 weeks"
+        },
+        {
+          "k": "Delivered",
+          "v": "Launch-ready"
+        }
       ],
       "photoNote": "NEXTGEN — hero image 1200×1008 · Identity applied: launch site on screen · warm grade · object-position 70% 45% · radius 16/16/16/60",
       "fig": "Fig. 01 — Launch site, home view",
@@ -46,7 +102,8 @@
         "Pitch deck template the team can maintain"
       ],
       "outcomeLabel": "The point of the entry",
-      "outcome": "A startup shouldn't need a six-month brand process before it can knock on doors. Identity, site and story can move together — if the scope stays honest."
+      "outcome": "A startup shouldn't need a six-month brand process before it can knock on doors. Identity, site and story can move together — if the scope stays honest.",
+      "photo": ""
     },
     {
       "id": "p02",
@@ -55,10 +112,22 @@
       "h2": "Harmony",
       "badge": "Concept demo",
       "meta": [
-        { "k": "Client", "v": "Consumer brand" },
-        { "k": "Scope", "v": "Campaigns · Social · Creatives" },
-        { "k": "Timeline", "v": "Ongoing" },
-        { "k": "Focus", "v": "Measurable enquiries" }
+        {
+          "k": "Client",
+          "v": "Consumer brand"
+        },
+        {
+          "k": "Scope",
+          "v": "Campaigns · Social · Creatives"
+        },
+        {
+          "k": "Timeline",
+          "v": "Ongoing"
+        },
+        {
+          "k": "Focus",
+          "v": "Measurable enquiries"
+        }
       ],
       "photoNote": "HARMONY — campaign still 1008×1104 · Campaign creative laid out — seasonal key visual · warm grade · object-position 50% 24% · radius 16/16/16/60",
       "fig": "Fig. 02 — Seasonal campaign key visual",
@@ -75,7 +144,8 @@
         "Simple reporting — earned vs spent"
       ],
       "outcomeLabel": "The point of the entry",
-      "outcome": "Marketing should behave like an operating cost with a return — not a mystery box. Wave planning and kill rules make it one."
+      "outcome": "Marketing should behave like an operating cost with a return — not a mystery box. Wave planning and kill rules make it one.",
+      "photo": ""
     },
     {
       "id": "p03",
@@ -84,10 +154,22 @@
       "h2": "Velora",
       "badge": "Concept demo",
       "meta": [
-        { "k": "Client", "v": "Lifestyle brand" },
-        { "k": "Scope", "v": "Naming · Identity · Guidelines" },
-        { "k": "Timeline", "v": "5 weeks" },
-        { "k": "Delivered", "v": "Flexible system" }
+        {
+          "k": "Client",
+          "v": "Lifestyle brand"
+        },
+        {
+          "k": "Scope",
+          "v": "Naming · Identity · Guidelines"
+        },
+        {
+          "k": "Timeline",
+          "v": "5 weeks"
+        },
+        {
+          "k": "Delivered",
+          "v": "Flexible system"
+        }
       ],
       "photoNote": "VELORA — still-life 1408×912 · Identity applied: packaging & stationery on desk · warm grade · object-center · radius 16/16/16/60",
       "fig": "Fig. 03 — Identity across packaging & print",
@@ -104,22 +186,44 @@
         "Guidelines a printer can follow"
       ],
       "outcomeLabel": "The point of the entry",
-      "outcome": "A brand system earns its keep the day someone you've never met applies it correctly. That's the test we design for."
+      "outcome": "A brand system earns its keep the day someone you've never met applies it correctly. That's the test we design for.",
+      "photo": ""
     }
   ],
   "process": {
     "micro": "Behind the register",
-    "h2": ["How these", "entries were made."],
-    "headAside": ["SAME DISCIPLINE AS", "CLIENT WORK"],
+    "h2": [
+      "How these",
+      "entries were made."
+    ],
+    "headAside": [
+      "SAME DISCIPLINE AS",
+      "CLIENT WORK"
+    ],
     "notes": [
-      { "step": "Note 01", "h3": "Concept, briefed properly", "p": "Each entry starts with a real-shaped brief — audience, constraint, success line — the same document a client project gets. No self-indulgent briefs." },
-      { "step": "Note 02", "h3": "Built, not moodboarded", "p": "Every entry ships as working artifacts — applied identities, real layouts, campaign sets — not a mood board collage. Made fast, reviewed honestly." },
-      { "step": "Note 03", "h3": "Written down honestly", "p": "What the entry proves, what it doesn't, and what we'd do differently — stated in plain words. The register only works if it's honest." }
+      {
+        "step": "Note 01",
+        "h3": "Concept, briefed properly",
+        "p": "Each entry starts with a real-shaped brief — audience, constraint, success line — the same document a client project gets. No self-indulgent briefs."
+      },
+      {
+        "step": "Note 02",
+        "h3": "Built, not moodboarded",
+        "p": "Every entry ships as working artifacts — applied identities, real layouts, campaign sets — not a mood board collage. Made fast, reviewed honestly."
+      },
+      {
+        "step": "Note 03",
+        "h3": "Written down honestly",
+        "p": "What the entry proves, what it doesn't, and what we'd do differently — stated in plain words. The register only works if it's honest."
+      }
     ]
   },
   "compass": {
     "micro": "End of volume 01 · Next entry could be yours",
-    "ask": ["Your project", "could be next."],
+    "ask": [
+      "Your project",
+      "could be next."
+    ],
     "aside": "These concepts show the range of our work. Bring us what you're building and we'll help shape the right next step — the same brief-first discipline, pointed at your business.",
     "cta": "Start a conversation"
   }

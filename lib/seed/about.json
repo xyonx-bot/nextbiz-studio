@@ -1,21 +1,48 @@
 {
   "page": "about",
-  "sectionOrder": ["masthead", "story", "defs", "method", "people", "close"],
+  "sectionOrder": [
+    "masthead",
+    "story",
+    "defs",
+    "method",
+    "people",
+    "close"
+  ],
   "masthead": {
     "micro": "The studio · About us · 01",
-    "h1": ["A studio built", "around your", "business."],
+    "h1": [
+      "A studio built",
+      "around your",
+      "business."
+    ],
     "ghostWord": "your",
     "standfirst": "NextBiz Studio helps businesses build, improve and automate their digital operations — with practical technology shaped around the way they work. Not a preset package, not an agency retainer you can't exit. A focused team that plans, builds, improves and iterates with you.",
     "photoNote": "STUDIO PORTRAIT 1008×1104 (crop 4:3) · Strategist at work — warm window light · radius 14/14/14/60 · saturate .9",
     "ledger": [
-      { "k": "Based in", "v": "Kolkata, India — working with businesses everywhere" },
-      { "k": "Core team", "v": "03 people + trusted specialists per project" },
-      { "k": "Working since", "v": "2026 — deliberate, compact, built to flex" },
-      { "k": "Also building", "v": "Meta Proxy — our WhatsApp Business API product" }
-    ]
+      {
+        "k": "Based in",
+        "v": "Kolkata, India — working with businesses everywhere"
+      },
+      {
+        "k": "Core team",
+        "v": "03 people + trusted specialists per project"
+      },
+      {
+        "k": "Working since",
+        "v": "2026 — deliberate, compact, built to flex"
+      },
+      {
+        "k": "Also building",
+        "v": "Meta Proxy — our WhatsApp Business API product"
+      }
+    ],
+    "photo": ""
   },
   "story": {
-    "h2": ["Useful technology.", "Meaningful progress."],
+    "h2": [
+      "Useful technology.",
+      "Meaningful progress."
+    ],
     "col1": "We work with businesses to understand their needs, find opportunities to improve, and create practical solutions around their operations. Technology for its own sake doesn't interest us — technology that moves your work forward does.",
     "col1Drop": "W",
     "col2": "That might mean a digital experience, custom software, an internal tool, connected systems, workflow automation or a practical AI solution. It might also mean marketing support or WhatsApp workflows — including Meta Proxy, our product being prepared for market. The shape follows the need, never the other way around."
@@ -24,10 +51,46 @@
     "h2": "What we mean when we say—",
     "lede": "Four words carry our whole approach. Here's exactly what each one means in practice, so we never talk past each other.",
     "items": [
-      { "term": "Practical", "word": "Word 01", "body": "Software that fits the way your team already works. No dashboards nobody opens, no features that exist only in the proposal. If it doesn't get used in week one, it doesn't ship.", "tags": ["Fits existing habits", "Ships early", "Zero ceremony"] },
-      { "term": "Focused", "word": "Word 02", "body": "A core team of three plus specialists chosen per project — no layers between you and the people doing the work. You talk to the builder, not an account manager relaying messages.", "tags": ["Direct access", "Right expertise", "No layers"] },
-      { "term": "Iterative", "word": "Word 03", "body": "Launch, learn, refine. We put something real in front of you early and improve it with your feedback instead of hiding for months behind a big reveal.", "tags": ["Early drafts", "Feedback loops", "No big reveals"] },
-      { "term": "Honest", "word": "Word 04", "body": "Fixed quotes with no surprise lines. If something isn't worth building, we say so — even when it's the bigger invoice. Refunds and pauses are written down before you ask.", "tags": ["Fixed quotes", "Straight answers", "Policies up front"] }
+      {
+        "term": "Practical",
+        "word": "Word 01",
+        "body": "Software that fits the way your team already works. No dashboards nobody opens, no features that exist only in the proposal. If it doesn't get used in week one, it doesn't ship.",
+        "tags": [
+          "Fits existing habits",
+          "Ships early",
+          "Zero ceremony"
+        ]
+      },
+      {
+        "term": "Focused",
+        "word": "Word 02",
+        "body": "A core team of three plus specialists chosen per project — no layers between you and the people doing the work. You talk to the builder, not an account manager relaying messages.",
+        "tags": [
+          "Direct access",
+          "Right expertise",
+          "No layers"
+        ]
+      },
+      {
+        "term": "Iterative",
+        "word": "Word 03",
+        "body": "Launch, learn, refine. We put something real in front of you early and improve it with your feedback instead of hiding for months behind a big reveal.",
+        "tags": [
+          "Early drafts",
+          "Feedback loops",
+          "No big reveals"
+        ]
+      },
+      {
+        "term": "Honest",
+        "word": "Word 04",
+        "body": "Fixed quotes with no surprise lines. If something isn't worth building, we say so — even when it's the bigger invoice. Refunds and pauses are written down before you ask.",
+        "tags": [
+          "Fixed quotes",
+          "Straight answers",
+          "Policies up front"
+        ]
+      }
     ]
   },
   "method": {
@@ -36,10 +99,30 @@
     "h2": "Four steps. No mystery.",
     "lede": "Good work is a clear, shared process — from the first question through the next improvement. Each step has an owner, an output, and a definition of done.",
     "rows": [
-      { "no": "01", "title": "Plan around the real need", "body": "We learn how your business works, then identify the problem or opportunity worth solving.", "practice": "Output: a one-page brief you approve" },
-      { "no": "02", "title": "Build the right solution", "body": "We choose the right mix of technology, development and expertise for the job — not a preset package.", "practice": "Output: working software in your hands early" },
-      { "no": "03", "title": "Improve the operation", "body": "We make practical changes that help your systems and day-to-day work perform better.", "practice": "Output: refinements tied to real usage" },
-      { "no": "04", "title": "Iterate with purpose", "body": "We keep learning from real use and refine the solution as your business changes.", "practice": "Output: a rhythm, not a one-off project" }
+      {
+        "no": "01",
+        "title": "Plan around the real need",
+        "body": "We learn how your business works, then identify the problem or opportunity worth solving.",
+        "practice": "Output: a one-page brief you approve"
+      },
+      {
+        "no": "02",
+        "title": "Build the right solution",
+        "body": "We choose the right mix of technology, development and expertise for the job — not a preset package.",
+        "practice": "Output: working software in your hands early"
+      },
+      {
+        "no": "03",
+        "title": "Improve the operation",
+        "body": "We make practical changes that help your systems and day-to-day work perform better.",
+        "practice": "Output: refinements tied to real usage"
+      },
+      {
+        "no": "04",
+        "title": "Iterate with purpose",
+        "body": "We keep learning from real use and refine the solution as your business changes.",
+        "practice": "Output: a rhythm, not a one-off project"
+      }
     ]
   },
   "people": {
@@ -49,17 +132,49 @@
     "lede": "NextBiz Studio has a core team of three, supported by trusted collaborators and specialists selected for each project. Together, we bring the technology, development, design, AI and automation skills the work calls for.",
     "photoNote": "TEAM PHOTO 1408×800 · The core team at work — candid, warm grade · radius 16/16/16/60 · saturate .85 · full content width",
     "facts": [
-      { "b": "03", "span": "people in the core team — every project starts here" },
-      { "b": "+", "sup": "specialists", "span": "trusted collaborators added per project, never padded in" },
-      { "b": "01", "sup": "point", "span": "of contact — the person doing the work, not a manager" }
+      {
+        "b": "03",
+        "span": "people in the core team — every project starts here"
+      },
+      {
+        "b": "+",
+        "sup": "specialists",
+        "span": "trusted collaborators added per project, never padded in"
+      },
+      {
+        "b": "01",
+        "sup": "point",
+        "span": "of contact — the person doing the work, not a manager"
+      }
     ],
     "roster": [
-      { "idx": "A", "name": "The Strategist", "desc": "Plans the work — briefs, scope, quotes, priorities. The voice you'll hear most on calls.", "focus": "Planning · Direction · Client work" },
-      { "idx": "B", "name": "The Builder", "desc": "Turns plans into working software — sites, platforms, automations, integrations.", "focus": "Development · Systems · Shipping" },
-      { "idx": "C", "name": "The Specialist Circle", "desc": "Design, AI, content and marketing experts brought in when the work calls for them.", "focus": "Expertise · On demand · Vetted" },
-      { "idx": "D", "name": "The Support System", "desc": "AI-assisted workflows behind every engagement — research, drafts, checks and monitoring.", "focus": "Automation · Research · Quality" }
+      {
+        "idx": "A",
+        "name": "The Strategist",
+        "desc": "Plans the work — briefs, scope, quotes, priorities. The voice you'll hear most on calls.",
+        "focus": "Planning · Direction · Client work"
+      },
+      {
+        "idx": "B",
+        "name": "The Builder",
+        "desc": "Turns plans into working software — sites, platforms, automations, integrations.",
+        "focus": "Development · Systems · Shipping"
+      },
+      {
+        "idx": "C",
+        "name": "The Specialist Circle",
+        "desc": "Design, AI, content and marketing experts brought in when the work calls for them.",
+        "focus": "Expertise · On demand · Vetted"
+      },
+      {
+        "idx": "D",
+        "name": "The Support System",
+        "desc": "AI-assisted workflows behind every engagement — research, drafts, checks and monitoring.",
+        "focus": "Automation · Research · Quality"
+      }
     ],
-    "note": "Note: individual names and portraits to be added when Joydip approves the final roster. Roles listed as they function today."
+    "note": "Note: individual names and portraits to be added when Joydip approves the final roster. Roles listed as they function today.",
+    "photo": ""
   },
   "close": {
     "micro": "Make the next move · 06",

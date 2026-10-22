@@ -78,7 +78,11 @@ export function About({ content }: { content?: typeof homeContent.about }) {
       </div>
       <div className="about-grid">
         <div className="about-photo">
-          <Placeholder note={c.imageNote} />
+          {c.photo ? (
+            <div className="imgph realimg-box"><img src={c.photo} alt={String(c.imageNote ?? "")} /></div>
+          ) : (
+            <Placeholder note={c.imageNote} />
+          )}
         </div>
         <div className="stats">
           {c.steps.map((s) => (
@@ -236,7 +240,11 @@ export function Team({ content }: { content?: typeof homeContent.team }) {
         </div>
       </div>
       <div className="team-photo">
-        <Placeholder note={c.imageNote} />
+        {c.photo ? (
+          <div className="imgph realimg-box"><img src={c.photo} alt={String(c.imageNote ?? "")} /></div>
+        ) : (
+          <Placeholder note={c.imageNote} />
+        )}
         <div className="team-names">
           {c.members.map((m) => (
             <span key={m.name}><b>{m.name}</b><small>{m.role}</small></span>
