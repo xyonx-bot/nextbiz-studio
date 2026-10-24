@@ -130,6 +130,12 @@ export function PagesConfigurator({
   // refs mirror the state so the full dragstart→dragover→drop sequence works
   // even when the events land in the same tick (React state is async)
   const dragRef = useRef<string | null>(null);
+  // one mutation in flight at a time. A second dispatch that lands before the
+  // previous one settles (rapid double-click, or a click beating React's
+  // re-render) runs a STALE closure and re-applies the same swap as a no-op —
+  // silently eating the move (the S5-8 e2e red of Oct 22: three rapid ↑
+  // clicks landed two). Refs are current in every closure; state is not.
+  const inFlight = useRef(false);
 
   // authoritative sync after router.refresh() (server recomputes merged rows)
   useEffect(() => setRows(sections), [sections]);
@@ -172,27 +178,36 @@ export function PagesConfigurator({
     return { ok: res.ok, data };
   }
 
-  /** mutate optimistically; rollback + inline error on failure; reconcile */
+  /** mutate optimistically; rollback + inline error on failure; reconcile.
+   *  Duplicate dispatches while a mutation is settling are IGNORED — the
+   *  in-flight ref is synchronous and shared across every closure, so a
+   *  stale-closure duplicate can never re-apply a swap mid-flight. */
   async function run(
     optimistic: () => void,
     rollback: () => void,
     req: () => Promise<{ ok: boolean; data: unknown }>,
   ) {
-    const before = rows;
-    optimistic();
-    setBusy(true);
-    setErr("");
-    const r = await req();
-    setBusy(false);
-    if (!r.ok) {
-      setRows(before);
-      rollback();
-      const msg = (r.data as { error?: string } | null)?.error ?? "request failed";
-      setErr(`Couldn't save — ${msg}. Nothing was changed.`);
-      return false;
+    if (inFlight.current) return false;
+    inFlight.current = true;
+    try {
+      const before = rows;
+      optimistic();
+      setBusy(true);
+      setErr("");
+      const r = await req();
+      setBusy(false);
+      if (!r.ok) {
+        setRows(before);
+        rollback();
+        const msg = (r.data as { error?: string } | null)?.error ?? "request failed";
+        setErr(`Couldn't save — ${msg}. Nothing was changed.`);
+        return false;
+      }
+      router.refresh();
+      return true;
+    } finally {
+      inFlight.current = false;
     }
-    router.refresh();
-    return true;
   }
 
   async function reorder(i: number, dir: -1 | 1) {
@@ -266,6 +281,7 @@ export function PagesConfigurator({
     setDragId(null);
     setOverId(null);
     if (!dragged || dragged === targetId || from < 0 || to < 0) return;
+    if (inFlight.current) return; // a mutation is settling — never stack drops
     const before = rows;
     const next = rows.slice();
     const [moved] = next.splice(from, 1);
