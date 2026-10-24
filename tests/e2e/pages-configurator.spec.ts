@@ -161,11 +161,57 @@ test.describe("admin pages configurator (S5-8)", () => {
     const lede2 = page.locator(".frow", { has: page.locator("label", { hasText: "lede" }) }).locator("input, textarea");
     await lede2.fill(original);
     await page.click("[data-testid=save-section]");
+    // Move up is an async optimistic swap (two PATCHes + router.refresh).
+    // Firing the next click before the previous move settles runs a stale
+    // React closure and the move is silently eaten — exactly what flipped CI
+    // red on Oct 22 with zero code delta. Wait for EACH move to land.
+    const ledgerIndexOfRegister = () =>
+      page.evaluate(() =>
+        [...document.querySelectorAll(".sledger .srow")].findIndex(
+          (r) => (r as HTMLElement).dataset.key === "register",
+        ),
+      );
     for (let i = 0; i < 3; i++) {
       await page.click(".srow[data-key=register] .acts button[title='Move up']");
+      await expect.poll(ledgerIndexOfRegister).toBe(2 - i);
     }
     const order = await publicOrder(page);
     expect(order[0]).toBe("register");
+  });
+
+  test("rapid move-up burst: a duplicate dispatch while a mutation settles is ignored, never re-applied", async ({ page }) => {
+    await login(page);
+    await page.goto("/admin/pages?p=projects");
+    // park register one slot down so Move up is armed (index 0 disables it)
+    await page.click(".srow[data-key=register] .acts button[title='Move down']");
+    const indexOfRegister = () =>
+      page.evaluate(() =>
+        [...document.querySelectorAll(".sledger .srow")].findIndex(
+          (r) => (r as HTMLElement).dataset.key === "register",
+        ),
+      );
+    await expect.poll(indexOfRegister).toBe(1);
+
+    // worst-case burst: three synchronous dispatches in ONE JS task — every
+    // handler would read the same pre-click closure. The in-flight guard must
+    // apply the swap exactly once and ignore the duplicates.
+    let patches = 0;
+    page.on("request", (req) => {
+      if (req.method() === "PATCH" && req.url().includes("/api/config/pages/")) patches++;
+    });
+    await page.evaluate(() => {
+      const btn = document.querySelector(
+        ".srow[data-key=register] .acts button[title='Move up']",
+      ) as HTMLElement;
+      btn.click();
+      btn.click();
+      btn.click();
+    });
+    await expect.poll(indexOfRegister).toBe(0); // moved exactly once
+    await page.waitForTimeout(400); // straggler duplicates would land here
+    expect(patches).toBe(2); // one swap = 2 PATCHes — not 6 (three stale duplicates)
+    await expect(page.locator(".pfoot .err")).toHaveCount(0);
+    // register(10) + entries(20) are back at their seed sorts — state restored
   });
 
   test("add flows: topline + ghost row open the sheet; ESC closes; registry list works", async ({ page }) => {
