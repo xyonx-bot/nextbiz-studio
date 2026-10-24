@@ -100,3 +100,14 @@ Bonus: DB backup pipeline LIVE — scripts/db-backup.py → joyverse-user-data/b
 | S5-8 | Admin Pages UI — 1:1 port of Mira's pages wireframe (chip bar, ledger, schema editor, structure card, registry+sheet, legal lock, soft-remove 005) | feat/s5-admin-pages-ui | done (2ecb1fa→fac6e1b) |
 | S5-9 | Ship foundation → deploy e3e6bd8 → verify live | — | done (CI success, live-verified) |
 | S5-10 | Image uploads: /api/config/upload → CDN R2, editor Replace functional, photo slots render real imgs, grip DnD reorder (wireframe miss) + array-content round-trip + content:null revert op | feat/s5-uploads-drag | done (a20f24d→8577931, e909d29) |
+
+## S58-FIX (r-nbs-e2e-s58-deterministic) — CI e2e red on main / deploy gate blocked
+| # | Task | Branch | Status |
+|---|---|---|---|
+| F-1 | Evidence pass: both failing attempts' logs vs green run — no cross-spec overlap, same PG 16.15, same code → failure inside the spec's own click loop | — | done |
+| F-2 | Local repro: fresh DB in nbs_ci_pg:5433 + standalone app; 3 sync DOM clicks fired 6 duplicate PATCH bodies and reproduced order[0]='entry' byte-exact | — | done (s58_repro.cjs) |
+| F-3 | Fix app: inFlight ref guard in run() + dropOn (stale-closure duplicates ignored, never re-applied) | fix/e2e-s58-deterministic | done (9f75a7f) |
+| F-4 | Fix spec: per-move expect.poll waits + new rapid-burst guard test (3 dispatches = 1 swap = 2 PATCHes) | fix/e2e-s58-deterministic | done (9f75a7f) |
+| F-5 | Verify: lint/tsc/unit 40 + spec 9/9 + FULL fresh-DB suite 269/0 (3.8m, more workers than CI) | — | done |
+| F-6 | Merge → push → CI green → auto-deploy unblocked → live-verify prod | — | done (merge f4dd583; CI 40084621931 all 4 jobs success — e2e 369 green on the CI stack; deploy 10:12:10Z container recreate; live: / + /contact + /projects 200; buildId asset PSHgq14I 200 = deployed build serving; stage export contains the guard) |
+| F-7 | Clean my run's 3 e2e-upload objects from CDN bucket (nbs/pages/, Oct 24 09:47Z) | — | done (204 x3; pre-existing Oct 22 residue documented in backlog) |
