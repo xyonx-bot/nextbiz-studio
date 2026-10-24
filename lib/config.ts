@@ -221,6 +221,63 @@ export async function addSection(pageKey: string, sectionKey: string): Promise<S
   }
 }
 
+/** Swap a section with its neighbor in one atomic statement. The neighbor is
+ *  computed from DB truth (not client-passed values), and BOTH halves of the
+ *  swap land in the same statement — there is no window where a navigation or
+ *  a racing refresh can cancel half a swap and leave two rows tied on
+ *  sort_order (the S5-8 CI red of Oct 22+24: an aborted second PATCH left
+ *  register=entries=20 and the public page read the tie). Returns the updated
+ *  rows, or an empty list when the section has no neighbor in that direction
+ *  (already first/last — a no-op). */
+export async function swapSection(
+  pageKey: string,
+  id: string,
+  dir: -1 | 1,
+): Promise<SectionRow[]> {
+  const { rows } = await getPool().query<SectionRow>(
+    `WITH ranked AS (
+       SELECT id, section_key, sort_order, enabled, content,
+              ROW_NUMBER() OVER (ORDER BY sort_order ASC, id ASC) AS rn
+         FROM page_sections
+        WHERE page_key = $1 AND removed = false
+     ),
+     pair AS (
+       SELECT me.id AS aid, me.sort_order AS aval,
+              nbr.id AS bid, nbr.sort_order AS bval
+         FROM ranked me
+         JOIN ranked nbr ON nbr.rn = me.rn + $2
+        WHERE me.id = $3
+     )
+     UPDATE page_sections AS p
+        SET sort_order = CASE p.id WHEN pair.aid THEN pair.bval WHEN pair.bid THEN pair.aval END,
+            updated_at = now()
+       FROM pair
+      WHERE p.id IN (pair.aid, pair.bid)
+      RETURNING p.id, section_key, p.sort_order AS sort_order, enabled, content`,
+    [pageKey, dir, id],
+  );
+  return rows;
+}
+
+/** Atomically resequence a whole page's section order (drag-to-reorder).
+ *  One statement sets every listed row's sort_order to its list position —
+ *  the old path PATCHed each row in parallel, so a navigation mid-storm left
+ *  a half-resequenced page. Rows not on the page are ignored. */
+export async function resequenceSections(
+  pageKey: string,
+  order: string[],
+): Promise<SectionRow[]> {
+  const { rows } = await getPool().query<SectionRow>(
+    `UPDATE page_sections AS p
+        SET sort_order = t.ord * 10, updated_at = now()
+       FROM unnest($2::uuid[]) WITH ORDINALITY AS t(id, ord)
+      WHERE p.id = t.id AND p.page_key = $1
+      RETURNING p.id, section_key, p.sort_order AS sort_order, enabled, content`,
+    [pageKey, order],
+  );
+  return rows;
+}
+
 /** Update one row's content patch / order / enabled state. */
 export async function updateSection(
   id: string,
