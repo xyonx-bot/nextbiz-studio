@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
-import { PAGE_BY_KEY, updateSection, deleteSection } from "@/lib/config";
+import { PAGE_BY_KEY, updateSection, swapSection, deleteSection } from "@/lib/config";
 
 /**
- * PATCH  /api/config/pages/[page]/sections/[id] — { content?, sortOrder?, enabled? }
+ * PATCH  /api/config/pages/[page]/sections/[id] — { content?, sortOrder?, enabled?, move? }
  *        content = a JSON-object PATCH over the seed default (deep-merged at
  *        render; non-object → 400, page never breaks). No redeploy needed.
+ *        move = "up" | "down" — ATOMIC neighbor swap computed from DB truth;
+ *        never two independent writes (a navigation between them used to
+ *        strand half a swap and tie two rows on sort_order).
  * DELETE /api/config/pages/[page]/sections/[id] — remove the section (re-add
  *        via POST restores seed defaults).
  * Self-gated: 401 JSON, never a redirect.
@@ -30,6 +33,12 @@ export async function PATCH(req: Request, ctx: Ctx) {
     return NextResponse.json({ error: "malformed body" }, { status: 400 });
   }
   try {
+    if (body.move === "up" || body.move === "down") {
+      const moved = await swapSection(page, id, body.move === "up" ? -1 : 1);
+      revalidatePath(PAGE_BY_KEY[page].path);
+      // empty = already at the boundary — a graceful no-op, the ledger re-syncs
+      return NextResponse.json({ ok: true, moved: moved.length > 0 });
+    }
     const row = await updateSection(id, {
       content: body.content,
       sortOrder: body.sortOrder as number | undefined,

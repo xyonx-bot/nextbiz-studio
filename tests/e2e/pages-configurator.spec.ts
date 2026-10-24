@@ -113,12 +113,28 @@ test.describe("admin pages configurator (S5-8)", () => {
     await page.goto("/admin/pages?p=projects");
     await page.click(".srow[data-key=compass] .acts button[title='Move up']"); // compass: entries → register
     await expect(page.locator(".srow[data-key=compass] .sn small")).toHaveText("projects.compass");
+    // wait for the move to COMMIT via the API (context-level reads are never
+    // cancelled by navigation); compass=30 + process=40 is the swap's signature
+    await expect
+      .poll(async () => {
+        const data = await (await page.request.get("/api/config/pages/projects/sections")).json();
+        const by = (k: string) => data.sections.find((s: { section_key: string }) => s.section_key === k);
+        return `${by("compass")?.sort_order ?? "?"}/${by("process")?.sort_order ?? "?"}`;
+      })
+      .toBe("30/40");
     const after = await publicOrder(page);
     expect(after.indexOf("compass")).toBeLessThan(before.indexOf("compass")); // moved up publicly
 
     // restore: compass back down
     await page.goto("/admin/pages?p=projects");
     await page.click(".srow[data-key=compass] .acts button[title='Move down']");
+    await expect
+      .poll(async () => {
+        const data = await (await page.request.get("/api/config/pages/projects/sections")).json();
+        const by = (k: string) => data.sections.find((s: { section_key: string }) => s.section_key === k);
+        return `${by("compass")?.sort_order ?? "?"}/${by("process")?.sort_order ?? "?"}`;
+      })
+      .toBe("40/30");
     const restored = await publicOrder(page);
     expect(restored).toEqual(before);
   });
@@ -175,6 +191,18 @@ test.describe("admin pages configurator (S5-8)", () => {
       await page.click(".srow[data-key=register] .acts button[title='Move up']");
       await expect.poll(ledgerIndexOfRegister).toBe(2 - i);
     }
+    // The polls above prove the CLIENT ledger. Wait for the last move to
+    // COMMIT before any page.goto — a navigation can cancel an in-flight
+    // move request in its pre-flush window and lose it entirely. The API
+    // poll is context-level (never cancelled by navigation); register=20 +
+    // entries=30 is the exact committed signature of the final swap.
+    await expect
+      .poll(async () => {
+        const data = await (await page.request.get("/api/config/pages/projects/sections")).json();
+        const by = (k: string) => data.sections.find((s: { section_key: string }) => s.section_key === k);
+        return `${by("register")?.sort_order ?? "?"}/${by("entries")?.sort_order ?? "?"}`;
+      })
+      .toBe("20/30");
     const order = await publicOrder(page);
     expect(order[0]).toBe("register");
   });
@@ -209,7 +237,7 @@ test.describe("admin pages configurator (S5-8)", () => {
     });
     await expect.poll(indexOfRegister).toBe(0); // moved exactly once
     await page.waitForTimeout(400); // straggler duplicates would land here
-    expect(patches).toBe(2); // one swap = 2 PATCHes — not 6 (three stale duplicates)
+    expect(patches).toBe(1); // one move = ONE atomic swap request — not three stale duplicates
     await expect(page.locator(".pfoot .err")).toHaveCount(0);
     // register(10) + entries(20) are back at their seed sorts — state restored
   });

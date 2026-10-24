@@ -218,11 +218,13 @@ export function PagesConfigurator({
     await run(
       () => setRows((rs) => rs.map((r) => (r.id === a.id ? { ...r, sortOrder: b.sortOrder } : r.id === b.id ? { ...r, sortOrder: a.sortOrder } : r)).slice().sort((x, y) => x.sortOrder - y.sortOrder)),
       () => undefined,
-      async () => {
-        const ok1 = await api(`/api/config/pages/${pageKey}/sections/${a.id}`, "PATCH", { sortOrder: b.sortOrder });
-        if (!ok1.ok) return ok1;
-        return api(`/api/config/pages/${pageKey}/sections/${b.id}`, "PATCH", { sortOrder: a.sortOrder });
-      },
+      // ONE atomic request: the server computes the swap from DB truth. The
+      // old two-PATCH form left half a swap behind whenever a navigation or
+      // refresh cancelled the second write — two rows tied on sort_order and
+      // the public page read the tie (the S5-8 CI red).
+      async () => api(`/api/config/pages/${pageKey}/sections/${a.id}`, "PATCH", {
+        move: dir === -1 ? "up" : "down",
+      }),
     );
   }
 
@@ -270,9 +272,11 @@ export function PagesConfigurator({
     }
   }
 
-  /** grip-drag reorder: move the dragged row to the drop target's index,
-   *  resequence sort orders (i+1)*10, PATCH every changed row in parallel;
-   *  full rollback + inline error if any write fails. */
+  /** grip-drag reorder: move the dragged row to the drop target's index and
+   *  persist with ONE atomic bulk request (order = id list; server sets
+   *  sort_order = position*10 in a single statement). The old path PATCHed
+   *  every changed row in parallel — a navigation mid-storm left the page
+   *  half-resequenced. */
   async function dropOn(targetId: string) {
     const dragged = dragRef.current;
     const from = rows.findIndex((r) => r.id === dragged);
@@ -289,16 +293,11 @@ export function PagesConfigurator({
     const resequenced = next.map((r, i) => ({ ...r, sortOrder: (i + 1) * 10 }));
     setRows(resequenced);
     setBusy(true);
-    const changed = resequenced.filter(
-      (r) => before.find((b) => b.id === r.id)?.sortOrder !== r.sortOrder,
-    );
-    const results = await Promise.all(
-      changed.map((r) =>
-        api(`/api/config/pages/${pageKey}/sections/${r.id}`, "PATCH", { sortOrder: r.sortOrder }),
-      ),
-    );
+    const res = await api(`/api/config/pages/${pageKey}/sections/reorder`, "POST", {
+      order: resequenced.map((r) => r.id),
+    });
     setBusy(false);
-    if (results.some((x) => !x.ok)) {
+    if (!res.ok) {
       setRows(before);
       setErr("Reorder didn't save — restored the previous order.");
       return;
