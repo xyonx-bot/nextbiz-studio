@@ -111,3 +111,8 @@ Bonus: DB backup pipeline LIVE — scripts/db-backup.py → joyverse-user-data/b
 | F-5 | Verify: lint/tsc/unit 40 + spec 9/9 + FULL fresh-DB suite 269/0 (3.8m, more workers than CI) | — | done |
 | F-6 | Merge → push → CI green → auto-deploy unblocked → live-verify prod | — | done (merge f4dd583; CI 40084621931 all 4 jobs success — e2e 369 green on the CI stack; deploy 10:12:10Z container recreate; live: / + /contact + /projects 200; buildId asset PSHgq14I 200 = deployed build serving; stage export contains the guard) |
 | F-7 | Clean my run's 3 e2e-upload objects from CDN bucket (nbs/pages/, Oct 24 09:47Z) | — | done (204 x3; pre-existing Oct 22 residue documented in backlog) |
+| F-8 | Round 2 evidence: chore push 6458ef6 → CI 40086240014 RED at the same assertion — race 2 = the spec's publicOrder goto aborted the 2nd PATCH of the two-PATCH swap mid-flight; DB stuck at an entries=register=20 tie forever (round-1 polls verified the optimistic ledger, not the DB commit) | — | done |
+| F-9 | Round 2 fix: atomic reorder — lib swapSection (single-statement CTE swap from DB truth) + resequenceSections (single-statement bulk via unnest WITH ORDINALITY); PATCH move:up/down on existing route; new POST /sections/reorder; UI reorder+dropOn send one request each; spec API-commit polls (context-level) before public reads; burst expects 1 PATCH | fix/e2e-s58-atomic-reorder | done |
+| F-10 | Round 2 verify: build green + pages-configurator spec 9/9 fresh-DB + full fresh-DB suite 269/0 (3.9m) | — | done |
+| F-11 | Round 2 ship: merge → push → CI green → auto-deploy → live-verify → final log entry | — | in flight |
+| F-12 | Round 2 cleanup: delete this suite run's e2e-upload objects from CDN nbs/pages/ | — | pending |
