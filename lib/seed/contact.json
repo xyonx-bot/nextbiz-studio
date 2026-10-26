@@ -23,7 +23,7 @@
     "channels": [
       {
         "ch": "Call",
-        "val": "22 (00) 356 7890",
+        "val": "+91 90887 27191",
         "sub": "Mon–Sat, 10:00–19:00 IST — fastest for quick questions",
         "note": [
           "Picks up",
@@ -32,7 +32,7 @@
       },
       {
         "ch": "Email",
-        "val": "hello@nextbizstudio.com",
+        "val": "nextbizstudio@gmail.com",
         "sub": "Best for briefs, documents and long ideas",
         "note": [
           "Reply < 1",
@@ -193,6 +193,6 @@
       "Just call."
     ],
     "aside": "Sometimes one honest conversation answers more than ten emails. If your idea is already formed, reach us directly — we'll pick up or call back within the day.",
-    "cta": "Call 22 (00) 356 7890"
+    "cta": "Call +91 90887 27191"
   }
 }
