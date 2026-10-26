@@ -70,9 +70,7 @@ jobs:
       ADMIN_USER: e2e-admin
       ADMIN_PASS: e2e-test-pass-2026
       SESSION_SECRET: ci-e2e-session-secret-0123456789abcdef
-      NEXT_PUBLIC_BUSINESS_PHONE: "+910000000000"
-      NEXT_PUBLIC_BUSINESS_EMAIL: "hello@example.com"
-      NEXT_PUBLIC_WHATSAPP_NUMBER: "910000000000"
+      NEXT_PUBLIC_WHATSAPP_NUMBER: "919088727191"
       # public marketing copy asserted by e2e — real values, not dummies
       NEXT_PUBLIC_WHATSAPP_PREFILL: "Hi NextBiz Studio — I'd like to talk about a project."
       NEXT_PUBLIC_CDN_BASE: "https://cdn.joyverse.fun"
