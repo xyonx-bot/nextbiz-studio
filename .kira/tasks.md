@@ -126,5 +126,5 @@ Bonus: DB backup pipeline LIVE — scripts/db-backup.py → joyverse-user-data/b
 | S6-4 | Configurator: services catalog.meta Investment row (floor ₹5,000) + c01 includes priced list (5–10k landing; 10–20k sites; 20–50k e-com; care from ₹2,500/mo) | — | done (render verified live) |
 | S6-5 | Code: lib/content.ts CONTACT consts + WA fallback; seed contact.json = honest fallback truth | feat/s6-real-content | done |
 | S6-6 | Tests: tests/content.test.ts (8 unit) + tests/e2e/contact-details.spec.ts (2×3) — e2e caught the .env.local stale override for real | feat/s6-real-content | done |
-| S6-7 | Verify ladder: lint 0 + tsc 0 + unit 48/48 + build green + full fresh-DB e2e | feat/s6-real-content | running |
-| S6-8 | Merge → push → CI (4 jobs + auto-deploy) → live-verify prod surfaces | — | pending |
+| S6-7 | Verify ladder: lint 0 + tsc 0 + unit 48/48 + build green + full fresh-DB e2e | feat/s6-real-content | done (lint 0; tsc 0; unit 48/48; build; fresh-DB e2e 275/0 — own new spec caught the stale .env.local override for real) |
+| S6-8 | Merge → push → CI (4 jobs + auto-deploy) → live-verify prod surfaces | — | done (CI red on acd9426 = stale WA pin in ci-cd.yml e2e env → fix 1b49e37 CI ALL GREEN; deploy 10:21:33Z; live-verified: 9/9 pages 200; topbar/inline/tel real; wa.me real; channels+CTA real; budget rows live; admin login real-flow OK; assets 200; shots s6-shots/) |
