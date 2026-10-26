@@ -116,3 +116,15 @@ Bonus: DB backup pipeline LIVE — scripts/db-backup.py → joyverse-user-data/b
 | F-10 | Round 2 verify: build green + pages-configurator spec 9/9 fresh-DB + full fresh-DB suite 269/0 (3.9m) | — | done |
 | F-11 | Round 2 ship: merge → push → CI green → auto-deploy → live-verify → final log entry | — | done (merge 96b55a3; CI 40104527443 ALL 4 jobs success — the previously-red test green on the CI stack; deploy 14:57:04→14:58:40Z; live / + /contact + /projects 200; new-route probe 401 = atomic build serving) |
 | F-12 | Round 2 cleanup: delete this suite run's e2e-upload objects from CDN nbs/pages/ | — | done (3 keys mvmhl* @ 14:21Z deleted after profile check; bucket back to documented 42) |
+
+## S6 (r-nbs-s6) — real content + deploy + verify (M6)
+| # | Task | Branch | Status |
+|---|---|---|---|
+| S6-1 | .env reconcile: live values canonical; WhatsApp number 919088727191; QUOTED convention restored (de-quoted broke bash sourcing on PREFILL apostrophe — quoted .env is load-bearing for `set -a; . ./.env` harness launches) | — | done |
+| S6-2 | .env.local stale override caught by own e2e: it beat .env at build and inlined the old WA number — patched to 919088727191 | — | done |
+| S6-3 | Configurator (live API, no redeploy): contact desk.channels Call/Email real values + qclose CTA | — | done (render verified live) |
+| S6-4 | Configurator: services catalog.meta Investment row (floor ₹5,000) + c01 includes priced list (5–10k landing; 10–20k sites; 20–50k e-com; care from ₹2,500/mo) | — | done (render verified live) |
+| S6-5 | Code: lib/content.ts CONTACT consts + WA fallback; seed contact.json = honest fallback truth | feat/s6-real-content | done |
+| S6-6 | Tests: tests/content.test.ts (8 unit) + tests/e2e/contact-details.spec.ts (2×3) — e2e caught the .env.local stale override for real | feat/s6-real-content | done |
+| S6-7 | Verify ladder: lint 0 + tsc 0 + unit 48/48 + build green + full fresh-DB e2e | feat/s6-real-content | running |
+| S6-8 | Merge → push → CI (4 jobs + auto-deploy) → live-verify prod surfaces | — | pending |

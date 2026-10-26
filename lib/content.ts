@@ -23,15 +23,20 @@ export const SERVICE_LINKS = [
   { href: "/services#meta-proxy", label: "Meta Proxy" },
 ] as const;
 
-/** Placeholder contact details until Joydip supplies real ones (S6 blocker). */
+/**
+ * Real contact details — supplied by Joydip Oct 23 (r-nbs-s6, s6-content-inputs).
+ * Rendered by Topbar call cell, home inline calls, and the contact qclose CTA.
+ * (email has no chrome surface yet; the contact page shows it via its
+ * desk.channels content — configurator-driven.)
+ */
 export const CONTACT = {
-  phoneDisplay: "22 (00) 356 7890",
-  phoneTel: "+910000000000",
-  email: "hello@nextbizstudio.com",
+  phoneDisplay: "+91 90887 27191",
+  phoneTel: "+919088727191",
+  email: "nextbizstudio@gmail.com",
 } as const;
 
 /** WhatsApp click-to-chat (P1.4) — env-driven number, prefilled message. */
-export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "910000000000";
+export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "919088727191";
 export const WHATSAPP_PREFILL =
   process.env.NEXT_PUBLIC_WHATSAPP_PREFILL ??
   "Hi NextBiz Studio — I'd like to talk about a project.";
