@@ -1,9 +1,12 @@
 name: CI/CD
 
-# Quality gates (lint, typecheck, unit, e2e w/ real Postgres) → deploy on green.
-# Tests red ⇒ deploy job never runs. Deploy script: scripts/deploy.sh (VM side).
-# Secrets needed (Tony): DEPLOY_SSH_HOST, DEPLOY_SSH_USER, DEPLOY_SSH_KEY.
-# Manual dispatch supported; deploys only track origin/main pushes.
+# CI = TESTS ONLY (lint, typecheck, unit, e2e w/ real Postgres). There is
+# NO deploy step here: the old deploy job silently skipped when
+# DEPLOY_SSH_* secrets were missing, so a green build could lie about
+# being live (Oct 26 incident). Deploys are VM-side — docs/release-flow.md:
+#   beta — systemd timer auto-deploys origin/main every 5 min
+#   prod — scripts/deploy.sh --env prod --ref <v-tag> --approved-by "Joydip <date>"
+#          (refuses to run without Joydip's explicit GO)
 
 on:
   push:
@@ -11,7 +14,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: deploy-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -63,7 +66,7 @@ jobs:
     env:
       # 127.0.0.1, not localhost — GH runners resolve localhost to ::1 first
       # and the postgres service container is IPv4-only (connect would hang)
-      DATABASE_URL: postgres://nextbiz:nextbiz@127.0.0.1:5432/nextbiz
+      DATABASE_URL: postgres://nextbiz:***@127.0.0.1:5432/nextbiz
       SLACK_WEBHOOK_URL: ""            # CI never pings Slack
       IP_HASH_SALT: ci-test-salt-only
       # S4 admin (e2e-only throwaway creds; prod creds live in VM .env only)
@@ -109,47 +112,3 @@ jobs:
           curl -sf -o /dev/null http://127.0.0.1:3000 || { echo "app did not start"; exit 1; }
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test
-
-  deploy:
-    name: deploy → VM (gated on all green)
-    needs: [quality, unit, e2e]
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - uses: actions/checkout@v4
-      - name: Check deploy secrets (Tony)
-        id: secrets_check
-        env:
-          DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
-          DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
-          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-        run: |
-          # secrets context is not allowed in job-level if — check here instead;
-          # skip cleanly until Tony configures the three DEPLOY_SSH_* secrets.
-          if [ -z "$DEPLOY_SSH_HOST" ] || [ -z "$DEPLOY_SSH_USER" ] || [ -z "$DEPLOY_SSH_KEY" ]; then
-            echo "SKIP: DEPLOY_SSH_* secrets not set yet (Tony) — deploy step will skip, tests-only run."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-          fi
-      - name: SSH deploy + health gate
-        if: steps.secrets_check.outputs.skip != 'true'
-        env:
-          DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
-          DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
-          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-        run: |
-          install -D -m 600 /dev/null ~/.ssh/deploy_key
-          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key
-          ssh -o StrictHostKeyChecking=accept-new -i ~/.ssh/deploy_key \
-            "$DEPLOY_SSH_USER@$DEPLOY_SSH_HOST" \
-            'bash -s' < scripts/deploy.sh
-      - name: Post-deploy public verification
-        if: steps.secrets_check.outputs.skip != 'true'
-        run: |
-          sleep 5
-          for path in / /contact; do
-            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "https://nextbizstudio.com${path}")
-            echo "GET ${path} -> ${code}"
-            [ "$code" = "200" ] || { echo "DEPLOY HEALTH FAIL on ${path}"; exit 1; }
-          done
-          echo "✅ public site healthy after deploy"

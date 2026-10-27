@@ -1,0 +1,46 @@
+# NextBizStudio — BETA shape (mirrors docker-compose.yml, beta container
+# names + its own volume, so beta and prod run side by side on the same
+# docker network). deploy.sh --env beta copies .env.beta next to this file
+# as .env (untracked — secrets never in repo). No host ports: nginx proxies.
+services:
+  nextbiz-beta-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nextbiz_beta_app
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+    depends_on:
+      nextbiz-beta-db:
+        condition: service_healthy
+    networks:
+      - joyverse_main_network
+
+  nextbiz-beta-db:
+    image: postgres:16-alpine
+    container_name: nextbiz_beta_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=nextbiz
+      - POSTGRES_PASSWORD=nextbiz
+      - POSTGRES_DB=nextbiz
+    volumes:
+      - nextbiz_beta_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nextbiz -d nextbiz"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - joyverse_main_network
+
+volumes:
+  nextbiz_beta_db_data:
+
+networks:
+  joyverse_main_network:
+    external: true
