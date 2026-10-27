@@ -141,8 +141,11 @@ log "building image…"
 docker compose -f "$COMPOSE_FILE" build "$APP_SVC"
 
 # 2. DB up first (fresh beta volumes need the db before migrations/seed)
-log "starting DB ($DB_SVC)…"
-docker compose -f "$COMPOSE_FILE" up -d "$DB_SVC"
+log "starting DB ($DB_SVC, waiting for healthcheck)…"
+# --wait is load-bearing: up -d alone returns before postgres accepts
+# connections, and a fresh beta volume's first exec then races the socket
+# (bit us on the first beta deploy — psql "No such file or directory")
+docker compose -f "$COMPOSE_FILE" up -d --wait "$DB_SVC"
 
 if [ "$ENV" = beta ] && [ "$SEED" = yes ]; then
   log "seeding beta DB from prod DB (nextbiz_db) — wipes beta DB…"
