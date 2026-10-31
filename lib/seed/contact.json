@@ -116,7 +116,7 @@
     "checkText": "Send me occasional studio updates — launches, notes, no spam. See the Privacy Policy.",
     "hint": "Typical reply: under one business day — from the person who'd actually do the work.",
     "submit": "Send the brief →",
-    "photo": ""
+    "photo": "/img/nextbiz-studio-stilllife.jpg"
   },
   "response": {
     "micro": "After you hit send · 03",
@@ -149,7 +149,8 @@
         "h3": "We say so",
         "p": "Honestly and early — often with a pointer to someone better suited. Your time is the thing we waste least."
       }
-    ]
+    ],
+    "lede": "You'll always know who's handling your enquiry — and what happens next."
   },
   "faq": {
     "micro": "Before you ask · 04",

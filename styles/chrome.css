@@ -152,7 +152,9 @@
   .burger { display: block; margin-left: auto; }
   .brandcell { font-size: 13px; border-right: 0; padding: 0; }
   .brandcell .brandlogo, .brandcell .logo-ph { width: 22px; height: 22px; }
-  .pad { padding-left: 22px; padding-right: 22px; }
+  /* v5 geofix: .pad.pad (0,2,0) beats the later base .pad{var(--pad-x)} in
+     globals.css regardless of @import order — the 22px mobile pad must win */
+  .pad.pad { padding-left: 22px; padding-right: 22px; }
   .footer { grid-template-columns: 1fr 1fr; }
   .fcol.brand, .news, .copyright { grid-column: 1 / -1; }
   .copyright { gap: 15px; flex-direction: column; }

@@ -80,6 +80,7 @@ export function ResponseLedger({ content }: { content?: typeof contact.response 
         <div>
           <span className="micro">{c.micro}</span>
           <h2 style={{ marginTop: 12 }}>{c.h2[0]}<br />{c.h2[1]}</h2>
+          {c.lede ? <p className="response-lede">{c.lede}</p> : null}
         </div>
         <span className="micro">{c.headAside[0]}<br />{c.headAside[1]}</span>
       </div>
