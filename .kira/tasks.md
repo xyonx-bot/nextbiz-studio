@@ -128,3 +128,19 @@ Bonus: DB backup pipeline LIVE — scripts/db-backup.py → joyverse-user-data/b
 | S6-6 | Tests: tests/content.test.ts (8 unit) + tests/e2e/contact-details.spec.ts (2×3) — e2e caught the .env.local stale override for real | feat/s6-real-content | done |
 | S6-7 | Verify ladder: lint 0 + tsc 0 + unit 48/48 + build green + full fresh-DB e2e | feat/s6-real-content | done (lint 0; tsc 0; unit 48/48; build; fresh-DB e2e 275/0 — own new spec caught the stale .env.local override for real) |
 | S6-8 | Merge → push → CI (4 jobs + auto-deploy) → live-verify prod surfaces | — | done (CI red on acd9426 = stale WA pin in ci-cd.yml e2e env → fix 1b49e37 CI ALL GREEN; deploy 10:21:33Z; live-verified: 9/9 pages 200; topbar/inline/tel real; wa.me real; channels+CTA real; budget rows live; admin login real-flow OK; assets 200; shots s6-shots/) |
+
+## 2026-10-27 — beta-deploy-pipeline (shipped)
+- [x] two-env release flow: beta.nextbizstudio.com auto-deploys origin/main (systemd timer, 5 min)
+- [x] prod gated: deploy.sh --env prod --ref <v-tag> --approved-by "Joydip <date>" — refuses without GO
+- [x] beta DB seeded from live prod DB (pipefail-protected); Slack webhook disabled on beta
+- [x] CI deploy job removed — tests-only
+- merged to main: 92d3c15; verified: public 200 + noindex through CF, systemd fire test ok
+
+## r-nbs-contact-v5-geofix (mira Oct-24 re-verify gaps) — 2026-10-31
+| # | Fix | Status |
+|---|---|---|
+| G1 | .response 88/92 + head mb 48 + .response-lede (CSS + tsx + seed) | done |
+| G2 | .rrow desktop 20px 26px | done |
+| G3 | .pad @<=760 22px wins cascade (.pad.pad specificity) | done |
+| G4 | Section B real still-life photo (public/img + seed photo + saturate .85) | done |
+| G5 | e2e spec contact-v5-geofix.spec.ts + full suite green | done |
