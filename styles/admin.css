@@ -127,13 +127,14 @@
 .adminui .fpill.on { border-color: var(--ink); background: var(--ink); color: var(--paper); }
 .adminui .fbar .count { margin-left: auto; font-size: 9px; color: var(--muted); font-weight: 600; }
 
-.adminui .content { flex: 1; padding: clamp(12px, 2vw, 22px); display: grid; gap: 14px; align-content: start; }
+.adminui .content { flex: 1; padding: clamp(12px, 2vw, 22px) clamp(14px, 2.5vw, 28px); display: grid; gap: 14px; align-content: start; }
 .adminui .ledger { background: var(--paper); border: 1px solid var(--line); }
 /* NOTE: login wireframe and inbox wireframe BOTH use `.lrow` (standalone
    files, no clash in Mira's package). Merged here, the inbox rules are
    scoped `.ledger` so they never touch the login rows. */
 .adminui .ledger .lhead, .adminui .ledger .lrow { display: grid; grid-template-columns: 2.1fr 1.5fr 2.6fr .9fr 1fr .8fr; gap: 12px; align-items: baseline; padding: 8px 14px; }
 .adminui .ledger .lhead { border-bottom: 2px solid var(--ink); font-size: 8px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; color: var(--muted); }
+.adminui .ledger .lhead :nth-child(5) { text-align: right; } /* "Received" header aligns with its right-aligned data (inbox wireframe, patched Oct 24) */
 .adminui .ledger .lrow { border-bottom: 1px solid var(--line); font-size: 11.5px; text-decoration: none; color: inherit; }
 .adminui .ledger .lrow:hover { background: var(--card); }
 .adminui .ledger .lrow:last-child { border-bottom: 0; }
@@ -163,7 +164,7 @@
 .adminui .empty p { font-size: 11px; color: var(--muted); margin: 0; line-height: 1.6; }
 
 /* ═══ LEAD DETAIL — 2-col: brief + notes | pipeline rail ═══ */
-.adminui .dwrap { flex: 1; padding: clamp(12px, 2vw, 22px); display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 16px; align-content: start; }
+.adminui .dwrap { flex: 1; padding: clamp(12px, 2vw, 22px) clamp(14px, 2.5vw, 28px); display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: 16px; align-content: start; }
 .adminui .dcol-l { display: grid; gap: 14px; min-width: 0; align-content: start; }
 .adminui .panel { background: var(--paper); border: 1px solid var(--line); }
 .adminui .phead { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--line); }
@@ -224,6 +225,9 @@
 .adminui .rail .ract { border-top: 2px solid var(--ink); padding: 10px 14px; display: grid; gap: 7px; }
 .adminui .rail .ract .lbl { font-size: 7.5px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; color: var(--muted); margin-bottom: 1px; }
 .adminui .btnrow { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+/* server-action forms wrap each rbtn — display:contents lets the grid size
+   the buttons themselves (lead wireframe, patched Oct 24) */
+.adminui .ract .btnrow form { display: contents; }
 .adminui .rbtn { border: 1px solid var(--line); background: var(--card); min-height: 30px; border-radius: 3px; font-size: 9.5px; font-weight: 700; color: var(--ink); display: flex; align-items: center; justify-content: center; gap: 5px; text-decoration: none; font-family: inherit; cursor: pointer; padding: 0 6px; }
 .adminui .rbtn:disabled { opacity: .45; cursor: default; }
 .adminui .rbtn.primary { background: var(--primary); border-color: var(--ink); color: var(--primary-fg); }
@@ -269,7 +273,9 @@
   .adminui .topstrip { height: 48px; }
   .adminui .logincard { max-width: 100%; }
   .adminui .logincard h1 { font-size: 20px; }
-  .adminui .lc-head { padding: 18px 18px 14px; }
+  /* specificity must tie the base .adminui .logincard .lc-head (0 3 0) — a
+     bare .lc-head override loses and the 760 pad never applies */
+  .adminui .logincard .lc-head { padding: 18px 18px 14px; }
   .adminui .lrow label { padding: 12px 18px 5px; }
   .adminui .lrow .field { padding: 0 18px 11px; }
   .adminui .lrow .errmsg { padding: 5px 18px 10px; }
@@ -291,7 +297,7 @@
 .adminui .pbar .count { margin-left: auto; font-size: 9px; color: var(--muted); font-weight: 600; white-space: nowrap; flex: none; }
 
 /* content: sections ledger + editor rail */
-.adminui .pagescontent { flex: 1; padding: clamp(12px, 2vw, 22px); display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 14px; align-content: start; }
+.adminui .pagescontent { flex: 1; padding: clamp(12px, 2vw, 22px) clamp(14px, 2.5vw, 28px); display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 14px; align-content: start; }
 .adminui .colL { display: grid; gap: 14px; align-content: start; min-width: 0; }
 .adminui .colR { display: grid; gap: 12px; align-content: start; min-width: 0; }
 
@@ -343,10 +349,10 @@
 
 /* right rail: section editor + structure + registry */
 .adminui .panel { background: var(--paper); border: 1px solid var(--line); }
-.adminui .panel .phead { border-bottom: 2px solid var(--ink); padding: 10px 14px; display: grid; gap: 2px; }
-.adminui .panel .phead .micro { font-size: 8px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
-.adminui .panel .phead b { font-size: 12.5px; font-weight: 800; }
-.adminui .panel .phead small { font-size: 9px; color: var(--muted); font-weight: 600; }
+.adminui .pagescontent .panel .phead { border-bottom: 2px solid var(--ink); padding: 10px 14px; display: grid; gap: 2px; }
+.adminui .pagescontent .panel .phead .micro { font-size: 8px; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); }
+.adminui .pagescontent .panel .phead b { font-size: 12.5px; font-weight: 800; }
+.adminui .pagescontent .panel .phead small { font-size: 9px; color: var(--muted); font-weight: 600; }
 .adminui .panel .pbody { padding: 10px 14px; display: grid; gap: 10px; }
 .adminui .frow { display: grid; gap: 4px; }
 .adminui .frow label { font-size: 8px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }

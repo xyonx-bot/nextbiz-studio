@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import type { Metadata } from "next";
 import { isAuthenticated } from "@/lib/auth";
 import { countLeads, getLead } from "@/lib/db";
 import { fmtRel, fmtStamp } from "@/lib/format";
@@ -14,6 +15,16 @@ import { ArrowLeft, ArrowRight, Check } from "@/components/admin/icons";
  * right: pipeline stepper + "Move to" quick actions + lead meta.
  */
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const lead = await getLead(id);
+  return { title: `${lead?.name ?? "Lead"} — Studio Desk | NextBiz Studio` };
+}
 
 const ORDER = ["new", "replied", "quoted"] as const;
 const DOT: Record<string, string> = {

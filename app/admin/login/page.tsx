@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { LoginForm } from "./login-form";
 import { ArrowLeft } from "@/components/admin/icons";
 
@@ -9,6 +10,7 @@ import { ArrowLeft } from "@/components/admin/icons";
  * desk canvas + foot strip. NO sidebar — the gate renders alone.
  */
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "Sign in — Studio Desk | NextBiz Studio" };
 
 export default function AdminLoginPage() {
   return (
