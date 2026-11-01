@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import type { Metadata } from "next";
 import { isAuthenticated, isLeadStatus } from "@/lib/auth";
 import { listLeads } from "@/lib/db";
 import { fmtRel, fmtAbs } from "@/lib/format";
@@ -14,6 +15,7 @@ import { Download, ArrowRight, Mail } from "@/components/admin/icons";
  * Defense in depth: middleware is the gate, this page re-checks too.
  */
 export const dynamic = "force-dynamic";
+export const metadata: Metadata = { title: "Leads inbox — Studio Desk | NextBiz Studio" };
 
 const STATUSES = ["new", "replied", "quoted", "won", "lost"] as const;
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);

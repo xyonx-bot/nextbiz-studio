@@ -144,3 +144,16 @@ Bonus: DB backup pipeline LIVE — scripts/db-backup.py → joyverse-user-data/b
 | G3 | .pad @<=760 22px wins cascade (.pad.pad specificity) | done |
 | G4 | Section B real still-life photo (public/img + seed photo + saturate .85) | done |
 | G5 | e2e spec contact-v5-geofix.spec.ts + full suite green | done |
+
+## r-nbs-admin-visual-fix (mira Oct-24 live pass, 6-item list) — 2026-11-01 — branch fix/admin-visual-fix-oct24
+Spec is the dispatch itself (explicit fix list = reviewed breakdown). Source of truth: ~/workspaces/mira/prototypes/nextbizstudio/admin/.
+| # | Fix | Status |
+|---|---|---|
+| V1 | Tab titles: /admin + /admin/lead/* + /admin/login get Studio Desk titles (metadata exports) | done |
+| V2 | 2px-ink .panel .phead scoped to .pagescontent; lead panels fall back to 1px --line | done |
+| V3 | 760 .lc-head override written as .adminui .logincard .lc-head (specificity tie, later wins) | done |
+| V4 | .ract .btnrow form{display:contents} — grid sizes buttons not forms | done |
+| V5 | .content/.dwrap/.pagescontent x-pad clamp(14px,2.5vw,28px) = chrome | done |
+| V6 | .ledger .lhead :nth-child(5){text-align:right} | done |
+| V7 | e2e admin-visual-fix.spec.ts (6 geometry probes) + full suite green | done (lint 0 warn-preexisting; tsc 0; unit 48/48; build green; fresh-DB e2e 308 passed / 0 failed / 112 skipped; spec 6/6) |
+OPS FYI checked: beta recreate uses beta-stage/.env which matches live beta container (sha-verified); deploy-stage/.env matches prod. No drift action needed.
