@@ -1,0 +1,15 @@
+import { LegalPage } from "@/components/sections/legal";
+import type { LegalDoc } from "@/components/sections/types";
+import { getSections } from "@/lib/config";
+import seedDoc from "@/lib/seed/legal/data-deletion.json";
+
+export const metadata = { title: "Data Deletion Instructions — NextBiz Studio" };
+
+// S5: seed ⊕ admin config; DB down/empty → seed fallback.
+export const dynamic = "force-dynamic";
+
+export default async function Page() {
+  const [section] = await getSections("legal/data-deletion");
+  const doc = (section?.content ?? seedDoc) as LegalDoc;
+  return <LegalPage doc={doc} current="/legal/data-deletion" />;
+}

@@ -1,0 +1,45 @@
+{
+  "page": "data-deletion",
+  "num": "05",
+  "h1a": "Data Deletion",
+  "h1b": "Instructions",
+  "lede": "How to request deletion of your data from NextBiz Studio and from the NextBiz One app (one.nextbizstudio.com) — including data received from Meta (WhatsApp / Instagram) on your behalf.",
+  "metaDoc": "Data Deletion Instructions — Legal 05",
+  "updated": "2026-11-02",
+  "version": "1.0",
+  "updatesNote": "First published. Questions about this document? Write to hello@nextbizstudio.com.",
+  "sections": [
+    {
+      "title": "What data we hold",
+      "blocks": [
+        { "t": "p", "text": "When you use NextBiz One, we store the data needed to run your workspace: your operator account (email), your connected WhatsApp Business number / Instagram professional account tokens, incoming and outgoing messages, contacts you message, and ad campaign records for your connected ad account." },
+        { "t": "ul", "items": [
+          "Operator account details (email, login).",
+          "Connected Meta asset tokens and account identifiers (WhatsApp number, IG account, Page, ad account).",
+          "Message history (inbound/outbound WhatsApp and Instagram DMs) and contact records.",
+          "Campaign and broadcast records you create."
+        ] }
+      ]
+    },
+    {
+      "title": "How to request deletion",
+      "blocks": [
+        { "t": "p", "text": "Email hello@nextbizstudio.com from the address linked to your account with the subject \"Data deletion request\", or use Settings → Workspace → Delete my data inside the app. We will confirm your identity and delete your data within 30 days." },
+        { "t": "p", "muted": true, "text": "Deleting your workspace removes your operator account, connected-asset tokens, message history, contacts and campaign records from our database. Backups are purged on the normal rotation cycle (maximum 90 days)." }
+      ]
+    },
+    {
+      "title": "Meta platform data (WhatsApp / Instagram)",
+      "blocks": [
+        { "t": "p", "text": "If you connected WhatsApp or Instagram through Meta Business Login, you can also revoke access at any time from your Meta account: facebook.com/settings → Apps and Websites → remove \"NextBiz Studio\". Meta will then send a data-deletion callback to our webhook, and we delete the associated Meta-derived data (tokens, message events) within 30 days." },
+        { "t": "p", "text": "Data that Meta itself holds about you (your Facebook/Instagram profile, your DMs on Instagram) is governed by Meta's own privacy policy and deletion tools and is not stored by us beyond what is listed above." }
+      ]
+    },
+    {
+      "title": "Contact",
+      "blocks": [
+        { "t": "p", "text": "NextBiz Studio · Kolkata, India · hello@nextbizstudio.com. We respond to deletion requests within 30 days, usually much sooner." }
+      ]
+    }
+  ]
+}
