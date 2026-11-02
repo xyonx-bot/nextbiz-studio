@@ -9,6 +9,7 @@ import privacySeed from "./seed/legal/privacy.json";
 import termsSeed from "./seed/legal/terms.json";
 import refundSeed from "./seed/legal/refund.json";
 import cookieSeed from "./seed/legal/cookie.json";
+import dataDeletionSeed from "./seed/legal/data-deletion.json";
 
 /**
  * S5 — page configurator core (P1.8 + P1.9).
@@ -48,6 +49,7 @@ const SEEDS: Record<string, Record<string, unknown>> = {
   "legal/terms": { doc: termsSeed },
   "legal/refund": { doc: refundSeed },
   "legal/cookie": { doc: cookieSeed },
+  "legal/data-deletion": { doc: dataDeletionSeed },
 };
 
 export interface ResolvedSection {
