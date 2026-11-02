@@ -14,6 +14,7 @@ export const LEGAL_LINKS = [
   { href: "/legal/terms", label: "Terms & Conditions" },
   { href: "/legal/refund", label: "Refund & Cancellation" },
   { href: "/legal/cookie", label: "Cookie Policy" },
+  { href: "/legal/data-deletion", label: "Data Deletion" },
 ] as const;
 
 export const SERVICE_LINKS = [
