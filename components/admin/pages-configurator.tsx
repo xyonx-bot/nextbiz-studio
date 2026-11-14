@@ -87,6 +87,13 @@ function setAtPath(obj: Content, path: (string | number)[], value: unknown): Con
   return root;
 }
 
+/** shape for the FIRST item of a list that is currently empty (no sibling
+ *  to copy the shape from) — keyed by the list's field name */
+const EMPTY_LIST_TEMPLATES: Record<string, unknown> = {
+  gallery: { src: "", caption: "", frame: "browser" },
+  meta: { k: "", v: "" },
+};
+
 function templateLike(sample: unknown): unknown {
   if (typeof sample === "string") return "";
   if (typeof sample === "number") return 0;
@@ -728,7 +735,7 @@ function Node({
           <button
             type="button"
             className="additem"
-            onClick={() => mutate(path, { type: "addItem", tpl: value.length ? templateLike(value[0]) : "" })}
+            onClick={() => mutate(path, { type: "addItem", tpl: value.length ? templateLike(value[0]) : (EMPTY_LIST_TEMPLATES[label] ?? "") })}
           ><Plus /> Add item</button>
         </div>
       </div>

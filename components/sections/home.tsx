@@ -161,8 +161,8 @@ export function Work({ content }: { content?: typeof homeContent.work }) {
         </div>
       </div>
       <div className="proj-grid">
-      {c.items.map((p) => (
-        <Link className="proj" key={p.name} href="/projects" style={{ display: "block" }}>
+      {c.items.map((p, i) => (
+        <Link className="proj" key={i} href={(p as { href?: string }).href || "/projects"} style={{ display: "block" }}>
           {p.photo ? (
             <div className="imgph realimg-box ph"><img src={p.photo} alt={String(p.note ?? "")} /></div>
           ) : (

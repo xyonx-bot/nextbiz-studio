@@ -91,7 +91,8 @@ test.describe("configurator uploads + drag (S5-10)", () => {
       data: { content: null },
     });
     await page.goto("/projects");
-    await expect(page.locator("main .entry-photo img")).toHaveCount(0); // placeholder back
+    // seed cover back (project 01 ships with a real cover since Nov 14)
+    expect(await page.locator("main .entry-photo img").first().getAttribute("src")).toContain("nbs/projects/");
   });
 
   test("hero photo swap (the reported gap): hero editor has the upload option and the public hero renders it", async ({ page }) => {

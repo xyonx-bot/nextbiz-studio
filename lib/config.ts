@@ -10,6 +10,7 @@ import termsSeed from "./seed/legal/terms.json";
 import refundSeed from "./seed/legal/refund.json";
 import cookieSeed from "./seed/legal/cookie.json";
 import dataDeletionSeed from "./seed/legal/data-deletion.json";
+import type { ProjectEntry } from "@/components/sections/types";
 
 /**
  * S5 — page configurator core (P1.8 + P1.9).
@@ -328,4 +329,20 @@ export async function deleteSection(id: string): Promise<boolean> {
     [id],
   );
   return (r.rowCount ?? 0) > 0;
+}
+
+/** projects.entries, seed ⊕ admin override — read straight from the row so
+ *  case-study pages keep working even when the section is hidden on the
+ *  /projects page. Any failure → seed. */
+export async function getProjectEntries(): Promise<ProjectEntry[]> {
+  const seed = (projectsSeed as unknown as { entries: ProjectEntry[] }).entries;
+  try {
+    const { rows } = await getPool().query<{ content: unknown }>(
+      `SELECT content FROM page_sections WHERE page_key = 'projects' AND section_key = 'entries'`,
+    );
+    const ov = rows[0]?.content;
+    return Array.isArray(ov) ? (ov as ProjectEntry[]) : seed;
+  } catch {
+    return seed;
+  }
 }
