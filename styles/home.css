@@ -92,6 +92,7 @@
 .work h2 { margin-top: 23px; }
 .proj-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; align-items: end; }
 .proj .ph { height: 220px; border-radius: 9px; }
+.proj .ph.realimg-box img { object-position: top; }
 .proj h3 { display: flex; justify-content: space-between; align-items: center; font-size: 13px; margin: 13px 0 2px; font-weight: 700; }
 .proj h3 svg { width: 15px; height: 15px; }
 .proj p { font-size: 11px; color: var(--muted); margin: 0; }

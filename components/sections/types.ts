@@ -22,3 +22,39 @@ export interface LegalDoc {
   sections: LegalSection[];
   siblings: { href: string; label: string }[];
 }
+
+/** One project in projects.entries (lib/seed/projects.json) — the single
+ *  source for the /projects grid AND the /projects/[slug] case study.
+ *  Edited in admin → Pages → Projects → Case entries. `placeholder: true`
+ *  renders an "in the making" card with no detail page. */
+export interface ProjectShot {
+  src: string;
+  caption: string;
+  frame: string; // "browser" (wide screenshot) | "phone" (tall screenshot)
+}
+
+export interface ProjectEntry {
+  id: string;
+  slug: string;
+  placeholder: boolean;
+  no: string;
+  micro: string;
+  h2: string;
+  badge: string;
+  type: string;
+  year: string;
+  summary: string;
+  liveUrl: string;
+  liveLabel: string;
+  meta: { k: string; v: string }[];
+  photo: string;
+  photoNote: string;
+  fig: string;
+  figRight: string;
+  brief: string[];
+  approach: string;
+  deliverables: string[];
+  gallery: ProjectShot[];
+  outcomeLabel: string;
+  outcome: string;
+}

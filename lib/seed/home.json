@@ -150,22 +150,25 @@
     "cta": "View All Projects",
     "items": [
       {
-        "name": "NextGen",
-        "tags": "Web Design · Branding",
-        "note": "NEXTGEN · hero image · object 70% 45%",
-        "photo": ""
+        "name": "Beautify Interior",
+        "tags": "E-commerce · Storefront · Admin",
+        "note": "Beautify Interior — online store, home view",
+        "photo": "https://cdn.joyverse.fun/nbs/projects/beautify-interior/home.jpg",
+        "href": "/projects/beautify-interior"
       },
       {
-        "name": "Harmony",
-        "tags": "Digital Marketing",
-        "note": "HARMONY · about image · object 50% 24%",
-        "photo": ""
+        "name": "Next entry",
+        "tags": "In the making",
+        "note": "ENTRY 02 · IN THE MAKING",
+        "photo": "",
+        "href": "/projects"
       },
       {
-        "name": "Velora",
-        "tags": "Brand Identity",
-        "note": "VELORA · still-life · object-center",
-        "photo": ""
+        "name": "Next entry",
+        "tags": "In the making",
+        "note": "ENTRY 03 · IN THE MAKING",
+        "photo": "",
+        "href": "/projects"
       }
     ]
   },
