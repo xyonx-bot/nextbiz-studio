@@ -1,0 +1,271 @@
+{
+  "name": "WhatsApp Auto-Reply Menu (NextBiz Studio)",
+  "nodes": [
+    {
+      "parameters": {
+        "multipleMethods": true,
+        "httpMethod": [
+          "GET",
+          "POST"
+        ],
+        "path": "whatsapp-menu",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "eced6cb4-b754-5bea-9e8e-5b44d62e826b",
+      "name": "Meta Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "febe12bc-832a-588d-8bcf-7ef3c4e78c0d"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "v1",
+              "leftValue": "={{ $json.query['hub.mode'] }}",
+              "rightValue": "subscribe",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "v2",
+              "leftValue": "={{ $json.query['hub.verify_token'] }}",
+              "rightValue": "CHANGE_ME_VERIFY_TOKEN",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true
+      },
+      "id": "d0345fbc-3ddc-5766-ab5d-ae712d3287c9",
+      "name": "Verify Token OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        240,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.query['hub.challenge'] }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "51bf6cd7-5218-5d28-944e-a87cdca04af9",
+      "name": "Respond Challenge",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Forbidden",
+        "options": {
+          "responseCode": 403
+        }
+      },
+      "id": "f68ff236-4ff6-510f-9698-5017b348070d",
+      "name": "Respond 403",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "EVENT_RECEIVED",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "00e48cc8-9b7e-53de-b380-9f172008e929",
+      "name": "Ack 200 to Meta",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ── EDIT THESE ──────────────────────────────────────────────\nreturn [{ json: {\n  GRAPH: 'https://graph.facebook.com/v23.0',\n  TOKEN: 'PASTE_YOUR_WHATSAPP_ACCESS_TOKEN',\n  // Send the menu when the message is one of these words…\n  TRIGGERS: ['HI', 'HELLO', 'HEY', 'MENU', 'START', 'PRICE', 'PRICES'],\n  // …or on ANY text message (true = every message gets the menu).\n  MENU_ON_ANY_TEXT: false,\n  MENU: {\n    header: 'Welcome to Our Shop 👋',\n    text: 'How can we help? Tap below to see options.',\n    button: 'View options',\n    rows: [   // max 10, title max 24 chars\n      { id: 'PRICES',   title: 'Prices',            description: 'Our full price list' },\n      { id: 'TIMINGS',  title: 'Timings & location', description: 'When and where to find us' },\n      { id: 'BOOK',     title: 'Book an appointment', description: 'Pick a time that suits you' },\n      { id: 'HUMAN',    title: 'Talk to a person',  description: 'We reply within working hours' },\n    ],\n  },\n  ANSWERS: {\n    PRICES:  'Here are our prices:\\n• Service A — ₹499\\n• Service B — ₹999\\nReply MENU any time.',\n    TIMINGS: 'We are open Mon–Sat, 10am–8pm.\\n📍 https://maps.google.com/?q=your+shop',\n    BOOK:    'Book here 👉 https://example.com/book — or reply with a day and time that suits you.',\n    HUMAN:   'Sure! A team member will reply here shortly 🙏',\n  },\n} }];\n"
+      },
+      "id": "b1e0c52e-dc37-54a5-b5dc-46821bdb595e",
+      "name": "CONFIG",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Builds WhatsApp replies: list menu for greetings, text answers for menu taps.\nconst cfg = $('CONFIG').first().json;\nconst body = $('Meta Webhook').first().json.body || {};\nconst out = [];\nconst triggers = (cfg.TRIGGERS || []).map(t => String(t).toUpperCase());\nfor (const entry of body.entry || []) {\n  for (const change of entry.changes || []) {\n    if (change.field !== 'messages') continue;\n    const v = change.value || {};\n    const phoneId = v.metadata && v.metadata.phone_number_id;\n    for (const msg of v.messages || []) {\n      const to = msg.from;\n      if (!phoneId || !to) continue;\n      const url = `${cfg.GRAPH}/${phoneId}/messages`;\n      const base = { messaging_product: 'whatsapp', recipient_type: 'individual', to };\n      const reply = msg.interactive && (msg.interactive.list_reply || msg.interactive.button_reply);\n      if (reply) {\n        const a = (cfg.ANSWERS || {})[reply.id];\n        if (a) out.push({ json: { url, body: { ...base, type: 'text', text: { body: a } } } });\n        continue;\n      }\n      if (msg.type !== 'text') continue;\n      const text = String((msg.text && msg.text.body) || '').trim().toUpperCase();\n      if (!cfg.MENU_ON_ANY_TEXT && !triggers.includes(text)) continue;\n      const M = cfg.MENU;\n      out.push({ json: { url, body: { ...base, type: 'interactive', interactive: {\n        type: 'list',\n        header: { type: 'text', text: M.header },\n        body: { text: M.text },\n        action: { button: M.button, sections: [{ title: 'Menu',\n          rows: M.rows.slice(0, 10).map(r => ({ id: r.id, title: r.title.slice(0, 24), description: (r.description || '').slice(0, 72) })) }] },\n      } } } });\n    }\n  }\n}\nreturn out;\n"
+      },
+      "id": "dbb50146-4434-5767-849f-e5e99de34cfa",
+      "name": "Plan Replies",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.url }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('CONFIG').first().json.TOKEN }}"
+            }
+          ]
+        }
+      },
+      "id": "29320b62-13a3-5b5c-b083-6f8a9bf1a304",
+      "name": "Send to WhatsApp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        420
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## WhatsApp auto-reply menu\n**What it does:** customer says \"hi\" → gets a tappable menu (prices, timings, booking, talk to a person). Each option replies instantly.\n\n**Setup (15 min)** — needs the WhatsApp Cloud API (Meta developer app with WhatsApp added).\n1. Edit **CONFIG**: access token, menu rows and answers.\n2. In **Verify Token OK?** replace `CHANGE_ME_VERIFY_TOKEN` with a secret word.\n3. Activate, copy *Meta Webhook* Production URL → Meta app → WhatsApp → Configuration → Webhook; subscribe to **messages**.\n\nReplies within 24h of the customer's message are free. Free resource from nextbizstudio.com",
+        "width": 440,
+        "height": 420
+      },
+      "id": "fb16865b-04d5-51cd-8314-452b0077dee7",
+      "name": "Read me",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Meta Webhook": {
+      "main": [
+        [
+          {
+            "node": "Verify Token OK?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ack 200 to Meta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Token OK?": {
+      "main": [
+        [
+          {
+            "node": "Respond Challenge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 403",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ack 200 to Meta": {
+      "main": [
+        [
+          {
+            "node": "CONFIG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CONFIG": {
+      "main": [
+        [
+          {
+            "node": "Plan Replies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan Replies": {
+      "main": [
+        [
+          {
+            "node": "Send to WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "source": "nextbizstudio.com/resources"
+  },
+  "tags": []
+}

@@ -9,8 +9,8 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "@/components/icons";
 import resources from "@/lib/seed/resources.json";
 import type { ResourceEntry } from "./types";
-import { Library, GatedContent, EmailCapture } from "./resources-client";
-import { accessLabel, accessMode, igDmUrl, isPublished, publicView, resourceHref, snippetOf } from "@/lib/resources";
+import { Library, GatedContent, EmailCapture, ResourceCard } from "./resources-client";
+import { accessLabel, accessMode, facetsOf, igDmUrl, isPublished, publicView, resourceHref, snippetOf } from "@/lib/resources";
 
 const list = <T,>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
 const typeLabel = (k: string) => resources.library.types.find((t) => t.key === k)?.label ?? k;
@@ -18,7 +18,7 @@ const typeLabel = (k: string) => resources.library.types.find((t) => t.key === k
 /** Strip gated fields before anything reaches a client component. */
 const forCard = (e: ResourceEntry) => {
   const pub = publicView(e).entry;
-  return { ...pub, href: resourceHref(e), snippet: snippetOf(pub) };
+  return { ...pub, href: resourceHref(e), snippet: snippetOf(pub), ...facetsOf(e) };
 };
 
 /** 2 · The library */
@@ -33,6 +33,7 @@ export function LibrarySection({ entries }: { entries: ResourceEntry[] }) {
       types={L.types}
       searchPlaceholder={L.searchPlaceholder}
       emptyNote={L.emptyNote}
+      labels={(L as { filters?: Record<string, string> }).filters ?? {}}
     />
   );
 }
@@ -109,28 +110,7 @@ export function HomeLibrary({
         </div>
       </div>
       <div className="lib-grid">
-        {pick.map((e, i) => {
-          const card = forCard(e);
-          return (
-            <Link className="rcard" href={card.href} key={e.id || e.slug}>
-              <div className="rcard-face">
-                <div className="rcard-top">
-                  <span className="rtag">{typeLabel(e.type)}</span>
-                  <span className="no">{String(i + 1).padStart(2, "0")}</span>
-                </div>
-                <p className="rcard-snip">{card.snippet}</p>
-              </div>
-              <div className="rcard-body">
-                <h3>{e.title} <ArrowUpRight /></h3>
-                <p>{e.summary}</p>
-                <div className="rcard-meta">
-                  <span>{[e.tool, e.time].filter(Boolean).join(" · ")}</span>
-                  <span className="rfree">{accessLabel(e)}</span>
-                </div>
-              </div>
-            </Link>
-          );
-        })}
+        {pick.map((e, i) => <ResourceCard e={forCard(e)} i={i} typeLabel={typeLabel(e.type)} key={e.id || e.slug} />)}
       </div>
     </section>
   );

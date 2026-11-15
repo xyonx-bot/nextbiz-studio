@@ -32,85 +32,186 @@ async function subscribe(body: Record<string, string>) {
   return data as { ok: true; unlocked?: { prompts: ResourcePrompt[]; blocks: ResourceBlock[]; fileUrl: string } };
 }
 
-/* ═══ LIBRARY GRID — search + type chips ═══ */
+/* ═══ LIBRARY — two columns: filter rail (search + facets) | results ═══
+   Facets: OR inside a group, AND across groups; counts reflect the
+   other active groups. Filters live in the URL (?type=n8n&tool=…&q=…)
+   so DMs and reels can link straight to a filtered view. */
+export type LibraryCard = ResourceEntry & {
+  href: string; snippet: string; tools: string[]; via: string; minutes: number;
+};
+type FacetKey = "type" | "tool" | "level" | "access";
+const FACETS: FacetKey[] = ["type", "tool", "level", "access"];
+const ACCESS_LABELS: Record<string, string> = { open: "Open — no sign-up", email: "Email unlock", dm: "Instagram DM" };
+const valuesOf = (e: LibraryCard, f: FacetKey): string[] =>
+  f === "type" ? [e.type] : f === "tool" ? e.tools : f === "level" ? (e.level ? [e.level] : []) : [e.via];
+
 export function Library({
-  entries, types, searchPlaceholder, emptyNote,
+  entries, types, searchPlaceholder, emptyNote, labels,
 }: {
-  entries: (ResourceEntry & { href: string; snippet: string })[];
+  entries: LibraryCard[];
   types: TypeLabel[];
   searchPlaceholder: string;
   emptyNote: string;
+  labels: Record<string, string>;
 }) {
   const [q, setQ] = useState("");
-  const [type, setType] = useState<string>("all");
+  const [sel, setSel] = useState<Record<FacetKey, string[]>>({ type: [], tool: [], level: [], access: [] });
+  const [sort, setSort] = useState<"featured" | "az" | "quick">("featured");
+  const [open, setOpen] = useState(false); // mobile filter sheet
   const labelOf = (k: string) => types.find((t) => t.key === k)?.label ?? k;
+  const L = (k: string, d: string) => labels[k] ?? d;
 
-  // only offer chips for kinds that actually have items
-  const chips = types.filter((t) => entries.some((e) => e.type === t.key));
-  const counts = Object.fromEntries(chips.map((t) => [t.key, entries.filter((e) => e.type === t.key).length]));
+  // URL → state once on mount (client only, avoids hydration mismatch)
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const next = { type: [], tool: [], level: [], access: [] } as Record<FacetKey, string[]>;
+    for (const f of FACETS) next[f] = sp.getAll(f).filter(Boolean);
+    setSel(next);
+    setQ(sp.get("q") ?? "");
+  }, []);
+  // state → URL (replace, no history spam)
+  useEffect(() => {
+    const sp = new URLSearchParams();
+    if (q.trim()) sp.set("q", q.trim());
+    for (const f of FACETS) for (const v of sel[f]) sp.append(f, v);
+    const qs = sp.toString();
+    window.history.replaceState(null, "", `${window.location.pathname}${qs ? `?${qs}` : ""}${window.location.hash}`);
+  }, [q, sel]);
+
+  const needle = q.trim().toLowerCase();
+  const matchQ = (e: LibraryCard) => !needle ||
+    [e.title, e.summary, e.tool, labelOf(e.type), ...(e.inside ?? [])].join(" ").toLowerCase().includes(needle);
+  const matchFacets = (e: LibraryCard, skip?: FacetKey) =>
+    FACETS.every((f) => f === skip || sel[f].length === 0 || valuesOf(e, f).some((v) => sel[f].includes(v)));
 
   const shown = useMemo(() => {
-    const needle = q.trim().toLowerCase();
-    return entries.filter((e) =>
-      (type === "all" || e.type === type) &&
-      (!needle || [e.title, e.summary, e.tool, labelOf(e.type), ...(e.inside ?? [])]
-        .join(" ").toLowerCase().includes(needle)),
-    );
-  }, [q, type, entries]);
+    const list = entries.filter((e) => matchQ(e) && matchFacets(e));
+    if (sort === "az") return [...list].sort((a, b) => a.title.localeCompare(b.title));
+    if (sort === "quick") return [...list].sort((a, b) => a.minutes - b.minutes);
+    return list; // server already put featured first
+  }, [entries, q, sel, sort]);
+
+  // facet options + live counts (respecting the other groups)
+  const options = (f: FacetKey) => {
+    const all = new Map<string, number>();
+    for (const e of entries) for (const v of valuesOf(e, f)) all.set(v, all.get(v) ?? 0);
+    for (const e of entries) if (matchQ(e) && matchFacets(e, f)) for (const v of valuesOf(e, f)) all.set(v, (all.get(v) ?? 0) + 1);
+    let keys = [...all.keys()];
+    if (f === "type") keys = types.map((t) => t.key).filter((k) => all.has(k));
+    else if (f === "level") keys = ["Beginner", "Intermediate", "Advanced"].filter((k) => all.has(k));
+    else if (f === "access") keys = ["open", "email", "dm"].filter((k) => all.has(k));
+    else keys.sort((a, b) => (all.get(b)! - all.get(a)!) || a.localeCompare(b));
+    return keys.map((k) => ({ key: k, count: all.get(k) ?? 0,
+      label: f === "type" ? labelOf(k) : f === "access" ? ACCESS_LABELS[k] ?? k : k }));
+  };
+  const toggle = (f: FacetKey, v: string) =>
+    setSel((s) => ({ ...s, [f]: s[f].includes(v) ? s[f].filter((x) => x !== v) : [...s[f], v] }));
+  const active = FACETS.flatMap((f) => sel[f].map((v) => ({ f, v })));
+  const clear = () => { setSel({ type: [], tool: [], level: [], access: [] }); setQ(""); };
+  const groupTitle: Record<FacetKey, string> = {
+    type: L("kind", "Kind"), tool: L("tool", "Works with"), level: L("level", "Level"), access: L("access", "How you get it"),
+  };
 
   return (
     <section className="lib pad" id="library">
-      <div className="lib-tools">
+      <div className={`lib-scrim${open ? " open" : ""}`} onClick={() => setOpen(false)} aria-hidden />
+      <aside className={`lib-rail${open ? " open" : ""}`} aria-label="Filter the library">
+        <div className="rail-head">
+          <b>{L("filtersButton", "Filters")}</b>
+          <button type="button" className="rail-close" onClick={() => setOpen(false)} aria-label="Close filters">×</button>
+        </div>
         <label className="lib-search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden>
             <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
           </svg>
-          <input
-            type="search"
-            value={q}
-            onChange={(ev) => setQ(ev.target.value)}
-            placeholder={searchPlaceholder}
-            aria-label="Search the library"
-          />
+          <input type="search" value={q} onChange={(ev) => setQ(ev.target.value)} placeholder={searchPlaceholder} aria-label="Search the library" />
         </label>
-        <div className="lib-chips" role="tablist" aria-label="Filter by kind">
-          <button role="tab" aria-selected={type === "all"} className={type === "all" ? "on" : ""} onClick={() => setType("all")}>
-            All <span>{entries.length}</span>
+        {FACETS.map((f) => {
+          const opts = options(f);
+          if (opts.length < 2 && sel[f].length === 0) return null;
+          const long = f === "tool" && opts.length > 8;
+          return (
+            <fieldset className="facet" key={f}>
+              <legend>{groupTitle[f]}</legend>
+              <div className={long ? "facet-list scroll" : "facet-list"}>
+                {opts.map((o) => (
+                  <label key={o.key} className={`fopt${o.count === 0 && !sel[f].includes(o.key) ? " dim" : ""}`}>
+                    <input type="checkbox" checked={sel[f].includes(o.key)} onChange={() => toggle(f, o.key)} />
+                    <span className="box" aria-hidden />
+                    <span className="fl">{o.label}</span>
+                    <span className="fc">{o.count}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          );
+        })}
+        {(active.length > 0 || q) && (
+          <button type="button" className="rail-clear" onClick={clear}>{L("clear", "Clear all")}</button>
+        )}
+        <button type="button" className="action dark rail-done" onClick={() => setOpen(false)}>
+          Show {shown.length} {L("results", "resources")}
+        </button>
+      </aside>
+
+      <div className="lib-main">
+        <div className="lib-bar">
+          <button type="button" className="lib-filterbtn" onClick={() => setOpen(true)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden><path d="M4 6h16M7 12h10M10 18h4" /></svg>
+            {L("filtersButton", "Filters")}{active.length ? ` · ${active.length}` : ""}
           </button>
-          {chips.map((t) => (
-            <button key={t.key} role="tab" aria-selected={type === t.key} className={type === t.key ? "on" : ""} onClick={() => setType(t.key)}>
-              {t.label} <span>{counts[t.key]}</span>
-            </button>
-          ))}
+          <span className="lib-count"><b>{shown.length}</b> {L("results", "resources")}</span>
+          <div className="lib-pills">
+            {active.map(({ f, v }) => (
+              <button type="button" key={`${f}:${v}`} onClick={() => toggle(f, v)} aria-label={`Remove filter ${v}`}>
+                {f === "type" ? labelOf(v) : f === "access" ? ACCESS_LABELS[v] ?? v : v} <span aria-hidden>×</span>
+              </button>
+            ))}
+          </div>
+          <label className="lib-sort">
+            <span>Sort</span>
+            <select value={sort} onChange={(ev) => setSort(ev.target.value as typeof sort)}>
+              <option value="featured">{L("sortFeatured", "Featured first")}</option>
+              <option value="az">{L("sortAZ", "A–Z")}</option>
+              <option value="quick">{L("sortQuick", "Quickest first")}</option>
+            </select>
+          </label>
+        </div>
+
+        {shown.length === 0 ? (
+          <div className="lib-empty">
+            <p>{emptyNote}</p>
+            <button type="button" className="text-link" onClick={clear}>{L("clear", "Clear all")} <ArrowRight /></button>
+          </div>
+        ) : (
+          <div className="lib-grid">
+            {shown.map((e, i) => <ResourceCard e={e} i={i} typeLabel={labelOf(e.type)} key={e.id || e.slug} />)}
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+export function ResourceCard({ e, i, typeLabel }: { e: LibraryCard; i: number; typeLabel: string }) {
+  return (
+    <Link className={`rcard t-${e.type}`} href={e.href}>
+      <div className="rcard-face">
+        <div className="rcard-top">
+          <span className="rtag">{typeLabel}</span>
+          <span className="no">{String(i + 1).padStart(2, "0")}</span>
+        </div>
+        <p className="rcard-snip">{e.snippet}</p>
+      </div>
+      <div className="rcard-body">
+        <h3>{e.title} <ArrowUpRight /></h3>
+        <p>{e.summary}</p>
+        <div className="rcard-meta">
+          <span>{[e.tool, e.time].filter(Boolean).join(" · ")}</span>
+          <span className="rfree">{accessLabel(e)}</span>
         </div>
       </div>
-
-      {shown.length === 0 ? (
-        <p className="lib-empty">{emptyNote}</p>
-      ) : (
-        <div className="lib-grid">
-          {shown.map((e, i) => (
-            <Link className="rcard" href={e.href} key={e.id || e.slug}>
-              <div className="rcard-face">
-                <div className="rcard-top">
-                  <span className="rtag">{labelOf(e.type)}</span>
-                  <span className="no">{String(i + 1).padStart(2, "0")}</span>
-                </div>
-                <p className="rcard-snip">{e.snippet}</p>
-              </div>
-              <div className="rcard-body">
-                <h3>{e.title} <ArrowUpRight /></h3>
-                <p>{e.summary}</p>
-                <div className="rcard-meta">
-                  <span>{[e.tool, e.time].filter(Boolean).join(" · ")}</span>
-                  <span className="rfree">{accessLabel(e)}</span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
-    </section>
+    </Link>
   );
 }
 
@@ -225,7 +326,7 @@ export function GatedContent({
       )}
 
       {file && (
-        <a className="action dark rfile" href={file} target="_blank" rel="noreferrer">
+        <a className="action dark rfile" href={file} target="_blank" rel="noreferrer" download={/\.json$/i.test(file) ? "" : undefined}>
           {fileCta} <ArrowUpRight />
         </a>
       )}

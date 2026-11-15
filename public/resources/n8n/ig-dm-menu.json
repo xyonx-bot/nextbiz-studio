@@ -1,0 +1,343 @@
+{
+  "name": "Instagram DM Menu — START (NextBiz Studio)",
+  "nodes": [
+    {
+      "parameters": {
+        "multipleMethods": true,
+        "httpMethod": [
+          "GET",
+          "POST"
+        ],
+        "path": "ig-dm-menu",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "b73c2cfb-1644-5085-88d2-2db702695f88",
+      "name": "Meta Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "b9c0e6e2-fe84-56fd-8241-6ea2927c369f"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "v1",
+              "leftValue": "={{ $json.query['hub.mode'] }}",
+              "rightValue": "subscribe",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "v2",
+              "leftValue": "={{ $json.query['hub.verify_token'] }}",
+              "rightValue": "CHANGE_ME_VERIFY_TOKEN",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true
+      },
+      "id": "e220fce3-0e7f-5081-a37a-eb089dded835",
+      "name": "Verify Token OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        240,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.query['hub.challenge'] }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "66e25665-2852-56af-9191-97fa17b33caf",
+      "name": "Respond Challenge",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Forbidden",
+        "options": {
+          "responseCode": 403
+        }
+      },
+      "id": "7e28d692-c26b-563f-9743-fe6ecddbcc95",
+      "name": "Respond 403",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "EVENT_RECEIVED",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "97e4eac7-3157-52f3-ae7a-94ea78f54462",
+      "name": "Ack 200 to Meta",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ── EDIT THESE ──────────────────────────────────────────────\nreturn [{ json: {\n  GRAPH: 'https://graph.instagram.com/v23.0',\n  TOKEN: 'PASTE_YOUR_INSTAGRAM_ACCESS_TOKEN',\n  IG_USER_ID: 'PASTE_YOUR_INSTAGRAM_USER_ID',\n  // Words that open the menu (exact match, any case). Other messages are left for you.\n  TRIGGERS: ['START', 'MENU', 'HI', 'HELLO'],\n  // Optional: Slack/Discord/any webhook URL to ping when someone asks to work with you.\n  NOTIFY_URL: '',\n  MENU: {\n    text: 'Hey! 👋 What can we help you with?',\n    buttons: [   // max 3\n      { type: 'postback', title: 'Free resources', payload: 'RESOURCES' },\n      { type: 'web_url',  title: 'Visit website',  url: 'https://example.com' },\n      { type: 'postback', title: 'Work with us',   payload: 'WORK' },\n    ],\n  },\n  // What each button/quick-reply payload answers with.\n  ANSWERS: {\n    RESOURCES: { text: 'Pick one 👇', buttons: [\n      { type: 'web_url', title: 'Prompt packs',   url: 'https://example.com/prompts' },\n      { type: 'web_url', title: 'n8n workflows',  url: 'https://example.com/n8n' },\n      { type: 'postback', title: '← Main menu',   payload: 'MENU' },\n    ] },\n    WORK: { text: 'Love that! What do you need?', quick_replies: [\n      { title: 'Website',        payload: 'LEAD_WEBSITE' },\n      { title: 'Automation',     payload: 'LEAD_AUTOMATION' },\n      { title: 'Marketing',      payload: 'LEAD_MARKETING' },\n    ] },\n    LEAD: { text: 'Perfect 🙌 Reply with your name and WhatsApp number (or email) and we will reach out within a day.' },\n  },\n} }];\n"
+      },
+      "id": "029c3582-c1ae-5638-a9a8-67a6a620283b",
+      "name": "CONFIG",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Decides the reply for each incoming DM / button tap.\nconst cfg = $('CONFIG').first().json;\nconst body = $('Meta Webhook').first().json.body || {};\nconst out = [];\nconst send = (to, message) => out.push({ json: { kind: 'send', url: `${cfg.GRAPH}/me/messages`,\n  body: { recipient: { id: to }, message } } });\nconst asMessage = (a) => {\n  if (a.buttons) return { attachment: { type: 'template', payload: {\n    template_type: 'button', text: a.text, buttons: a.buttons.slice(0, 3) } } };\n  if (a.quick_replies) return { text: a.text, quick_replies: a.quick_replies.slice(0, 13)\n    .map(q => ({ content_type: 'text', title: q.title, payload: q.payload })) };\n  return { text: a.text };\n};\nconst triggers = (cfg.TRIGGERS || []).map(t => String(t).toUpperCase());\nfor (const entry of body.entry || []) {\n  for (const m of entry.messaging || []) {\n    const from = m.sender && String(m.sender.id);\n    if (!from || from === String(cfg.IG_USER_ID)) continue;   // our own messages\n    if (m.message && m.message.is_echo) continue;             // echoes of what we sent\n    const payload = (m.postback && m.postback.payload)\n      || (m.message && m.message.quick_reply && m.message.quick_reply.payload) || '';\n    const text = String((m.message && m.message.text) || '').trim().toUpperCase();\n    let key = payload || (triggers.includes(text) ? 'MENU' : '');\n    if (!key) continue;                                        // normal chat → leave it for a human\n    if (key === 'MENU') { send(from, asMessage(cfg.MENU)); continue; }\n    if (key.startsWith('LEAD_')) {\n      send(from, asMessage(cfg.ANSWERS.LEAD));\n      if (cfg.NOTIFY_URL) out.push({ json: { kind: 'notify', url: cfg.NOTIFY_URL,\n        body: { text: `New Instagram lead: user ${from} wants ${key.slice(5).toLowerCase()}`,\n                content: `New Instagram lead: user ${from} wants ${key.slice(5).toLowerCase()}` } } });\n      continue;\n    }\n    const a = (cfg.ANSWERS || {})[key];\n    if (a) send(from, asMessage(a));\n  }\n}\nreturn out;\n"
+      },
+      "id": "4d943371-ac9e-584f-8dde-e64910fce6f5",
+      "name": "Plan Replies",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "n1",
+              "leftValue": "={{ $json.kind }}",
+              "rightValue": "notify",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true
+      },
+      "id": "f77c7130-a2ce-5155-a011-19a10e9cfb70",
+      "name": "Is Notify?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        960,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.url }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "5fafba9f-cb43-591a-8be4-5681bedcd068",
+      "name": "Notify Me",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        340
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.url }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('CONFIG').first().json.TOKEN }}"
+            }
+          ]
+        }
+      },
+      "id": "6115aba5-129f-5ce6-b94b-7183acc111bb",
+      "name": "Send to Instagram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        500
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Instagram DM menu (\"DM START\")\n**What it does:** someone DMs START (or taps a button) → they get a menu with buttons. Buttons open links or answer with the next step; *Work with us* asks what they need and pings you.\n\n**Setup (10 min)**\n1. Edit **CONFIG**: token, IG user ID, your menu text, buttons and links.\n2. In **Verify Token OK?** replace `CHANGE_ME_VERIFY_TOKEN` with a secret word.\n3. Activate, copy *Meta Webhook* Production URL into your Meta app → Instagram → Webhooks; subscribe to **messages** and **messaging_postbacks**.\n\nNormal messages that are not a trigger word are ignored, so real chats are never interrupted. Free resource from nextbizstudio.com",
+        "width": 440,
+        "height": 420
+      },
+      "id": "5b336378-d88e-58b7-b3e2-e99d767183ff",
+      "name": "Read me",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Meta Webhook": {
+      "main": [
+        [
+          {
+            "node": "Verify Token OK?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ack 200 to Meta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Token OK?": {
+      "main": [
+        [
+          {
+            "node": "Respond Challenge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 403",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ack 200 to Meta": {
+      "main": [
+        [
+          {
+            "node": "CONFIG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CONFIG": {
+      "main": [
+        [
+          {
+            "node": "Plan Replies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan Replies": {
+      "main": [
+        [
+          {
+            "node": "Is Notify?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Notify?": {
+      "main": [
+        [
+          {
+            "node": "Notify Me",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send to Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "source": "nextbizstudio.com/resources"
+  },
+  "tags": []
+}

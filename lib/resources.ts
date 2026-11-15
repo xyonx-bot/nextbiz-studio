@@ -83,7 +83,16 @@ export function accessLabel(e: ResourceEntry): string {
 
 /** One-line teaser for a card face: first prompt line, else first block, else first "inside" item. */
 export function snippetOf(e: ResourceEntry): string {
-  const first = e.prompts?.[0]?.text ?? e.blocks?.[0]?.p ?? e.inside?.join(" · ") ?? e.summary;
+  const inside = (e.inside ?? []).filter((i) => !/^importable/i.test(i));
+  const first = e.prompts?.[0]?.text ?? (inside.length ? inside.join(" · ") : undefined) ?? e.blocks?.[0]?.p ?? e.summary;
   const clean = str(first).replace(/\[paste [^\]]+\]\s*/gi, "").replace(/\s+/g, " ").trim();
   return clean.length > 150 ? `${clean.slice(0, 147).trimEnd()}…` : clean;
+}
+
+/** Card facets: tools split from "A · B · C", minutes parsed from "20 min" / "8 min read" / "15 min a week". */
+export function facetsOf(e: ResourceEntry) {
+  const tools = str(e.tool).split(/\s*·\s*/).map((t) => t.trim()).filter(Boolean);
+  const m = /(\d+)\s*(min|hour|hr)/i.exec(str(e.time));
+  const minutes = m ? Number(m[1]) * (/^h/i.test(m[2]) ? 60 : 1) : 999;
+  return { tools, via: accessMode(e), minutes };
 }
