@@ -27,7 +27,7 @@ export function Hero({ content }: { content?: typeof homeContent.hero }) {
         <p className="lede">{c.lede}</p>
         <div className="hero-actions">
           <Link className="action dark" href="/contact">{c.ctaPrimary} <ArrowRight /></Link>
-          <Link className="watch" href="/projects">
+          <Link className="watch" href={(c as { ctaWatchHref?: string }).ctaWatchHref || "/projects"}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <circle cx="12" cy="12" r="10" /><polygon points="10 8 16 12 10 16 10 8" />
             </svg>

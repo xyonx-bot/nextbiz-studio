@@ -27,6 +27,10 @@
           "label": "Work showcase"
         },
         {
+          "key": "library",
+          "label": "Free library teaser"
+        },
+        {
           "key": "industries",
           "label": "Industries"
         },
@@ -37,6 +41,10 @@
         {
           "key": "team",
           "label": "Team"
+        },
+        {
+          "key": "waitlist",
+          "label": "NextBiz One waitlist"
         },
         {
           "key": "contactBand",
@@ -133,9 +141,33 @@
       ]
     },
     {
+      "key": "resources",
+      "title": "Resources",
+      "navOrder": 5,
+      "path": "/resources",
+      "sections": [
+        {
+          "key": "register",
+          "label": "Library opener"
+        },
+        {
+          "key": "entries",
+          "label": "Resource entries"
+        },
+        {
+          "key": "dmBand",
+          "label": "Instagram DM band"
+        },
+        {
+          "key": "waitlist",
+          "label": "NextBiz One waitlist"
+        }
+      ]
+    },
+    {
       "key": "contact",
       "title": "Contact",
-      "navOrder": 5,
+      "navOrder": 6,
       "path": "/contact",
       "sections": [
         {

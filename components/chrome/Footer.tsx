@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { LEGAL_LINKS, NAV_LINKS, SERVICE_LINKS } from "@/lib/content";
+import { EmailCapture } from "@/components/sections/resources-client";
 
 const SOCIALS = [
   {
@@ -41,7 +42,7 @@ const SOCIALS = [
  * Footer — single rich variant on ALL 9 pages (Joydip's call Oct 13:
  * home's rich footer everywhere; Mira updated all 9 wireframes to match).
  * Brand+socials · Quick Links · Our Services · Legal ×4 · newsletter.
- * Newsletter input is decorative (brief has no email marketing).
+ * Newsletter posts to /api/subscribe (list=newsletter) since Nov 15.
  */
 export function Footer() {
   const cdn = process.env.NEXT_PUBLIC_CDN_BASE ?? "https://cdn.joyverse.fun";
@@ -91,16 +92,9 @@ export function Footer() {
       </div>
 
       <div className="fcol news">
-        <b>Subscribe to our newsletter</b>
-        <p>Get the latest updates and insights.</p>
-        <form className="row" action="/contact" method="get">
-          <input placeholder="Your email address" type="email" name="email" aria-label="Email address" />
-          <button type="submit" aria-label="Subscribe">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-              <path d="M5 12h14M13 5l7 7-7 7" />
-            </svg>
-          </button>
-        </form>
+        <b>Get free resources</b>
+        <p>New templates, prompts and workflows in your inbox — free.</p>
+        <EmailCapture list="newsletter" placeholder="Your email address" cta="Subscribe" done="Subscribed — the next drop comes to your inbox." compact />
       </div>
 
       <div className="copyright">

@@ -156,3 +156,41 @@ export async function addLeadNote(leadId: string, note: string): Promise<NoteRow
   );
   return rows[0];
 }
+
+/* ── subscribers (migration 006) ─────────────────────────── */
+export interface SubscriberRow {
+  id: string;
+  email: string;
+  list: string;
+  source: string;
+  created_at: Date;
+  last_seen_at: Date;
+}
+
+/** Insert or bump — one row per (email, list, source). */
+export async function upsertSubscriber(input: {
+  email: string; list: string; source?: string; ipHash?: string | null;
+}): Promise<void> {
+  await getPool().query(
+    `INSERT INTO subscribers (email, list, source, ip_hash) VALUES ($1, $2, $3, $4)
+     ON CONFLICT (lower(email), list, source) DO UPDATE SET last_seen_at = now()`,
+    [input.email, input.list, input.source ?? "", input.ipHash ?? null],
+  );
+}
+
+export async function countRecentSubscribesByIp(ipHash: string, windowMinutes = 60): Promise<number> {
+  const { rows } = await getPool().query<{ n: number }>(
+    `SELECT COUNT(*)::int AS n FROM subscribers
+     WHERE ip_hash = $1 AND last_seen_at > now() - ($2 || ' minutes')::interval`,
+    [ipHash, String(windowMinutes)],
+  );
+  return rows[0]?.n ?? 0;
+}
+
+export async function listSubscribers(): Promise<SubscriberRow[]> {
+  const { rows } = await getPool().query<SubscriberRow>(
+    `SELECT id, email, list, source, created_at, last_seen_at
+       FROM subscribers ORDER BY created_at DESC LIMIT 5000`,
+  );
+  return rows;
+}

@@ -1,0 +1,451 @@
+{
+  "page": "resources",
+  "sectionOrder": [
+    "register",
+    "entries",
+    "dmBand",
+    "waitlist"
+  ],
+  "register": {
+    "micro": "Free library · Resources · Volume 01",
+    "h1": [
+      "Tools we use,",
+      "yours free."
+    ],
+    "lede": "Prompt packs, Notion templates, n8n workflows and short guides — the same setups we build for clients, packaged so you can use them today. Free while we grow the library.",
+    "meta": [
+      {
+        "k": "Kinds",
+        "v": "AI prompts · Notion · n8n · Guides"
+      },
+      {
+        "k": "Price",
+        "v": "Free — some items unlock with your email"
+      },
+      {
+        "k": "Updates",
+        "v": "New resources added every week"
+      }
+    ]
+  },
+  "library": {
+    "searchPlaceholder": "Search prompts, templates, workflows…",
+    "emptyNote": "Nothing matches that yet. Tell us what you need on Instagram — the most requested resources get built first.",
+    "types": [
+      {
+        "key": "prompt",
+        "label": "AI Prompts"
+      },
+      {
+        "key": "notion",
+        "label": "Notion Templates"
+      },
+      {
+        "key": "n8n",
+        "label": "n8n Workflows"
+      },
+      {
+        "key": "guide",
+        "label": "Guides"
+      }
+    ]
+  },
+  "dmBand": {
+    "micro": "On Instagram",
+    "h2": "Want everything in one go?",
+    "body": "DM START to @nextbizstudio. You'll get a menu with the full pack, new drops before they land here, and a direct line to us if you want something set up for your business.",
+    "keyword": "START",
+    "handle": "nextbizstudio",
+    "cta": "Open Instagram"
+  },
+  "waitlist": {
+    "id": "nextbiz-one",
+    "micro": "Coming soon · NextBiz One",
+    "h2": [
+      "One inbox for",
+      "WhatsApp & Instagram."
+    ],
+    "body": "NextBiz One is the app we're building from our client work: comment-to-DM replies, WhatsApp broadcasts, shared inbox and AI replies, in one place. It's in private beta now. Join the waitlist and we'll invite people in small batches.",
+    "points": [
+      "Instagram comment → DM automation",
+      "WhatsApp Business inbox and broadcasts",
+      "AI replies trained on your business",
+      "One workspace for your whole team"
+    ],
+    "placeholder": "Your email address",
+    "cta": "Join the waitlist",
+    "done": "You're on the list. We'll email you when your invite is ready.",
+    "fine": "No spam. One email when your spot opens, and the occasional product update."
+  },
+  "entries": [
+    {
+      "id": "r01",
+      "slug": "ai-character-sheet-prompts",
+      "type": "prompt",
+      "draft": false,
+      "featured": true,
+      "title": "AI Character Sheet Prompts",
+      "summary": "Create one character and keep them consistent across every image — turnaround sheet, expressions, outfits and scenes. Works for mascots, comic panels and brand avatars.",
+      "tool": "ChatGPT · Midjourney · Gemini",
+      "level": "Beginner",
+      "time": "15 min",
+      "cover": "",
+      "inside": [
+        "A master character brief you fill in once",
+        "Turnaround sheet prompt (front, side, back, ¾)",
+        "Expression sheet prompt (8 emotions)",
+        "Outfit variations without losing the face",
+        "Placing the character into any scene"
+      ],
+      "steps": [
+        "Fill in the master brief with your character's details and save it.",
+        "Run the turnaround prompt and pick the best sheet — this becomes your reference image.",
+        "For every new image, attach the reference sheet and paste the scene prompt.",
+        "If the face drifts, re-attach the sheet and add the line 'match the reference exactly'."
+      ],
+      "prompts": [
+        {
+          "title": "1 · Master character brief",
+          "text": "You are a character designer. Help me lock a consistent character for an illustration series. Ask me nothing — fill any gaps with sensible choices and list them at the end.\n\nCharacter: [name], [age], [role/occupation]\nLook: [face shape], [skin tone], [hair style + colour], [eye colour], [build]\nSignature details: [glasses / scar / earrings / freckles]\nDefault outfit: [top], [bottom], [shoes], [one accessory]\nPersonality in 3 words: [word], [word], [word]\nArt style: [e.g. clean 2D flat illustration / Pixar-like 3D / anime / realistic photo]\n\nReturn a single paragraph 'CHARACTER DNA' under 80 words that I can paste at the start of every future prompt."
+        },
+        {
+          "title": "2 · Turnaround sheet",
+          "text": "[paste CHARACTER DNA]\n\nCreate a character turnaround reference sheet on a plain off-white background. Show the same character four times in a row, full body, evenly spaced: front view, three-quarter view, side profile, back view. Neutral standing pose, arms relaxed. Identical proportions, face, hair and outfit in every view. Even studio lighting, no shadows on the background, no text, no extra props."
+        },
+        {
+          "title": "3 · Expression sheet",
+          "text": "[paste CHARACTER DNA]\n\nUsing the attached reference sheet, create an expression sheet: a 4×2 grid of head-and-shoulders portraits of the same character showing happy, laughing, surprised, thinking, confident, worried, angry and calm. Keep the face structure, hairstyle and colours identical to the reference. Plain off-white background, no text labels."
+        },
+        {
+          "title": "4 · Outfit variation",
+          "text": "[paste CHARACTER DNA]\n\nUsing the attached reference sheet, show the same character in a new outfit: [describe outfit]. Change ONLY the clothing. Face, hair, body proportions and art style must match the reference exactly. Full body, front three-quarter view, plain background."
+        },
+        {
+          "title": "5 · Place into a scene",
+          "text": "[paste CHARACTER DNA]\n\nUsing the attached reference sheet, place the character in this scene: [location], [time of day], doing [action]. Camera: [close-up / medium / wide], [eye level / low angle]. Mood: [mood]. The character must match the reference exactly — same face, hair, outfit and art style. The background follows the same art style."
+        }
+      ],
+      "access": {
+        "mode": "email",
+        "freeCount": 2,
+        "cta": "Unlock all 5 prompts"
+      }
+    },
+    {
+      "id": "r02",
+      "slug": "ai-video-storyboard-prompts",
+      "type": "prompt",
+      "draft": false,
+      "featured": true,
+      "title": "AI Video Storyboard Prompts",
+      "summary": "Go from a one-line idea to a short AI video: script, shot list, a still for every shot, then motion prompts for each still. Built for 15–30 second reels.",
+      "tool": "ChatGPT · Claude · Kling · Runway · Veo",
+      "level": "Intermediate",
+      "time": "45 min",
+      "cover": "",
+      "inside": [
+        "Idea → 20-second script prompt",
+        "Script → numbered shot list",
+        "Shot list → consistent still images",
+        "Still → image-to-video motion prompts",
+        "A checklist for stitching it together"
+      ],
+      "steps": [
+        "Run the script prompt with your idea and trim it until it reads in 20 seconds.",
+        "Turn the script into a shot list and keep it to 5–7 shots.",
+        "Generate one still per shot — reuse the same style line in every prompt.",
+        "Animate each still with the motion prompt, then cut them together in CapCut or any editor."
+      ],
+      "prompts": [
+        {
+          "title": "1 · Idea to script",
+          "text": "Write a script for a vertical 20-second video.\nIdea: [one line]\nAudience: [who]\nGoal: [make them follow / visit / DM / buy]\n\nRules: open with a hook in the first 2 seconds, one idea only, spoken lines under 50 words in total, end with one clear call to action. Return a table: time | what we see | what we hear."
+        },
+        {
+          "title": "2 · Script to shot list",
+          "text": "Turn this script into a shot list of 5–7 shots for a 9:16 video.\n[paste script]\n\nFor each shot give: shot number, duration in seconds, framing (close-up / medium / wide), camera movement (static / slow push-in / pan / handheld), subject and action, and one line of lighting/mood. Also write one STYLE LINE (under 25 words) that describes the look of the whole video."
+        },
+        {
+          "title": "3 · Shot to still image",
+          "text": "[STYLE LINE]\n\nVertical 9:16 frame. [framing] of [subject] [action] in [location]. [lighting/mood]. Clean composition with the subject in the centre third, space at the top for captions. No text, no watermarks."
+        },
+        {
+          "title": "4 · Still to motion",
+          "text": "Animate this image for [duration] seconds. Camera: [slow push-in / gentle pan left / static]. Subject motion: [one small, natural movement — e.g. turns head toward camera and smiles]. Background: subtle movement only ([steam / leaves / light flicker]). Keep the face and outfit unchanged. Realistic physics, no morphing, no new objects."
+        }
+      ],
+      "access": {
+        "mode": "email",
+        "freeCount": 1,
+        "cta": "Unlock the full storyboard pack"
+      }
+    },
+    {
+      "id": "r03",
+      "slug": "product-photo-prompts",
+      "type": "prompt",
+      "draft": false,
+      "featured": false,
+      "title": "Product Photo Prompts for Small Brands",
+      "summary": "Turn one plain phone photo of your product into studio, lifestyle and festive shots for your store and Instagram — without a photoshoot.",
+      "tool": "ChatGPT · Gemini · Midjourney",
+      "level": "Beginner",
+      "time": "10 min",
+      "cover": "",
+      "inside": [
+        "Clean studio packshot",
+        "Lifestyle scene in a real setting",
+        "Festive / sale campaign version",
+        "Flat-lay for carousels"
+      ],
+      "steps": [
+        "Take a sharp photo of the product in daylight on a plain surface.",
+        "Attach it to the chat and paste one of the prompts below.",
+        "Check labels and logos closely — ask for a redo if any text changed.",
+        "Export at 4:5 for Instagram feed and 1:1 for your store."
+      ],
+      "prompts": [
+        {
+          "title": "1 · Studio packshot",
+          "text": "Using the attached photo of my product, create a professional studio packshot. Keep the product's shape, colours, label and logo exactly as they are. Place it on a [white / warm beige / soft grey] seamless background with a soft shadow beneath. Soft, even studio lighting from the left. Square 1:1, product centred and filling about 60% of the frame."
+        },
+        {
+          "title": "2 · Lifestyle scene",
+          "text": "Using the attached photo of my product, place it naturally into this setting: [a sunlit kitchen counter / a café table / a bedside shelf]. Add 2–3 props that suit [my brand vibe], slightly out of focus. Natural window light, warm tones, shallow depth of field. Do not change the product's design, label or colours. Vertical 4:5."
+        },
+        {
+          "title": "3 · Festive campaign",
+          "text": "Using the attached photo of my product, create a [Diwali / Christmas / Eid / summer sale] campaign image. Product in the foreground, sharp and unchanged. Background themed with [diyas and marigolds / fairy lights / etc.], warm bokeh. Leave clear empty space at the top for a headline. No text in the image. Vertical 4:5."
+        },
+        {
+          "title": "4 · Flat-lay",
+          "text": "Using the attached photo of my product, create a top-down flat-lay on a [linen / marble / wooden] surface with [3–4 related items] arranged around it. Product in the centre, unchanged. Soft daylight, minimal shadows, calm and tidy composition. Square 1:1."
+        }
+      ],
+      "access": {
+        "mode": "open"
+      }
+    },
+    {
+      "id": "r04",
+      "slug": "reel-script-prompts-local-business",
+      "type": "prompt",
+      "draft": false,
+      "featured": false,
+      "title": "Reel Scripts for Local Businesses",
+      "summary": "A month of reel ideas, hooks and scripts for a salon, café, clinic, gym or shop — written in your voice, with a comment or DM call to action built in.",
+      "tool": "ChatGPT · Claude · Gemini",
+      "level": "Beginner",
+      "time": "20 min",
+      "cover": "",
+      "inside": [
+        "Business profile prompt the AI remembers",
+        "30 reel ideas across 5 content types",
+        "Hook generator (10 hooks per idea)",
+        "Full script with on-screen text and caption"
+      ],
+      "steps": [
+        "Run the business profile prompt first and keep the chat open.",
+        "Ask for 30 ideas, then star the 8 you can actually film this month.",
+        "Generate hooks for each starred idea and pick the most specific one.",
+        "Write the script, film it on your phone and post with the caption it gives you."
+      ],
+      "prompts": [
+        {
+          "title": "1 · Business profile",
+          "text": "Remember this business for the rest of our chat.\nBusiness: [name], a [type of business] in [area/city]\nCustomers: [who they are, age, what they care about]\nWhat makes us different: [2–3 points]\nPrices: [range]\nTone: [friendly / premium / funny / straight-talking], language: [English / Hinglish / Hindi / Bengali]\nGoal for Instagram: [bookings / walk-ins / WhatsApp enquiries]\n\nReply only with 'Got it' and a one-line summary."
+        },
+        {
+          "title": "2 · 30 reel ideas",
+          "text": "Give me 30 reel ideas for this business, 6 each in these types: behind the scenes, customer before/after or result, myth vs fact, day-in-the-life, offer or announcement. Each idea in one line, filmable on a phone by one person in under 15 minutes."
+        },
+        {
+          "title": "3 · Hook generator",
+          "text": "For this reel idea: [idea], write 10 opening hooks under 9 words each. Mix: a bold claim, a question, a number, a mistake people make, and 'POV'. Make them specific to our area and customers, not generic."
+        },
+        {
+          "title": "4 · Full script",
+          "text": "Write a 20–25 second reel script for: [idea], starting with this hook: [hook]. Give: shot-by-shot what to film, what to say, on-screen text for each shot, and end with this call to action: 'Comment [WORD] and we'll DM you [the offer/price list/booking link]'. Then write a caption under 60 words with 5 local hashtags."
+        }
+      ],
+      "access": {
+        "mode": "email",
+        "freeCount": 2,
+        "cta": "Unlock all 4 prompts"
+      }
+    },
+    {
+      "id": "r05",
+      "slug": "instagram-comment-to-dm-guide",
+      "type": "guide",
+      "draft": false,
+      "featured": true,
+      "title": "How Comment-to-DM Automation Works",
+      "summary": "The setup behind every 'comment X and I'll send it to you' reel — what Instagram allows, what it costs, and the rules that keep your account safe.",
+      "tool": "Instagram · Meta API · n8n",
+      "level": "Beginner",
+      "time": "8 min read",
+      "cover": "",
+      "inside": [
+        "The flow from comment to DM, step by step",
+        "What Instagram's API allows (and the 24-hour rule)",
+        "Buttons and menus inside DMs",
+        "What it costs to run"
+      ],
+      "blocks": [
+        {
+          "h": "The flow",
+          "p": "Someone comments a keyword on your reel. Instagram sends that comment to your automation through a webhook. The automation checks the keyword, replies publicly to the comment ('Sent! Check your DMs'), and sends a private DM with your link or file. When they tap a button in that DM, the conversation opens and you can keep talking."
+        },
+        {
+          "h": "What Instagram allows",
+          "p": "Business and creator accounts can reply privately to a comment once, within 7 days of the comment. After the person messages you or taps a button, you have a 24-hour window to send them anything — menus, links, follow-up questions. Every new message from them resets the 24 hours. Outside that window you can't message them, so good automations always end with a reason for the person to reply."
+        },
+        {
+          "h": "Buttons and menus",
+          "p": "A DM can carry up to 3 buttons. A button either opens a link or sends a hidden reply back to your automation, so you can build menus: 'Get the template', 'See prices', 'Talk to us'. Quick-reply chips (up to 13) and carousels of up to 10 cards are also allowed. That's how a single comment turns into a small conversation — and a lead."
+        },
+        {
+          "h": "What it costs",
+          "p": "Instagram doesn't charge per message, unlike WhatsApp. You need a Meta developer app, an Instagram professional account and somewhere to run the automation — a self-hosted n8n server costs a few hundred rupees a month, or you can use a tool that does it for you."
+        },
+        {
+          "h": "Rules that keep you safe",
+          "p": "Never DM people who didn't comment or message first. Reply to each comment once. Ignore your own messages so the bot doesn't loop. Keep the keyword obvious in the reel so people know what they'll get."
+        }
+      ],
+      "access": {
+        "mode": "open"
+      }
+    },
+    {
+      "id": "r06",
+      "slug": "whatsapp-business-what-to-automate-first",
+      "type": "guide",
+      "draft": false,
+      "featured": false,
+      "title": "WhatsApp Business: What to Automate First",
+      "summary": "Five automations that save a local business the most time, in the order we set them up for clients — from the free app to the WhatsApp API.",
+      "tool": "WhatsApp Business · WhatsApp API",
+      "level": "Beginner",
+      "time": "6 min read",
+      "cover": "",
+      "inside": [
+        "Free app features most owners never switch on",
+        "When you actually need the WhatsApp API",
+        "The 5 automations, in order",
+        "Message costs explained simply"
+      ],
+      "blocks": [
+        {
+          "h": "Start with the free app",
+          "p": "Before paying for anything, switch on the WhatsApp Business app's greeting message, away message, quick replies (type /price to send your price list) and catalogue. That alone answers half the questions you get every day."
+        },
+        {
+          "h": "When you need the API",
+          "p": "Move to the WhatsApp API when more than one person answers chats, when you want to send reminders or broadcasts to hundreds of customers, or when you want replies to happen while you sleep. The API needs a Meta business account and a provider or your own setup."
+        },
+        {
+          "h": "The 5 automations, in order",
+          "p": "1) An instant menu reply: prices, location, timings, talk to a person. 2) Booking or order confirmation sent automatically. 3) Reminders a day before appointments. 4) A 'how was it?' message after the visit, with your Google review link. 5) Monthly broadcast to past customers with an offer."
+        },
+        {
+          "h": "What messages cost",
+          "p": "Replies inside 24 hours of the customer's message are free. Messages you start (reminders, offers) are charged per message by Meta and vary by type — utility messages like reminders cost much less than marketing ones. Keep broadcasts relevant and infrequent; people who block you hurt your number's quality rating."
+        }
+      ],
+      "access": {
+        "mode": "open"
+      }
+    },
+    {
+      "id": "r07",
+      "slug": "n8n-instagram-comment-to-dm-workflow",
+      "type": "n8n",
+      "draft": true,
+      "featured": false,
+      "title": "n8n Workflow: Instagram Comment → DM",
+      "summary": "The exact n8n workflow behind our comment automation — keyword match, public reply, DM with buttons, and a guard against double replies.",
+      "tool": "n8n · Instagram API",
+      "level": "Intermediate",
+      "time": "30 min setup",
+      "cover": "",
+      "inside": [
+        "Importable workflow JSON",
+        "Keyword → message mapping table",
+        "Echo / duplicate-reply guard",
+        "Setup notes for the Meta app and webhook"
+      ],
+      "steps": [
+        "Import the JSON into n8n (Workflows → Import from file).",
+        "Add your Instagram access token as a credential.",
+        "Point your Meta app's Instagram webhook at the workflow's webhook URL.",
+        "Edit the keyword table and test with a comment from a second account."
+      ],
+      "access": {
+        "mode": "dm",
+        "keyword": "N8N",
+        "fileUrl": "",
+        "cta": "Get the workflow"
+      }
+    },
+    {
+      "id": "r08",
+      "slug": "notion-content-planner",
+      "type": "notion",
+      "draft": true,
+      "featured": false,
+      "title": "Notion Content Planner",
+      "summary": "Plan, script and track every reel and post in one Notion board — ideas bank, weekly calendar, and a status pipeline from idea to posted.",
+      "tool": "Notion",
+      "level": "Beginner",
+      "time": "5 min setup",
+      "cover": "",
+      "inside": [
+        "Ideas bank with hook and format fields",
+        "Weekly calendar view",
+        "Idea → scripted → filmed → posted board",
+        "Post-performance log"
+      ],
+      "steps": [
+        "Open the template link and click Duplicate (top right).",
+        "Delete the example rows and add your first 10 ideas.",
+        "Use the calendar view every Monday to plan the week."
+      ],
+      "access": {
+        "mode": "email",
+        "fileUrl": "",
+        "cta": "Duplicate to your Notion"
+      }
+    },
+    {
+      "id": "r09",
+      "slug": "notion-client-crm",
+      "type": "notion",
+      "draft": true,
+      "featured": false,
+      "title": "Notion Client CRM for Freelancers",
+      "summary": "Track enquiries, proposals, projects and payments without a paid CRM — built for freelancers and small studios.",
+      "tool": "Notion",
+      "level": "Beginner",
+      "time": "10 min setup",
+      "cover": "",
+      "inside": [
+        "Leads pipeline (new → quoted → won/lost)",
+        "Projects with deadlines and status",
+        "Invoices and payment tracker",
+        "Client contact cards"
+      ],
+      "steps": [
+        "Open the template link and click Duplicate.",
+        "Add your current clients and open enquiries.",
+        "Review the pipeline view every Friday."
+      ],
+      "access": {
+        "mode": "email",
+        "fileUrl": "",
+        "cta": "Duplicate to your Notion"
+      }
+    }
+  ]
+}
