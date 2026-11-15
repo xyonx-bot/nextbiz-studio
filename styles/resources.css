@@ -171,3 +171,7 @@
   .prompt pre { font-size: 12px; padding: 14px; }
   .gate-box .action { width: 100%; justify-content: center; }
 }
+
+/* NextBiz One: link out to one.nextbizstudio.com/request-access */
+.waitlist .wl-cta { width: max-content; background: var(--primary-fg); color: var(--ink); border-color: var(--primary-fg); }
+@media (max-width: 760px) { .waitlist .wl-cta { width: 100%; justify-content: center; } }
