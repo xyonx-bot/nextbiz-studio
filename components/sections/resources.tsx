@@ -78,7 +78,13 @@ export function Waitlist({ content, as = "h2" }: { content?: typeof resources.wa
           <ul>
             {list<string>(c.points).map((p) => <li key={p}>{p}</li>)}
           </ul>
-          <EmailCapture list="nextbiz-one" placeholder={c.placeholder} cta={c.cta} done={c.done} className="wl-form" />
+          {(c as { ctaUrl?: string }).ctaUrl ? (
+            <a className="action wl-cta" href={(c as { ctaUrl?: string }).ctaUrl} target="_blank" rel="noreferrer">
+              {c.cta} <ArrowUpRight />
+            </a>
+          ) : (
+            <EmailCapture list="nextbiz-one" placeholder={c.placeholder} cta={c.cta} done={c.done} className="wl-form" />
+          )}
           <p className="wl-fine">{c.fine}</p>
         </div>
       </div>

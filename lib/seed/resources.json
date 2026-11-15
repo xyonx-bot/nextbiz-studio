@@ -77,7 +77,7 @@
       "One inbox for",
       "WhatsApp & Instagram."
     ],
-    "body": "NextBiz One is the app we're building from our client work: comment-to-DM replies, WhatsApp broadcasts, shared inbox and AI replies, in one place. It's in private beta now. Join the waitlist and we'll invite people in small batches.",
+    "body": "NextBiz One is the app we're building from our client work: comment-to-DM replies, WhatsApp broadcasts, shared inbox and AI replies, in one place. It's in private beta — request early access and we'll invite people in small batches.",
     "points": [
       "Instagram comment → DM automation",
       "WhatsApp Business inbox and broadcasts",
@@ -85,9 +85,10 @@
       "One workspace for your whole team"
     ],
     "placeholder": "Your email address",
-    "cta": "Join the waitlist",
+    "cta": "Request early access",
     "done": "You're on the list. We'll email you when your invite is ready.",
-    "fine": "No spam. One email when your spot opens, and the occasional product update."
+    "fine": "Early access is approval-based. We'll email you when your spot opens.",
+    "ctaUrl": "https://one.nextbizstudio.com/request-access"
   },
   "entries": [
     {
