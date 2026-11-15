@@ -4,6 +4,7 @@ import homeSeed from "@/lib/seed/home.json";
 import aboutSeed from "@/lib/seed/about.json";
 import servicesSeed from "@/lib/seed/services.json";
 import projectsSeed from "@/lib/seed/projects.json";
+import resourcesSeed from "@/lib/seed/resources.json";
 import contactSeed from "@/lib/seed/contact.json";
 
 /** S5 configurator core — pure parts (DB paths are covered by e2e). */
@@ -37,13 +38,14 @@ describe("page inventory ↔ seed consistency (every section resolvable)", () =>
     about: aboutSeed,
     services: servicesSeed,
     projects: projectsSeed,
+    resources: resourcesSeed,
     contact: contactSeed,
   };
 
-  it("9 pages in the inventory", () => {
-    expect(PAGES).toHaveLength(9);
+  it("10 pages in the inventory", () => {
+    expect(PAGES).toHaveLength(10);
     expect(PAGES.map((p) => p.key)).toEqual([
-      "home", "about", "services", "projects", "contact",
+      "home", "about", "services", "projects", "resources", "contact",
       "legal/privacy", "legal/terms", "legal/refund", "legal/cookie",
     ]);
   });

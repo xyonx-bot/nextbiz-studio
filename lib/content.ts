@@ -1,13 +1,15 @@
 import Link from "next/link";
 
 /** Routes for every public page. Single source — nav and footer both use it. */
-export const NAV_LINKS = [
+export const NAV_LINKS: ReadonlyArray<{ href: string; label: string; tag?: string }> = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About Us" },
   { href: "/services", label: "Services" },
   { href: "/projects", label: "Projects" },
+  { href: "/resources", label: "Resources" },
+  { href: "/nextbiz-one", label: "NextBiz One", tag: "Soon" },
   { href: "/contact", label: "Contact" },
-] as const;
+];
 
 export const LEGAL_LINKS = [
   { href: "/legal/privacy", label: "Privacy Policy" },

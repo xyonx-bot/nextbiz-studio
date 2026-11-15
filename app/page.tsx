@@ -3,7 +3,8 @@ import { Footer } from "@/components/chrome/Footer";
 import {
   Hero, Partners, About, ServicesSplit, Work, Industries, Testimonial, Team, ContactBand,
 } from "@/components/sections/home";
-import { getSections } from "@/lib/config";
+import { HomeLibrary, Waitlist } from "@/components/sections/resources";
+import { getResourceEntries, getSections } from "@/lib/config";
 import homeSeed from "@/lib/seed/home.json";
 
 // S5: sections resolve as seed ⊕ admin config (dynamic — config edits must
@@ -13,6 +14,7 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const sections = await getSections("home");
   const by = (k: string) => sections.find((s) => s.key === k)?.content;
+  const resources = sections.some((s) => s.key === "library") ? await getResourceEntries() : [];
 
   return (
     <main className="shell">
@@ -24,6 +26,8 @@ export default async function HomePage() {
           case "about": return <About key={s.key} content={by("about") as typeof homeSeed.about} />;
           case "services": return <ServicesSplit key={s.key} content={by("services") as typeof homeSeed.services} />;
           case "work": return <Work key={s.key} content={by("work") as typeof homeSeed.work} />;
+          case "library": return <HomeLibrary key={s.key} content={by("library") as typeof homeSeed.library} entries={resources} />;
+          case "waitlist": return <Waitlist key={s.key} content={by("waitlist") as typeof homeSeed.waitlist} />;
           case "industries": return <Industries key={s.key} content={by("industries") as typeof homeSeed.industries} />;
           case "testimonial": return <Testimonial key={s.key} content={by("testimonial") as typeof homeSeed.testimonial} />;
           case "team": return <Team key={s.key} content={by("team") as typeof homeSeed.team} />;

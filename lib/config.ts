@@ -5,12 +5,13 @@ import aboutSeed from "./seed/about.json";
 import servicesSeed from "./seed/services.json";
 import projectsSeed from "./seed/projects.json";
 import contactSeed from "./seed/contact.json";
+import resourcesSeed from "./seed/resources.json";
 import privacySeed from "./seed/legal/privacy.json";
 import termsSeed from "./seed/legal/terms.json";
 import refundSeed from "./seed/legal/refund.json";
 import cookieSeed from "./seed/legal/cookie.json";
 import dataDeletionSeed from "./seed/legal/data-deletion.json";
-import type { ProjectEntry } from "@/components/sections/types";
+import type { ProjectEntry, ResourceEntry } from "@/components/sections/types";
 
 /**
  * S5 — page configurator core (P1.8 + P1.9).
@@ -45,6 +46,7 @@ const SEEDS: Record<string, Record<string, unknown>> = {
   about: aboutSeed as Record<string, unknown>,
   services: servicesSeed as Record<string, unknown>,
   projects: projectsSeed as Record<string, unknown>,
+  resources: resourcesSeed as Record<string, unknown>,
   contact: contactSeed as Record<string, unknown>,
   "legal/privacy": { doc: privacySeed },
   "legal/terms": { doc: termsSeed },
@@ -342,6 +344,22 @@ export async function getProjectEntries(): Promise<ProjectEntry[]> {
     );
     const ov = rows[0]?.content;
     return Array.isArray(ov) ? (ov as ProjectEntry[]) : seed;
+  } catch {
+    return seed;
+  }
+}
+
+/** resources.entries, seed ⊕ admin override — same contract as
+ *  getProjectEntries: the library grid, detail pages and the unlock API all
+ *  read this one list, so an admin edit updates all three. Any failure → seed. */
+export async function getResourceEntries(): Promise<ResourceEntry[]> {
+  const seed = (resourcesSeed as unknown as { entries: ResourceEntry[] }).entries;
+  try {
+    const { rows } = await getPool().query<{ content: unknown }>(
+      `SELECT content FROM page_sections WHERE page_key = 'resources' AND section_key = 'entries'`,
+    );
+    const ov = rows[0]?.content;
+    return Array.isArray(ov) ? (ov as ResourceEntry[]) : seed;
   } catch {
     return seed;
   }

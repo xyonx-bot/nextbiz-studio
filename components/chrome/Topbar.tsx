@@ -39,6 +39,7 @@ export function Topbar({ current }: { current?: string }) {
               aria-current={l.href === current ? "page" : undefined}
             >
               {l.label}
+              {l.tag ? <span className="navtag">{l.tag}</span> : null}
             </Link>
           ))}
         </nav>
@@ -79,6 +80,7 @@ export function Topbar({ current }: { current?: string }) {
             >
               <span className="no">{`0${i + 1}`}</span>
               {l.label}
+              {l.tag ? <span className="navtag">{l.tag}</span> : null}
               <span className="st"></span>
             </Link>
           ))}

@@ -6,9 +6,11 @@
     "about",
     "services",
     "work",
+    "library",
     "industries",
     "testimonial",
     "team",
+    "waitlist",
     "contactBand"
   ],
   "hero": {
@@ -17,14 +19,15 @@
     "h1b": "When You Need It",
     "lede": "We help businesses build, improve and grow through thoughtful digital solutions, marketing support and technology shaped around the way they work.",
     "ctaPrimary": "Get Started",
-    "ctaWatch": "Watch Demo",
+    "ctaWatch": "Browse free resources",
     "imageNote": "HERO IMAGE 1200×1008 · creative director in a sunlit studio · warm grade · object-cover · radius 28/28/28/90",
     "scribble": [
       "Ideas",
       "become",
       "impact."
     ],
-    "photo": ""
+    "photo": "",
+    "ctaWatchHref": "/resources"
   },
   "partners": {
     "eyebrow": "One Studio, Different Needs",
@@ -270,5 +273,34 @@
       "Here"
     ],
     "photo": ""
+  },
+  "library": {
+    "eyebrow": "Free Library",
+    "h2": [
+      "Tools We Use,",
+      "Yours Free."
+    ],
+    "body": "Prompt packs, Notion templates, n8n workflows and guides — the same setups we build for clients, free while we grow the library.",
+    "cta": "Browse the library",
+    "count": 3
+  },
+  "waitlist": {
+    "id": "nextbiz-one",
+    "micro": "Coming soon · NextBiz One",
+    "h2": [
+      "One inbox for",
+      "WhatsApp & Instagram."
+    ],
+    "body": "NextBiz One is the app we're building from our client work: comment-to-DM replies, WhatsApp broadcasts, shared inbox and AI replies, in one place. It's in private beta now. Join the waitlist and we'll invite people in small batches.",
+    "points": [
+      "Instagram comment → DM automation",
+      "WhatsApp Business inbox and broadcasts",
+      "AI replies trained on your business",
+      "One workspace for your whole team"
+    ],
+    "placeholder": "Your email address",
+    "cta": "Join the waitlist",
+    "done": "You're on the list. We'll email you when your invite is ready.",
+    "fine": "No spam. One email when your spot opens, and the occasional product update."
   }
 }
