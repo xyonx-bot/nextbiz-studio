@@ -1,0 +1,271 @@
+{
+  "name": "Instagram Comment → DM (NextBiz Studio)",
+  "nodes": [
+    {
+      "parameters": {
+        "multipleMethods": true,
+        "httpMethod": [
+          "GET",
+          "POST"
+        ],
+        "path": "ig-comment-to-dm",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "f98f4b22-eba1-5c5b-86c3-1c92bfd47b33",
+      "name": "Meta Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "484e8614-fbb4-5b19-9220-4e2999d5e969"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "v1",
+              "leftValue": "={{ $json.query['hub.mode'] }}",
+              "rightValue": "subscribe",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "v2",
+              "leftValue": "={{ $json.query['hub.verify_token'] }}",
+              "rightValue": "CHANGE_ME_VERIFY_TOKEN",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true
+      },
+      "id": "66812d7e-0e94-58fe-a132-d22a90d4b0f6",
+      "name": "Verify Token OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        240,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "={{ $json.query['hub.challenge'] }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "19f969ba-2d7a-54ad-94f4-3587a19220dd",
+      "name": "Respond Challenge",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "Forbidden",
+        "options": {
+          "responseCode": 403
+        }
+      },
+      "id": "29065ef1-36e3-59ff-8d0f-4bf4b669ea7a",
+      "name": "Respond 403",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        480,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "EVENT_RECEIVED",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "910457c8-4b03-5e76-bd08-76056b90203a",
+      "name": "Ack 200 to Meta",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ── EDIT THESE ──────────────────────────────────────────────\nreturn [{ json: {\n  GRAPH: 'https://graph.instagram.com/v23.0',\n  TOKEN: 'PASTE_YOUR_INSTAGRAM_ACCESS_TOKEN',\n  IG_USER_ID: 'PASTE_YOUR_INSTAGRAM_USER_ID', // so the bot never answers itself\n  // One row per keyword. Comment must CONTAIN the keyword (any case).\n  RULES: [\n    {\n      keyword: 'GUIDE',\n      public_reply: 'Sent! Check your DMs 📩',\n      dm_text: 'Here you go! 🎁 Your free guide is ready — tap below to open it 👇',\n      button_title: 'Open the guide',\n      url: 'https://example.com/your-guide',\n    },\n    {\n      keyword: 'PRICE',\n      public_reply: 'Just DMed you our price list 🙌',\n      dm_text: 'Thanks for asking! Here is our full price list 👇',\n      button_title: 'See prices',\n      url: 'https://example.com/prices',\n    },\n  ],\n} }];\n"
+      },
+      "id": "ed64160f-0e2b-55c1-9955-c10f278d37e1",
+      "name": "CONFIG",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Turns Instagram comment events into API calls (public reply + private DM).\nconst cfg = $('CONFIG').first().json;\nconst body = $('Meta Webhook').first().json.body || {};\nconst out = [];\nfor (const entry of body.entry || []) {\n  for (const change of entry.changes || []) {\n    if (change.field !== 'comments') continue;\n    const v = change.value || {};\n    if (!v.id || !v.text) continue;\n    if (v.from && String(v.from.id) === String(cfg.IG_USER_ID)) continue; // our own reply\n    const text = String(v.text).toUpperCase();\n    const rule = (cfg.RULES || []).find(r => text.includes(String(r.keyword).toUpperCase()));\n    if (!rule) continue;\n    out.push({ json: { step: 'public reply', url: `${cfg.GRAPH}/${v.id}/replies`,\n      body: { message: rule.public_reply } } });\n    out.push({ json: { step: 'private DM', url: `${cfg.GRAPH}/me/messages`,\n      body: {\n        recipient: { comment_id: v.id },\n        message: { attachment: { type: 'template', payload: {\n          template_type: 'button', text: rule.dm_text,\n          buttons: [{ type: 'web_url', url: rule.url, title: rule.button_title }],\n        } } },\n      } } });\n  }\n}\nreturn out;\n"
+      },
+      "id": "c68121e2-8700-54bf-bfb2-0ef41c994894",
+      "name": "Plan Replies",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.url }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('CONFIG').first().json.TOKEN }}"
+            }
+          ]
+        }
+      },
+      "id": "857d7cb3-1f1a-591b-a9d5-a93c14c709bb",
+      "name": "Send to Instagram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        420
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Instagram comment → DM\n**What it does:** someone comments a keyword (e.g. GUIDE) → they get a public reply *and* a DM with a link button.\n\n**Setup (10 min)**\n1. Edit **CONFIG**: paste your Instagram access token, your IG user ID and your keywords/links.\n2. In **Verify Token OK?** replace `CHANGE_ME_VERIFY_TOKEN` with any secret word.\n3. Activate the workflow, copy the **Production URL** of *Meta Webhook*.\n4. Meta app → Instagram → Webhooks: paste that URL + the same secret word, subscribe to **comments**.\n\nInstagram allows ONE private reply per comment, within 7 days. Free resource from nextbizstudio.com",
+        "width": 440,
+        "height": 420
+      },
+      "id": "b1f6643f-9b0a-5a12-904e-9e4607811bc8",
+      "name": "Read me",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Meta Webhook": {
+      "main": [
+        [
+          {
+            "node": "Verify Token OK?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ack 200 to Meta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verify Token OK?": {
+      "main": [
+        [
+          {
+            "node": "Respond Challenge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 403",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ack 200 to Meta": {
+      "main": [
+        [
+          {
+            "node": "CONFIG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CONFIG": {
+      "main": [
+        [
+          {
+            "node": "Plan Replies",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Plan Replies": {
+      "main": [
+        [
+          {
+            "node": "Send to Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "source": "nextbizstudio.com/resources"
+  },
+  "tags": []
+}

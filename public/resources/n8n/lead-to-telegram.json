@@ -1,0 +1,225 @@
+{
+  "name": "Website Lead → Telegram Alert (NextBiz Studio)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "website-lead",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "523c1794-fd5d-540f-84ba-c4fb0b28e4c4",
+      "name": "Form Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        300
+      ],
+      "webhookId": "f1d17478-e167-5afe-9fe7-4b678dbf433e"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ── EDIT THESE ──────────────────────────────────────────────\nreturn [{ json: {\n  TELEGRAM_BOT_TOKEN: 'PASTE_BOT_TOKEN_FROM_BOTFATHER',\n  TELEGRAM_CHAT_ID: 'PASTE_YOUR_CHAT_ID',\n  SITE_NAME: 'My Website',\n} }];\n"
+      },
+      "id": "61213e12-3d3a-5ed7-8c39-599de5b3a3da",
+      "name": "CONFIG",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validates the form post and builds the Telegram message.\nconst cfg = $('CONFIG').first().json;\nconst raw = $('Form Webhook').first().json.body || {};\nconst clean = (v, n = 500) => String(v ?? '').replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c])).trim().slice(0, n);\nconst lead = { name: clean(raw.name, 120), email: clean(raw.email, 160), phone: clean(raw.phone, 30),\n  service: clean(raw.service, 120), message: clean(raw.message, 2000) };\nconst ok = lead.name.length >= 2 && (lead.email.includes('@') || lead.phone.length >= 7);\nconst lines = [`🔔 <b>New lead — ${clean(cfg.SITE_NAME, 60)}</b>\\n`,\n  `<b>Name:</b> ${lead.name}`,\n  lead.phone && `<b>Phone:</b> ${lead.phone}`,\n  lead.email && `<b>Email:</b> ${lead.email}`,\n  lead.service && `<b>Wants:</b> ${lead.service}`,\n  lead.message && `\\n${lead.message}`].filter(Boolean);\nreturn [{ json: { ok: ok ? 'yes' : 'no', lead,\n  url: `https://api.telegram.org/bot${cfg.TELEGRAM_BOT_TOKEN}/sendMessage`,\n  body: { chat_id: cfg.TELEGRAM_CHAT_ID, text: lines.join('\\n'), parse_mode: 'HTML' } } }];\n"
+      },
+      "id": "7856053e-7160-599f-a3b0-b5b5bc01777e",
+      "name": "Check & Format",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "ok",
+              "leftValue": "={{ $json.ok }}",
+              "rightValue": "yes",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true
+      },
+      "id": "54f7c88e-9206-5e7b-8f82-73c91e503358",
+      "name": "Valid Lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        720,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.url }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "67e5be07-2780-535c-afd4-974a923b8121",
+      "name": "Send Telegram Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        220
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: true }) }}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "id": "318b4867-bbc6-5786-a367-865facd7e290",
+      "name": "Respond OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ ok: false, error: \"Please add your name and an email or phone number.\" }) }}",
+        "options": {
+          "responseCode": 422
+        }
+      },
+      "id": "ec10dc6b-ab9c-5636-8b8c-1f433befc58f",
+      "name": "Respond 422",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        960,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Website form → Telegram alert\n**What it does:** your site's contact form posts to this workflow → you get an instant Telegram message with the lead's name, phone, email and message.\n\n**Setup (5 min)**\n1. Telegram → @BotFather → /newbot → copy the token. Message your bot once, then open `https://api.telegram.org/bot<TOKEN>/getUpdates` to find your chat id.\n2. Paste both into **CONFIG**.\n3. Activate, and point your form (POST, JSON) at the *Form Webhook* Production URL. Fields: name, email, phone, service, message.\n\nWorks with any site builder that can send a webhook. Free resource from nextbizstudio.com",
+        "width": 440,
+        "height": 400
+      },
+      "id": "8765edbb-0446-517d-85c2-ba97b506f303",
+      "name": "Read me",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Form Webhook": {
+      "main": [
+        [
+          {
+            "node": "CONFIG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CONFIG": {
+      "main": [
+        [
+          {
+            "node": "Check & Format",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check & Format": {
+      "main": [
+        [
+          {
+            "node": "Valid Lead?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valid Lead?": {
+      "main": [
+        [
+          {
+            "node": "Send Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond 422",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Telegram Alert": {
+      "main": [
+        [
+          {
+            "node": "Respond OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "source": "nextbizstudio.com/resources"
+  },
+  "tags": []
+}

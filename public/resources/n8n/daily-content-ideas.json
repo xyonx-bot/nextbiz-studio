@@ -1,0 +1,220 @@
+{
+  "name": "Daily AI Reel Ideas → Telegram (NextBiz Studio)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "id": "3e839ff1-168a-5b96-b07a-8a89f0d6f9de",
+      "name": "Every Morning",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        200
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "47ec90ae-530a-5346-adc3-81f196128c4e",
+      "name": "Test Run",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ── EDIT THESE ──────────────────────────────────────────────\nreturn [{ json: {\n  // Any OpenAI-compatible API: OpenAI, OpenRouter, Groq, Together…\n  AI_URL: 'https://api.openai.com/v1/chat/completions',\n  TOKEN: 'PASTE_YOUR_AI_API_KEY',\n  MODEL: 'gpt-4o-mini',\n  TELEGRAM_BOT_TOKEN: 'PASTE_BOT_TOKEN_FROM_BOTFATHER',\n  TELEGRAM_CHAT_ID: 'PASTE_YOUR_CHAT_ID',\n  BUSINESS: 'a home bakery in Kolkata selling custom cakes and cookies',\n  AUDIENCE: 'young parents and office teams ordering for celebrations',\n  LANGUAGE: 'English with a little Hinglish',\n} }];\n"
+      },
+      "id": "d5e202d3-07aa-5397-b5ce-e95612531cc1",
+      "name": "CONFIG",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Builds today's AI request (a different content angle each weekday).\nconst cfg = $('CONFIG').first().json;\nconst angles = ['behind the scenes', 'customer story or result', 'myth vs fact', 'quick tip', 'offer or announcement', 'day in the life', 'answering a common question'];\nconst angle = angles[new Date().getDay()];\nconst prompt = `You plan Instagram reels for ${cfg.BUSINESS}. Audience: ${cfg.AUDIENCE}. Language: ${cfg.LANGUAGE}.\nToday's angle: ${angle}.\nGive 3 reel ideas. For each: a hook under 9 words, 4 shots to film on a phone, on-screen text, and a one-line caption ending with a call to action to comment a keyword.\nKeep it short and specific. Plain text, no markdown tables.`;\nreturn [{ json: { angle, url: cfg.AI_URL, body: { model: cfg.MODEL, temperature: 0.9,\n  messages: [{ role: 'user', content: prompt }] } } }];\n"
+      },
+      "id": "99fd53ac-d09a-5ae3-9557-d6e37187d71f",
+      "name": "Build AI Request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.url }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {
+          "timeout": 30000
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $('CONFIG').first().json.TOKEN }}"
+            }
+          ]
+        }
+      },
+      "id": "d9271655-3212-5c94-96d9-6d94e250454e",
+      "name": "Ask AI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        720,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Turns the AI answer into a Telegram message.\nconst cfg = $('CONFIG').first().json;\nconst r = $input.first().json;\nconst text = (r.choices && r.choices[0] && r.choices[0].message && r.choices[0].message.content)\n  || (r.error ? `AI error: ${r.error.message || JSON.stringify(r.error)}` : 'No answer from the AI today.');\nconst angle = $('Build AI Request').first().json.angle;\nreturn [{ json: { url: `https://api.telegram.org/bot${cfg.TELEGRAM_BOT_TOKEN}/sendMessage`,\n  body: { chat_id: cfg.TELEGRAM_CHAT_ID, text: `🎬 Today's reel ideas (${angle})\\n\\n${text}`.slice(0, 4000) } } }];\n"
+      },
+      "id": "9b3ff53e-e14c-5ed5-a33f-504792faa2fe",
+      "name": "Format Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.url }}",
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.body) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "91055afd-4170-555e-a59e-10483e0c254d",
+      "name": "Send to Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1200,
+        300
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "content": "## Daily AI reel ideas → Telegram\n**What it does:** every morning at 9 you get 3 fresh reel ideas for your business on Telegram — hook, shots, on-screen text and caption. A different angle each weekday.\n\n**Setup (5 min)**\n1. Get an API key (OpenAI, OpenRouter or Groq) and a Telegram bot token + chat id (see the Lead → Telegram workflow notes).\n2. Fill in **CONFIG**, including a one-line description of your business and audience.\n3. Click **Test workflow** once to check, then Activate.\n\nChange the time in *Every Morning*. Free resource from nextbizstudio.com",
+        "width": 440,
+        "height": 400
+      },
+      "id": "140ab72e-df05-5543-bc7e-b5db3f49b9f2",
+      "name": "Read me",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Every Morning": {
+      "main": [
+        [
+          {
+            "node": "CONFIG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Test Run": {
+      "main": [
+        [
+          {
+            "node": "CONFIG",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CONFIG": {
+      "main": [
+        [
+          {
+            "node": "Build AI Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build AI Request": {
+      "main": [
+        [
+          {
+            "node": "Ask AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ask AI": {
+      "main": [
+        [
+          {
+            "node": "Format Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Message": {
+      "main": [
+        [
+          {
+            "node": "Send to Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "source": "nextbizstudio.com/resources"
+  },
+  "tags": []
+}

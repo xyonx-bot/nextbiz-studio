@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import { publicView, gatedPayload, isPublished, accessLabel, snippetOf, igDmUrl } from "@/lib/resources";
 import type { ResourceEntry } from "@/components/sections/types";
 import resourcesSeed from "@/lib/seed/resources.json";
+import { existsSync, readFileSync } from "node:fs";
+import { facetsOf } from "@/lib/resources";
 
 const base: ResourceEntry = {
   id: "x", slug: "x", type: "prompt", title: "X", summary: "s",
@@ -66,5 +68,29 @@ describe("resources seed", () => {
   });
   it("ships at least 6 published resources", () => {
     expect(entries.filter(isPublished).length).toBeGreaterThanOrEqual(6);
+  });
+  it("every local fileUrl exists in public/ and n8n files are valid workflows", () => {
+    for (const e of entries) {
+      const f = e.access?.fileUrl ?? "";
+      if (!f.startsWith("/")) continue;
+      const path = `public${f}`;
+      expect(existsSync(path), path).toBe(true);
+      if (f.endsWith(".json")) {
+        const wf = JSON.parse(readFileSync(path, "utf8"));
+        expect(Array.isArray(wf.nodes) && wf.nodes.length > 2).toBe(true);
+        const names = new Set(wf.nodes.map((n: { name: string }) => n.name));
+        for (const [from, c] of Object.entries(wf.connections as Record<string, { main: { node: string }[][] }>)) {
+          expect(names.has(from), from).toBe(true);
+          for (const out of c.main) for (const t of out) expect(names.has(t.node), t.node).toBe(true);
+        }
+        expect(JSON.stringify(wf)).not.toMatch(/EAA[A-Za-z0-9]{20,}/); // no real tokens shipped
+      }
+    }
+  });
+  it("facets parse tools and minutes", () => {
+    const f = facetsOf({ ...entries[0], tool: "n8n · Instagram API", time: "20 min setup", access: { mode: "email" } });
+    expect(f.tools).toEqual(["n8n", "Instagram API"]);
+    expect(f.minutes).toBe(20);
+    expect(f.via).toBe("email");
   });
 });

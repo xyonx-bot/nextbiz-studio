@@ -12,11 +12,11 @@
       "Tools we use,",
       "yours free."
     ],
-    "lede": "Prompt packs, Notion templates, n8n workflows and short guides — the same setups we build for clients, packaged so you can use them today. Free while we grow the library.",
+    "lede": "Prompt packs, n8n workflows and short guides — the same setups we build for clients, packaged so you can use them today. Notion templates are next. Free while we grow the library.",
     "meta": [
       {
         "k": "Kinds",
-        "v": "AI prompts · Notion · n8n · Guides"
+        "v": "AI prompts · n8n workflows · Guides · Notion templates soon"
       },
       {
         "k": "Price",
@@ -37,18 +37,30 @@
         "label": "AI Prompts"
       },
       {
-        "key": "notion",
-        "label": "Notion Templates"
-      },
-      {
         "key": "n8n",
         "label": "n8n Workflows"
+      },
+      {
+        "key": "notion",
+        "label": "Notion Templates"
       },
       {
         "key": "guide",
         "label": "Guides"
       }
-    ]
+    ],
+    "filters": {
+      "kind": "Kind",
+      "tool": "Works with",
+      "level": "Level",
+      "access": "How you get it",
+      "clear": "Clear all",
+      "filtersButton": "Filters",
+      "results": "resources",
+      "sortFeatured": "Featured first",
+      "sortAZ": "A–Z",
+      "sortQuick": "Quickest first"
+    }
   },
   "dmBand": {
     "micro": "On Instagram",
@@ -359,37 +371,6 @@
       }
     },
     {
-      "id": "r07",
-      "slug": "n8n-instagram-comment-to-dm-workflow",
-      "type": "n8n",
-      "draft": true,
-      "featured": false,
-      "title": "n8n Workflow: Instagram Comment → DM",
-      "summary": "The exact n8n workflow behind our comment automation — keyword match, public reply, DM with buttons, and a guard against double replies.",
-      "tool": "n8n · Instagram API",
-      "level": "Intermediate",
-      "time": "30 min setup",
-      "cover": "",
-      "inside": [
-        "Importable workflow JSON",
-        "Keyword → message mapping table",
-        "Echo / duplicate-reply guard",
-        "Setup notes for the Meta app and webhook"
-      ],
-      "steps": [
-        "Import the JSON into n8n (Workflows → Import from file).",
-        "Add your Instagram access token as a credential.",
-        "Point your Meta app's Instagram webhook at the workflow's webhook URL.",
-        "Edit the keyword table and test with a comment from a second account."
-      ],
-      "access": {
-        "mode": "dm",
-        "keyword": "N8N",
-        "fileUrl": "",
-        "cta": "Get the workflow"
-      }
-    },
-    {
       "id": "r08",
       "slug": "notion-content-planner",
       "type": "notion",
@@ -445,6 +426,430 @@
         "mode": "email",
         "fileUrl": "",
         "cta": "Duplicate to your Notion"
+      }
+    },
+    {
+      "id": "r10",
+      "slug": "n8n-instagram-comment-to-dm",
+      "type": "n8n",
+      "draft": false,
+      "featured": true,
+      "title": "n8n Workflow: Instagram Comment → DM",
+      "summary": "Someone comments a keyword on your reel and instantly gets a public reply plus a DM with your link. Multiple keywords, one simple settings box.",
+      "tool": "n8n · Instagram API",
+      "level": "Intermediate",
+      "time": "20 min setup",
+      "cover": "",
+      "inside": [
+        "Importable n8n workflow (.json)",
+        "Keyword → reply + link table in one CONFIG box",
+        "Meta webhook verification built in",
+        "Skips your own comments so it never loops"
+      ],
+      "steps": [
+        "Download the file, then in n8n open Workflows → Create → ⋯ → Import from File.",
+        "Open the CONFIG node: paste your Instagram token and user ID, then edit the keywords and links.",
+        "Set a secret word in 'Verify Token OK?', activate, and paste the webhook URL into your Meta app (subscribe to comments).",
+        "Comment the keyword from a second account to test."
+      ],
+      "access": {
+        "mode": "email",
+        "freeCount": 0,
+        "fileUrl": "/resources/n8n/ig-comment-to-dm.json",
+        "cta": "Unlock the workflow"
+      },
+      "blocks": [
+        {
+          "h": "Before you start",
+          "p": "You need an Instagram professional account connected to a Meta developer app with Instagram API access, and an n8n instance reachable from the internet (n8n Cloud or self-hosted with HTTPS)."
+        }
+      ]
+    },
+    {
+      "id": "r11",
+      "slug": "n8n-instagram-dm-menu",
+      "type": "n8n",
+      "draft": false,
+      "featured": true,
+      "title": "n8n Workflow: Instagram DM Menu (START)",
+      "summary": "Turn your Instagram inbox into a menu. People DM START and get buttons for free resources, your website and 'work with us' — which asks what they need and pings you.",
+      "tool": "n8n · Instagram API",
+      "level": "Intermediate",
+      "time": "20 min setup",
+      "cover": "",
+      "inside": [
+        "Importable n8n workflow (.json)",
+        "Button menu + quick replies, all editable in CONFIG",
+        "Lead step that alerts you on Slack or Discord",
+        "Ignores normal chats so real conversations aren't interrupted"
+      ],
+      "steps": [
+        "Download the file, then in n8n open Workflows → Create → ⋯ → Import from File.",
+        "Edit CONFIG: token, user ID, trigger words, menu buttons and answers.",
+        "Set the verify word, activate, and subscribe your Meta app webhook to messages and messaging_postbacks.",
+        "DM START from a second account to test."
+      ],
+      "access": {
+        "mode": "email",
+        "freeCount": 0,
+        "fileUrl": "/resources/n8n/ig-dm-menu.json",
+        "cta": "Unlock the workflow"
+      }
+    },
+    {
+      "id": "r12",
+      "slug": "n8n-whatsapp-auto-reply-menu",
+      "type": "n8n",
+      "draft": false,
+      "featured": false,
+      "title": "n8n Workflow: WhatsApp Auto-Reply Menu",
+      "summary": "Customers say 'hi' on WhatsApp and get a tappable menu — prices, timings, booking, talk to a person — with instant answers. Built for salons, cafés, clinics and shops.",
+      "tool": "n8n · WhatsApp Cloud API",
+      "level": "Intermediate",
+      "time": "25 min setup",
+      "cover": "",
+      "inside": [
+        "Importable n8n workflow (.json)",
+        "WhatsApp list menu with up to 10 options",
+        "Instant text answer for each option",
+        "Greeting words or reply-to-everything switch"
+      ],
+      "steps": [
+        "Download the file, then in n8n open Workflows → Create → ⋯ → Import from File.",
+        "Edit CONFIG: WhatsApp access token, menu rows and the answer for each row.",
+        "Set the verify word, activate, and add the webhook URL in Meta app → WhatsApp → Configuration (subscribe to messages).",
+        "Send 'hi' to your business number to test."
+      ],
+      "access": {
+        "mode": "email",
+        "freeCount": 0,
+        "fileUrl": "/resources/n8n/whatsapp-menu.json",
+        "cta": "Unlock the workflow"
+      }
+    },
+    {
+      "id": "r13",
+      "slug": "n8n-website-lead-telegram-alert",
+      "type": "n8n",
+      "draft": false,
+      "featured": false,
+      "title": "n8n Workflow: Website Lead → Telegram Alert",
+      "summary": "Get a Telegram message the second someone fills your website's contact form — name, phone, email and message, ready to call back.",
+      "tool": "n8n · Telegram",
+      "level": "Beginner",
+      "time": "5 min setup",
+      "cover": "",
+      "inside": [
+        "Importable n8n workflow (.json)",
+        "Validates the form (name + phone or email)",
+        "Clean, formatted Telegram alert",
+        "Works with any site that can POST a webhook"
+      ],
+      "steps": [
+        "Download the file, then in n8n open Workflows → Create → ⋯ → Import from File.",
+        "Create a bot with @BotFather, find your chat id, and paste both into CONFIG.",
+        "Activate and point your form at the workflow's webhook URL (POST, JSON).",
+        "Submit a test enquiry from your site."
+      ],
+      "access": {
+        "mode": "email",
+        "freeCount": 0,
+        "fileUrl": "/resources/n8n/lead-to-telegram.json",
+        "cta": "Unlock the workflow"
+      }
+    },
+    {
+      "id": "r14",
+      "slug": "n8n-daily-ai-reel-ideas",
+      "type": "n8n",
+      "draft": false,
+      "featured": false,
+      "title": "n8n Workflow: Daily AI Reel Ideas → Telegram",
+      "summary": "Every morning you get three reel ideas for your business on Telegram — hook, shots, on-screen text and caption — with a new angle each weekday.",
+      "tool": "n8n · OpenAI-compatible AI · Telegram",
+      "level": "Beginner",
+      "time": "5 min setup",
+      "cover": "",
+      "inside": [
+        "Importable n8n workflow (.json)",
+        "Works with OpenAI, OpenRouter or Groq",
+        "7 rotating content angles",
+        "Change the time in one click"
+      ],
+      "steps": [
+        "Download the file, then in n8n open Workflows → Create → ⋯ → Import from File.",
+        "Fill in CONFIG: AI key, model, Telegram bot details and a line about your business.",
+        "Click Test workflow to see today's ideas, then Activate."
+      ],
+      "access": {
+        "mode": "email",
+        "freeCount": 0,
+        "fileUrl": "/resources/n8n/daily-content-ideas.json",
+        "cta": "Unlock the workflow"
+      }
+    },
+    {
+      "id": "r15",
+      "slug": "ai-headshot-personal-brand-prompts",
+      "type": "prompt",
+      "draft": false,
+      "featured": true,
+      "title": "AI Headshot & Personal Brand Photo Prompts",
+      "summary": "Professional headshots and personal-brand photos from a few selfies — LinkedIn, website, podcast cover and 'founder at work' shots that still look like you.",
+      "tool": "ChatGPT · Gemini · Midjourney",
+      "level": "Beginner",
+      "time": "15 min",
+      "cover": "",
+      "inside": [
+        "Selfie checklist for the best likeness",
+        "Corporate headshot prompt",
+        "Creative/personal brand portrait",
+        "Founder-at-work lifestyle scene",
+        "Fixing likeness when the face drifts"
+      ],
+      "steps": [
+        "Take 3–5 well-lit selfies facing a window: front, slight left, slight right, no filters.",
+        "Attach them and run the headshot prompt first.",
+        "Use the fix-likeness prompt if the face doesn't look like you.",
+        "Keep one favourite as a reference for every later prompt."
+      ],
+      "prompts": [
+        {
+          "title": "1 · Corporate headshot",
+          "text": "Using the attached photos of me as the only reference for my face, create a professional headshot. Keep my exact facial features, skin tone, face shape, hairline and eye colour — do not beautify or change my age. Outfit: [navy blazer over a white shirt]. Background: soft neutral grey studio backdrop. Lighting: soft key light from the front-left, gentle fill. Framing: head and shoulders, eyes on the upper third, looking at the camera with a relaxed, confident smile. Photorealistic, 85mm lens look, shallow depth of field."
+        },
+        {
+          "title": "2 · Personal brand portrait",
+          "text": "Using the attached photos as the reference for my face (keep it identical), create a personal brand portrait for my website. I am a [your role]. Setting: [a bright studio with plants / a modern café / my workspace]. Outfit: [describe]. Pose: [arms relaxed, slight lean, turned 30° to camera]. Mood: warm, approachable, premium. Natural window light, warm colour grade, photorealistic."
+        },
+        {
+          "title": "3 · Founder at work",
+          "text": "Using the attached photos as the reference for my face, show me working: [sketching on a whiteboard / on a laptop at a wooden desk / talking with a client]. Candid documentary style, not posed, caught mid-action. Environment fits a [your industry] business. Soft daylight, slight film grain, 35mm lens look. Keep my face, hair and build exactly as in the reference."
+        },
+        {
+          "title": "4 · Podcast / social cover",
+          "text": "Using the attached photos as reference, create a square cover photo of me for a [podcast / YouTube channel] about [topic]. Me on the right third, chest-up, expressive [laughing / pointing / thinking] expression. Clean background in [brand colour] with empty space on the left for a title. Bold, crisp lighting. No text in the image."
+        },
+        {
+          "title": "5 · Fix the likeness",
+          "text": "This doesn't look enough like me. Compare it with the attached reference photos and correct: [eye shape / nose / jawline / hairline / skin tone / age]. Keep the outfit, background and lighting exactly as they are and change only the face to match the reference."
+        }
+      ],
+      "access": {
+        "mode": "email",
+        "freeCount": 2,
+        "cta": "Unlock all 5 prompts"
+      }
+    },
+    {
+      "id": "r16",
+      "slug": "instagram-carousel-prompts",
+      "type": "prompt",
+      "draft": false,
+      "featured": false,
+      "title": "Instagram Carousel Prompts",
+      "summary": "Turn one idea into a 7-slide carousel people save and share — hook slide, value slides, CTA — plus the design brief and caption.",
+      "tool": "ChatGPT · Claude · Canva",
+      "level": "Beginner",
+      "time": "20 min",
+      "cover": "",
+      "inside": [
+        "Topic → 10 carousel angles",
+        "Angle → 7-slide outline",
+        "Slide copy that fits on screen",
+        "Design brief for Canva",
+        "Caption + call to action"
+      ],
+      "steps": [
+        "Run the angles prompt and pick the most specific angle.",
+        "Generate the outline, then the slide copy.",
+        "Paste the design brief into Canva's Magic Design or follow it by hand.",
+        "Post with the caption it writes and pin a comment with your keyword."
+      ],
+      "prompts": [
+        {
+          "title": "1 · 10 carousel angles",
+          "text": "I run [business/creator niche] for [audience]. Give me 10 Instagram carousel angles about [topic]. Mix: a step-by-step, a mistakes list, a before/after, a myth-busting post, a checklist, and a 'save this for later' resource. One line each, specific, no generic titles."
+        },
+        {
+          "title": "2 · 7-slide outline",
+          "text": "Turn this angle into a 7-slide carousel: [angle]. Slide 1 is a hook under 10 words that creates curiosity. Slides 2–6 each give one idea with a short headline and max 25 words of support. Slide 7 is a call to action: comment [KEYWORD] to get [freebie]. Return as a numbered list."
+        },
+        {
+          "title": "3 · Slide copy that fits",
+          "text": "Rewrite each slide so it fits on a 1080×1350 slide at a readable size: headline max 6 words, body max 20 words, plain language, no hashtags or emojis in the slides. Keep the order. [paste outline]"
+        },
+        {
+          "title": "4 · Design brief",
+          "text": "Write a design brief for this carousel for Canva: colour palette (3 colours with hex codes) that suits [brand vibe], font pairing, layout for the hook slide vs content slides, where to put the slide number and handle, and one visual idea per slide. [paste slides]"
+        },
+        {
+          "title": "5 · Caption + CTA",
+          "text": "Write an Instagram caption for this carousel: first line repeats the hook differently, 3 short lines of context, then the CTA 'Comment [KEYWORD] and I'll DM you [freebie]'. Under 80 words, 5 niche hashtags at the end. [paste slides]"
+        }
+      ],
+      "access": {
+        "mode": "email",
+        "freeCount": 2,
+        "cta": "Unlock all 5 prompts"
+      }
+    },
+    {
+      "id": "r17",
+      "slug": "ai-customer-reply-prompts",
+      "type": "prompt",
+      "draft": false,
+      "featured": false,
+      "title": "AI Customer Reply Prompts for Small Businesses",
+      "summary": "Answer DMs, Google reviews, complaints and price questions in your own tone in seconds — polite, on-brand and ready to paste.",
+      "tool": "ChatGPT · Claude · Gemini",
+      "level": "Beginner",
+      "time": "10 min",
+      "cover": "",
+      "inside": [
+        "Tone profile the AI remembers",
+        "Reply to a DM or WhatsApp enquiry",
+        "Reply to Google reviews (good and bad)",
+        "Handle a complaint without losing the customer",
+        "Answer 'how much?' without scaring people off"
+      ],
+      "steps": [
+        "Run the tone profile first and keep that chat for replies.",
+        "Paste the customer's message into the matching prompt.",
+        "Read it once, change any detail that isn't true, and send."
+      ],
+      "prompts": [
+        {
+          "title": "1 · Tone profile",
+          "text": "Remember how my business talks for the rest of this chat. Business: [name, what you sell, where]. Tone: [warm and friendly / premium and calm / fun and casual]. Language: [English / Hinglish / Bengali]. We always: [offer to call / share a booking link / sign off with our name]. We never: [promise discounts in chat / use slang]. Reply 'Ready'."
+        },
+        {
+          "title": "2 · DM / WhatsApp enquiry",
+          "text": "Write a reply to this customer message in our tone. Answer their question directly in the first line, add one helpful detail, and end with a clear next step ([book here / share your date / call us]). Max 60 words. Customer: \"[paste message]\""
+        },
+        {
+          "title": "3 · Google review reply",
+          "text": "Write a reply to this Google review. If positive: thank them by name, mention one specific thing they liked, invite them back — max 40 words. If negative: thank them, apologise for the specific issue without excuses, say what we're changing, and offer to fix it offline at [phone/email] — max 70 words. Review: \"[paste review]\""
+        },
+        {
+          "title": "4 · Complaint, calmly",
+          "text": "A customer is upset: \"[paste message]\". Write a reply that acknowledges their feeling in one line, takes responsibility for what went wrong, offers a concrete fix ([refund / redo / discount on next visit]), and moves the chat to a call if needed. No defensive language. Max 80 words."
+        },
+        {
+          "title": "5 · 'How much?' answer",
+          "text": "A customer asks the price of [service/product]. Our price is [price or range]. Write a reply that gives the price clearly, explains in one line what's included and why it's worth it, and offers a smaller option or a quick call if budget is a concern. Max 60 words, friendly, no pressure."
+        }
+      ],
+      "access": {
+        "mode": "email",
+        "freeCount": 2,
+        "cta": "Unlock all 5 prompts"
+      }
+    },
+    {
+      "id": "r18",
+      "slug": "ai-logo-brand-moodboard-prompts",
+      "type": "prompt",
+      "draft": false,
+      "featured": false,
+      "title": "AI Logo & Brand Moodboard Prompts",
+      "summary": "Explore a brand look before paying a designer — name ideas, moodboards, logo concepts and a one-page brand sheet you can hand over.",
+      "tool": "ChatGPT · Midjourney · Ideogram",
+      "level": "Beginner",
+      "time": "30 min",
+      "cover": "",
+      "inside": [
+        "Brand brief builder",
+        "Name and tagline ideas",
+        "Visual moodboard prompt",
+        "Logo concept prompts (wordmark + icon)",
+        "One-page brand sheet"
+      ],
+      "steps": [
+        "Answer the brand brief prompt honestly — it shapes everything else.",
+        "Generate a moodboard and save the 2–3 directions you like.",
+        "Run logo concepts in Ideogram or Midjourney for clean text.",
+        "Use the brand sheet prompt to summarise it for a designer."
+      ],
+      "prompts": [
+        {
+          "title": "1 · Brand brief",
+          "text": "Interview me to build a brand brief. Ask me 8 short questions one at a time about: what I sell, who it's for, what makes it different, 3 words the brand should feel like, brands I admire, colours I love and hate, where it will be seen most, and the price level. After my last answer, summarise the brief in 8 bullet points."
+        },
+        {
+          "title": "2 · Names and taglines",
+          "text": "Using this brief, suggest 15 brand names in 3 styles (descriptive, invented, metaphor) and check each is short, easy to spell and say. Then write 5 taglines under 6 words for my favourite: [name]. [paste brief]"
+        },
+        {
+          "title": "3 · Moodboard",
+          "text": "Create a brand moodboard grid for [brand name], a [what it is] for [audience]. Brand feeling: [3 words]. Include: a colour palette swatch strip, a typography sample, 2 product/lifestyle photos, a texture, and a pattern. Cohesive, editorial layout on an off-white background. Style: [minimal / bold / earthy / luxurious]."
+        },
+        {
+          "title": "4 · Logo concepts",
+          "text": "Logo design for \"[brand name]\": a [wordmark / icon + wordmark / monogram]. Style: [flat, geometric, minimal]. Colours: [hex codes]. The icon suggests [idea, e.g. a leaf forming a cup]. Clean vector look, centred on a plain white background, no mockups, no extra text, high contrast. Show 4 variations in a 2×2 grid."
+        },
+        {
+          "title": "5 · One-page brand sheet",
+          "text": "Turn everything we decided into a one-page brand sheet for a designer: name, tagline, audience, personality (3 words + what it's not), colour palette with hex codes and usage %, fonts (heading/body with Google Fonts alternatives), logo direction, photo style, and 5 do's and don'ts."
+        }
+      ],
+      "access": {
+        "mode": "email",
+        "freeCount": 2,
+        "cta": "Unlock all 5 prompts"
+      }
+    },
+    {
+      "id": "r19",
+      "slug": "ai-weekly-planning-prompts",
+      "type": "prompt",
+      "draft": false,
+      "featured": false,
+      "title": "AI Weekly Planning & Focus Prompts",
+      "summary": "A calm Sunday planning routine with AI — brain dump to prioritised week, time-blocked days and a Friday review. Pairs well with Notion.",
+      "tool": "ChatGPT · Claude · Notion AI",
+      "level": "Beginner",
+      "time": "15 min a week",
+      "cover": "",
+      "inside": [
+        "Brain dump → sorted task list",
+        "Pick the 3 things that matter",
+        "Time-blocked plan for each day",
+        "Daily 5-minute check-in",
+        "Friday review that improves next week"
+      ],
+      "steps": [
+        "Every Sunday, dump everything on your mind into the first prompt.",
+        "Let it sort and choose your top 3 — then you decide.",
+        "Copy the time-blocked plan into your calendar or Notion.",
+        "Run the Friday review and save the lessons."
+      ],
+      "prompts": [
+        {
+          "title": "1 · Brain dump sorter",
+          "text": "Here is everything on my mind this week, unsorted: [paste brain dump]. Sort it into: Must do this week, Should do, Could do, Delegate, Delete. Flag anything with a deadline. Estimate time for each must-do in 15-minute blocks. Return as a checklist."
+        },
+        {
+          "title": "2 · Top 3 for the week",
+          "text": "My goals this quarter are: [goals]. From my must-do list, choose the 3 tasks that move those goals forward most and explain why in one line each. Then tell me which task I'm probably avoiding and the smallest first step to start it."
+        },
+        {
+          "title": "3 · Time-block my days",
+          "text": "Plan my week in time blocks. My working hours are [hours], I have these fixed commitments: [meetings/classes]. I focus best in the [morning/afternoon]. Put deep work for the top 3 in my best hours, batch small tasks together, leave 20% of the time free for surprises. Return a day-by-day table."
+        },
+        {
+          "title": "4 · Daily check-in",
+          "text": "Quick daily check-in. Yesterday I planned: [plan]. I actually did: [what happened]. Today's fixed commitments: [list]. Give me today's plan in 5 lines max, starting with the one task that matters most."
+        },
+        {
+          "title": "5 · Friday review",
+          "text": "Run a weekly review with me. What I planned: [top 3 + plan]. What happened: [notes]. Ask me 3 sharp questions about what worked and what didn't, then give me 2 changes to try next week and 1 thing to stop doing."
+        }
+      ],
+      "access": {
+        "mode": "email",
+        "freeCount": 2,
+        "cta": "Unlock all 5 prompts"
       }
     }
   ]
