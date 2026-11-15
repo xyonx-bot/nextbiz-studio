@@ -9,7 +9,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "@/components/icons";
 import resources from "@/lib/seed/resources.json";
 import type { ResourceEntry } from "./types";
-import { Library, GatedContent, EmailCapture, ResourceCard } from "./resources-client";
+import { Library, GatedContent, EmailCapture, ResourceCard, UnlockButton } from "./resources-client";
 import { accessLabel, accessMode, facetsOf, igDmUrl, isPublished, publicView, resourceHref, snippetOf } from "@/lib/resources";
 
 const list = <T,>(v: unknown): T[] => (Array.isArray(v) ? (v as T[]) : []);
@@ -20,6 +20,30 @@ const forCard = (e: ResourceEntry) => {
   const pub = publicView(e).entry;
   return { ...pub, href: resourceHref(e), snippet: snippetOf(pub), ...facetsOf(e) };
 };
+
+/** 1 · Compact header — title, one-line intro, live counts (replaces the big register) */
+export function LibraryHeader({ content, entries }: { content?: { micro?: string; h1?: string[] | string; lede?: string }; entries: ResourceEntry[] }) {
+  const c = content ?? resources.register;
+  const live = list<ResourceEntry>(entries).filter(isPublished);
+  const count = (t: string) => live.filter((e) => e.type === t).length;
+  const stats = [
+    { k: "Resources", v: live.length },
+    ...resources.library.types.map((t) => ({ k: t.label, v: count(t.key) })).filter((s) => s.v > 0),
+  ];
+  const title = Array.isArray(c.h1) ? c.h1.join(" ") : String(c.h1 ?? "Resource library");
+  return (
+    <section className="libhead pad">
+      <div>
+        {c.micro ? <span className="micro">{c.micro}</span> : null}
+        <h1>{title}</h1>
+        {c.lede ? <p className="lede">{c.lede}</p> : null}
+      </div>
+      <dl className="libhead-stats">
+        {stats.map((s) => <div key={s.k}><dt>{s.v}</dt><dd>{s.k}</dd></div>)}
+      </dl>
+    </section>
+  );
+}
 
 /** 2 · The library */
 export function LibrarySection({ entries }: { entries: ResourceEntry[] }) {
@@ -152,7 +176,7 @@ export function ResourceDetail({ entry, next }: { entry: ResourceEntry; next?: R
                 DM “{e.access?.keyword || dm.keyword}” on Instagram <ArrowUpRight />
               </a>
             ) : mode === "email" ? (
-              <a className="action dark" href="#unlock">{e.access?.cta || "Unlock it free"} <ArrowRight /></a>
+              <UnlockButton label={e.access?.cta || "Unlock it free"} />
             ) : e.prompts?.length ? (
               <a className="action dark" href="#prompt-1">Jump to the prompts <ArrowRight /></a>
             ) : null}
