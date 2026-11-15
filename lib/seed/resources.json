@@ -7,12 +7,11 @@
     "waitlist"
   ],
   "register": {
-    "micro": "Free library · Resources · Volume 01",
+    "micro": "Free library · NextBiz Studio",
     "h1": [
-      "Tools we use,",
-      "yours free."
+      "Resource library"
     ],
-    "lede": "Prompt packs, n8n workflows and short guides — the same setups we build for clients, packaged so you can use them today. Notion templates are next. Free while we grow the library.",
+    "lede": "AI prompt packs, n8n workflows and guides — the setups we build for clients, free to use. New resources every week.",
     "meta": [
       {
         "k": "Kinds",

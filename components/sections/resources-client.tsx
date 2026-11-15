@@ -5,7 +5,7 @@
    Server components pass only PUBLIC data in (lib/resources.ts
    publicView); gated text arrives from /api/subscribe after an email.
    ============================================================ */
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "@/components/icons";
 import type { ResourceBlock, ResourceEntry, ResourcePrompt } from "./types";
@@ -248,6 +248,16 @@ function Block({ b }: { b: ResourceBlock }) {
 }
 
 /* ═══ CONTENT + EMAIL GATE (detail page) ═══ */
+/* Hero "Unlock" button on the detail page — asks GatedContent to open its popup
+   (or, once unlocked, to scroll to the prompts). */
+export function UnlockButton({ label }: { label: string }) {
+  return (
+    <button type="button" className="action dark" onClick={() => window.dispatchEvent(new Event("nbs:unlock"))}>
+      {label} <ArrowRight />
+    </button>
+  );
+}
+
 export function GatedContent({
   slug, prompts, blocks, lockedPrompts, lockedBlocks, hasFile, gated, cta, fileUrl, fileCta,
 }: {
@@ -266,6 +276,12 @@ export function GatedContent({
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
+  const [modal, setModal] = useState(false);
+  const [justUnlocked, setJustUnlocked] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const locked = gated && !extra && (lockedPrompts > 0 || lockedBlocks > 0 || hasFile);
+  const lockedLabel = lockedPrompts > 0 ? `${lockedPrompts} more prompt${lockedPrompts > 1 ? "s" : ""}` : lockedBlocks > 0 ? "Keep reading" : "The file";
 
   const unlock = async (addr: string, quiet = false) => {
     setBusy(true); setErr("");
@@ -273,6 +289,7 @@ export function GatedContent({
       const r = await subscribe({ email: addr, list: "resource", source: slug });
       if (r.unlocked) setExtra(r.unlocked);
       saveEmail(addr);
+      if (!quiet) { setModal(false); setJustUnlocked(true); }
     } catch (e) {
       if (!quiet) setErr((e as Error).message);
     } finally {
@@ -287,15 +304,56 @@ export function GatedContent({
     if (saved) { setEmail(saved); void unlock(saved, true); }
   }, [gated, slug]);
 
+  // hero button → popup (or jump to the content once unlocked)
+  useEffect(() => {
+    const open = () => {
+      if (locked) { setModal(true); setErr(""); }
+      else document.getElementById(extra?.fileUrl || fileUrl ? "rfile" : "prompt-1")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+    window.addEventListener("nbs:unlock", open);
+    return () => window.removeEventListener("nbs:unlock", open);
+  }, [locked, extra, fileUrl]);
+
+  useEffect(() => {
+    if (!modal) return;
+    setTimeout(() => inputRef.current?.focus(), 30);
+    const esc = (e: KeyboardEvent) => { if (e.key === "Escape") setModal(false); };
+    window.addEventListener("keydown", esc);
+    return () => window.removeEventListener("keydown", esc);
+  }, [modal]);
+
+  // after unlocking, show the first NEW item instead of leaving people at the bottom
+  useEffect(() => {
+    if (!justUnlocked || !extra) return;
+    const target = extra.prompts.length ? `prompt-${prompts.length + 1}` : extra.blocks.length ? `rblock-${blocks.length + 1}` : "rfile";
+    setTimeout(() => document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+  }, [justUnlocked, extra, prompts.length, blocks.length]);
+
   const allPrompts = [...prompts, ...(extra?.prompts ?? [])];
   const allBlocks = [...blocks, ...(extra?.blocks ?? [])];
   const file = extra?.fileUrl || fileUrl;
-  const locked = gated && !extra && (lockedPrompts > 0 || lockedBlocks > 0 || hasFile);
+  const newFrom = prompts.length;
+
+  const form = (
+    <form className="gate-form" onSubmit={(ev) => { ev.preventDefault(); void unlock(email); }}>
+      <input ref={modal ? inputRef : undefined} type="email" required value={email} onChange={(ev) => setEmail(ev.target.value)} placeholder="you@example.com" aria-label="Email address" />
+      <button className="action dark" type="submit" disabled={busy}>
+        {busy ? "Unlocking…" : "Unlock"} <ArrowRight />
+      </button>
+    </form>
+  );
 
   return (
     <>
-      {allBlocks.length > 0 && <div className="rblocks">{allBlocks.map((b, i) => <Block b={b} key={i} />)}</div>}
-      {allPrompts.length > 0 && <div className="prompts">{allPrompts.map((p, i) => <PromptCard p={p} i={i} key={i} />)}</div>}
+      {justUnlocked && (
+        <p className="unlocked-note" role="status">✓ Unlocked — {extra?.prompts.length ? `${extra.prompts.length} more prompt${extra.prompts.length > 1 ? "s" : ""} added below` : extra?.fileUrl ? "your download is ready below" : "the full guide is below"}.</p>
+      )}
+      {allBlocks.length > 0 && <div className="rblocks">{allBlocks.map((b, i) => <div id={`rblock-${i + 1}`} key={i}><Block b={b} /></div>)}</div>}
+      {allPrompts.length > 0 && (
+        <div className="prompts">
+          {allPrompts.map((p, i) => <div className={justUnlocked && i >= newFrom ? "is-new" : undefined} key={i}><PromptCard p={p} i={i} /></div>)}
+        </div>
+      )}
 
       {locked && (
         <div className="gate" id="unlock">
@@ -305,30 +363,32 @@ export function GatedContent({
             </div>
           )}
           <div className="gate-box">
-            <span className="micro">
-              {lockedPrompts > 0 ? `${lockedPrompts} more prompt${lockedPrompts > 1 ? "s" : ""}` : lockedBlocks > 0 ? "Keep reading" : "Get the file"}
-              {" · free"}
-            </span>
+            <span className="micro">{lockedLabel} · free</span>
             <h3>{cta}</h3>
             <p>Enter your email and it opens right here. We&apos;ll also send new resources when they drop — unsubscribe any time.</p>
-            <form
-              className="gate-form"
-              onSubmit={(ev) => { ev.preventDefault(); void unlock(email); }}
-            >
-              <input type="email" required value={email} onChange={(ev) => setEmail(ev.target.value)} placeholder="you@example.com" aria-label="Email address" />
-              <button className="action dark" type="submit" disabled={busy}>
-                {busy ? "Unlocking…" : "Unlock"} <ArrowRight />
-              </button>
-            </form>
-            {err && <p className="gate-err" role="alert">{err}</p>}
+            {!modal && form}
+            {err && !modal && <p className="gate-err" role="alert">{err}</p>}
           </div>
         </div>
       )}
 
       {file && (
-        <a className="action dark rfile" href={file} target="_blank" rel="noreferrer" download={/\.json$/i.test(file) ? "" : undefined}>
+        <a id="rfile" className="action dark rfile" href={file} target="_blank" rel="noreferrer" download={/\.json$/i.test(file) ? "" : undefined}>
           {fileCta} <ArrowUpRight />
         </a>
+      )}
+
+      {modal && locked && (
+        <div className="umodal" role="dialog" aria-modal="true" aria-labelledby="umodal-title" onClick={(e) => { if (e.target === e.currentTarget) setModal(false); }}>
+          <div className="umodal-box">
+            <button type="button" className="umodal-x" onClick={() => setModal(false)} aria-label="Close">×</button>
+            <span className="micro">{lockedLabel} · free</span>
+            <h3 id="umodal-title">{cta}</h3>
+            <p>Enter your email and it opens on this page straight away. We&apos;ll also send new resources when they drop — unsubscribe any time.</p>
+            {form}
+            {err && <p className="gate-err" role="alert">{err}</p>}
+          </div>
+        </div>
       )}
     </>
   );
