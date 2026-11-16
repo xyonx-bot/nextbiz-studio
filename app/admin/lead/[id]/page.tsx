@@ -9,6 +9,7 @@ import { AdminShell } from "@/components/admin/shell";
 import { ArrowLeft, ArrowRight, Check } from "@/components/admin/icons";
 import { EmailComposer } from "@/components/admin/email-composer";
 import { listEmailsForLead, mailOn } from "@/lib/mail";
+import { getEmailSettings } from "@/lib/settings";
 
 /**
  * S4 (P1.7) — lead detail, ported from Mira's admin/lead/wireframe.html:
@@ -50,7 +51,7 @@ export default async function LeadDetailPage({
 }) {
   if (!(await isAuthenticated())) redirect("/admin/login");
   const { id } = await params;
-  const [lead, total, emails] = await Promise.all([getLead(id), countLeads(), listEmailsForLead(id).catch(() => [])]);
+  const [lead, total, emails, mailCfg] = await Promise.all([getLead(id), countLeads(), listEmailsForLead(id).catch(() => []), getEmailSettings()]);
   if (!lead) notFound();
 
   // stage dates from status ledger entries ("old → new" @ time)
@@ -102,6 +103,7 @@ export default async function LeadDetailPage({
           <EmailComposer
             lead={{ id: lead.id, name: lead.name, email: lead.email, service: lead.service }}
             enabled={mailOn()}
+            testTo={mailCfg.testTo}
             history={emails.map((e) => ({ id: e.id, subject: e.subject, status: e.status, kind: e.kind, error: e.error, at: `${noteWhen(e.created_at).join(" · ")}` }))}
           />
 

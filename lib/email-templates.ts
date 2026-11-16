@@ -21,6 +21,8 @@ export interface EmailContent {
   body: string;
   ctaLabel?: string;
   ctaUrl?: string;
+  /** Optional picture (https URL on our CDN). Linked, never embedded — embedded images hurt inbox placement. */
+  image?: string;
 }
 export interface LeadVars { name?: string | null; service?: string | null }
 
@@ -110,6 +112,10 @@ export function renderEmail(theme: ThemeId, c: EmailContent, v: LeadVars = {}): 
   const ctaUrl = safeUrl(c.ctaUrl);
   const ctaLabel = (c.ctaLabel ?? "").trim();
   const cta = ctaUrl && ctaLabel ? { url: ctaUrl, label: ctaLabel } : null;
+  const img = /^https:\/\//i.test(c.image?.trim() ?? "") ? c.image!.trim() : "";
+  const imgHtml = (w: number) => img
+    ? `<img src="${esc(img)}" width="${w}" alt="${esc(heading || subject)}" style="display:block;width:100%;max-width:${w}px;height:auto;border:0;margin:0 0 20px">`
+    : "";
 
   const text = [
     heading, heading ? "" : null, body.trim(), "",
@@ -128,7 +134,7 @@ export function renderEmail(theme: ThemeId, c: EmailContent, v: LeadVars = {}): 
     const P = "margin:0 0 14px;font-size:15px;line-height:1.6;color:#1a1a1a";
     const A = "color:#1a1a1a;text-decoration:underline";
     const inner =
-      `<tr><td style="padding:4px 2px">${heading ? `<p style="${P};font-weight:700">${esc(heading)}</p>` : ""}${bodyHtml(body, P, A)}` +
+      `<tr><td style="padding:4px 2px">${heading ? `<p style="${P};font-weight:700">${esc(heading)}</p>` : ""}${bodyHtml(body, P, A)}${imgHtml(560)}` +
       (cta ? `<p style="${P}"><a href="${esc(cta.url)}" style="${A};font-weight:600">${esc(cta.label)} →</a></p>` : "") +
       `<p style="${P};margin-top:22px">— ${esc(BRAND.signoff)}<br><span style="color:#666;font-size:13px"><a href="${BRAND.site}" style="color:#666">${BRAND.site.replace("https://", "")}</a> · WhatsApp ${BRAND.whatsappLabel}</span></p></td></tr>`;
     return { subject, text, html: wrap("#ffffff", inner) };
@@ -143,6 +149,7 @@ export function renderEmail(theme: ThemeId, c: EmailContent, v: LeadVars = {}): 
   const card =
     `<tr><td style="background:#ffffff;border:1px solid #E4E1DC;${dark ? "border-top:0;" : "border-top:3px solid #0E0E0E;"}padding:30px 28px">` +
     (heading ? `<h1 style="margin:0 0 18px;font-size:${dark ? 26 : 22}px;line-height:1.2;font-weight:800;color:#0E0E0E;letter-spacing:-.4px">${esc(heading)}</h1>` : "") +
+    imgHtml(522) +
     bodyHtml(body, P, A) +
     (cta ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px 0 18px"><tr><td style="background:#0E0E0E"><a href="${esc(cta.url)}" style="display:inline-block;padding:13px 22px;color:#ffffff;font-size:14px;font-weight:700;text-decoration:none">${esc(cta.label)} →</a></td></tr></table>` : "") +
     `<p style="${P};margin:22px 0 0">— ${esc(BRAND.signoff)}</p></td></tr>`;
@@ -151,4 +158,46 @@ export function renderEmail(theme: ThemeId, c: EmailContent, v: LeadVars = {}): 
     `<a href="${BRAND.site}" style="color:#8A8680">${BRAND.site.replace("https://", "")}</a> · <a href="${BRAND.whatsapp}" style="color:#8A8680">WhatsApp ${BRAND.whatsappLabel}</a><br>` +
     `You're getting this because you contacted ${BRAND.name}. Just reply to talk to us.</td></tr>`;
   return { subject, text, html: wrap(dark ? "#F4F2EE" : "#F7F6F3", head + card + foot) };
+}
+
+/* ── deliverability guard rails ─────────────────────────── */
+
+/** Attachments: documents and pictures only, small, few. Zips, HTML and executables are what spam filters hunt. */
+export const ATTACH = {
+  maxFiles: 3,
+  maxTotalBytes: 5 * 1024 * 1024,
+  types: {
+    "application/pdf": "pdf", "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation": "pptx",
+    "text/plain": "txt", "text/csv": "csv",
+  } as Record<string, string>,
+  accept: ".pdf,.png,.jpg,.jpeg,.webp,.docx,.xlsx,.pptx,.txt,.csv",
+};
+
+export function checkAttachments(files: { name: string; type: string; size: number }[]): string | null {
+  if (files.length > ATTACH.maxFiles) return `Up to ${ATTACH.maxFiles} attachments.`;
+  for (const f of files) {
+    if (!ATTACH.types[f.type]) return `${f.name}: only PDF, images, Word, Excel, PowerPoint, TXT or CSV.`;
+  }
+  const total = files.reduce((n, f) => n + f.size, 0);
+  if (total > ATTACH.maxTotalBytes) return `Attachments add up to ${(total / 1048576).toFixed(1)} MB — keep it under 5 MB (share a link for bigger files).`;
+  return null;
+}
+
+const SHORTENERS = /\b(bit\.ly|tinyurl\.com|t\.co|goo\.gl|ow\.ly|is\.gd|cutt\.ly|rb\.gy)\//i;
+const SPAMMY = /\b(free money|act now|100% free|guaranteed|risk[- ]free|click here|winner|urgent|limited time|cash bonus)\b/i;
+
+/** Gentle warnings shown under the composer — things that push mail into spam/promotions. */
+export function spamHints(c: EmailContent, attachments = 0): string[] {
+  const out: string[] = [];
+  const letters = c.subject.replace(/[^a-z]/gi, "");
+  if (letters.length >= 8 && letters.replace(/[^A-Z]/g, "").length / letters.length > 0.6) out.push("Subject is mostly CAPITALS.");
+  if (/[!?]{2,}|\$\$|₹₹/.test(c.subject)) out.push("Repeated !!! or symbols in the subject.");
+  if (SPAMMY.test(`${c.subject} ${c.body} ${c.ctaLabel ?? ""}`)) out.push("Salesy phrase (\"click here\", \"guaranteed\", \"limited time\"…) — reword it.");
+  if (SHORTENERS.test(`${c.body} ${c.ctaUrl ?? ""}`)) out.push("Link shorteners (bit.ly etc.) are a spam signal — use the full link.");
+  if (c.body.trim().length < 60 && (c.image || attachments)) out.push("Very little text next to a picture/attachment — add a couple of sentences.");
+  if ((c.body.match(/https?:\/\//g) ?? []).length > 4) out.push("Lots of links — keep it to 2–3.");
+  return out;
 }

@@ -25,7 +25,7 @@ export function AdminShell({
 }: {
   leadCount: number;
   pageCount?: number;
-  current?: "leads" | "pages" | "subscribers";
+  current?: "leads" | "pages" | "subscribers" | "email";
   crumb: string;
   title: React.ReactNode;
   acts?: React.ReactNode;
@@ -50,9 +50,9 @@ export function AdminShell({
             <Link href="/admin/subscribers" className={current === "subscribers" ? "on" : ""} onClick={() => setOpen(false)}>
               <Mail /> Subscribers
             </Link>
-            <span className="nnav" title="Settings — not in the current scope">
-              <Settings /> Settings
-            </span>
+            <Link href="/admin/email" className={current === "email" ? "on" : ""} onClick={() => setOpen(false)}>
+              <Settings /> Email
+            </Link>
           </nav>
           <span className="sgap" />
           <div className="sfoot">

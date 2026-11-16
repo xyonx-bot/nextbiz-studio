@@ -11,7 +11,9 @@ const repoRoot = path.dirname(fileURLToPath(import.meta.url));
 const nextConfig: NextConfig = {
   output: "standalone",
   outputFileTracingRoot: repoRoot,
-  serverExternalPackages: ["pg"],   // native pg must not be bundled by the build worker
+  serverExternalPackages: ["pg"],
+  // admin email composer posts attachments through a server action (capped at 5 MB in code)
+  experimental: { serverActions: { bodySizeLimit: "8mb" } },   // native pg must not be bundled by the build worker
   images: {
     remotePatterns: [
       {
