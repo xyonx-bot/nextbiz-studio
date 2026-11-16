@@ -520,3 +520,6 @@
   .adminui .eprev-bar { flex-direction: column; align-items: stretch; padding: 0 0 8px; }
   .adminui .eprev-tools { padding: 0 12px; }
 }
+.adminui .eswitch .tog { width: 100%; align-self: center; }
+.adminui .eswitch .tog > span { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.adminui .eswitch .tog > span b, .adminui .eswitch .tog > span small { display: block; white-space: normal; }

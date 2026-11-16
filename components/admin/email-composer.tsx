@@ -12,15 +12,14 @@ export interface SentEmail { id: string; subject: string; status: string; kind: 
 
 /* ── shared: fields + live preview ──────────────────────── */
 
-function EmailEditor({ theme, setTheme, c, setC, vars, to, presets, onPreset, extra, warnings }: {
+function EmailEditor({ theme, setTheme, c, setC, vars, to, presets, preset, onPreset, extra, warnings }: {
   theme: ThemeId; setTheme: (t: ThemeId) => void;
   c: EmailContent; setC: React.Dispatch<React.SetStateAction<EmailContent>>;
   vars: LeadVars; to: string;
-  presets?: boolean; onPreset?: (id: string) => void;
+  presets?: boolean; preset?: string; onPreset?: (id: string) => void;
   extra?: React.ReactNode; warnings: string[];
 }) {
   const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
-  const [preset, setPreset] = useState(PRESETS[0].id);
   const [upl, setUpl] = useState<string>("");
   const preview = useMemo(() => renderEmail(theme, c, vars), [theme, c, vars]);
   const set = (k: keyof EmailContent) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -46,7 +45,7 @@ function EmailEditor({ theme, setTheme, c, setC, vars, to, presets, onPreset, ex
       <div className="ecomp-form">
         {presets && (
           <label className="ef"><span>Start from</span>
-            <select value={preset} onChange={(e) => { setPreset(e.target.value); onPreset?.(e.target.value); }}>
+            <select value={preset} onChange={(e) => onPreset?.(e.target.value)}>
               {PRESETS.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
             </select>
           </label>
@@ -123,6 +122,7 @@ export function EmailComposer({ lead, history, enabled, testTo }: {
   const [theme, setTheme] = useState<ThemeId>(first.theme);
   const [c, setC] = useState<EmailContent>(first.content);
   const [files, setFiles] = useState<File[]>([]);
+  const [preset, setPreset] = useState(first.id);
   const fileRef = useRef<HTMLInputElement>(null);
   const modeRef = useRef<HTMLInputElement>(null);
   const [state, action, pending] = useActionState(sendEmailAction, null);
@@ -130,7 +130,7 @@ export function EmailComposer({ lead, history, enabled, testTo }: {
 
   useEffect(() => {
     if (state?.ok && state.message?.startsWith("Sent")) {
-      setC(PRESETS.find((p) => p.id === "blank")!.content); setFiles([]);
+      setC(PRESETS.find((p) => p.id === "blank")!.content); setPreset("blank"); setFiles([]);
       if (fileRef.current) fileRef.current.value = "";
       return;
     }
@@ -166,7 +166,7 @@ export function EmailComposer({ lead, history, enabled, testTo }: {
         {/* explicit mode field — never rely on the submit button's name/value reaching the action */}
         <input type="hidden" name="mode" ref={modeRef} defaultValue="send" />
         <EmailEditor theme={theme} setTheme={setTheme} c={c} setC={setC} vars={vars} to={lead.email}
-          presets onPreset={(id) => { const p = PRESETS.find((x) => x.id === id)!; setTheme(p.theme); setC({ heading: "", ctaLabel: "", ctaUrl: "", image: "", ...p.content }); }}
+          presets preset={preset} onPreset={(id) => { const p = PRESETS.find((x) => x.id === id)!; setPreset(id); setTheme(p.theme); setC({ heading: "", ctaLabel: "", ctaUrl: "", image: "", ...p.content }); }}
           warnings={warnings}
           extra={
             <div className="ef"><span>Attachments <em>optional · PDF, images, Office · max {ATTACH.maxFiles} files, 5 MB</em></span>
