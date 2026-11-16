@@ -12,7 +12,8 @@ import {
 } from "@/lib/auth";
 import { moveLeadStatus, addLeadNote, getLead, addEmailNote } from "@/lib/db";
 import { sendMail, mailOn } from "@/lib/mail";
-import { renderEmail, isTheme } from "@/lib/email-templates";
+import { renderEmail, isTheme, checkAttachments } from "@/lib/email-templates";
+import { getEmailSettings, saveEmailSettings, type EmailSettings } from "@/lib/settings";
 
 /**
  * Admin server actions (S4). Every mutating action re-checks the session
@@ -104,35 +105,88 @@ export async function addNoteAction(formData: FormData) {
 export interface SendEmailState { ok?: boolean; message?: string; sentAt?: number }
 
 const composeSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string().uuid().optional().or(z.literal("")),
+  mode: z.enum(["send", "test"]).default("send"),
   theme: z.string().refine(isTheme, "Pick a theme."),
   subject: z.string().trim().min(2, "Add a subject.").max(160),
   heading: z.string().trim().max(120).optional().default(""),
   body: z.string().trim().min(5, "Write a message.").max(8000),
   ctaLabel: z.string().trim().max(40).optional().default(""),
   ctaUrl: z.string().trim().max(500).optional().default(""),
+  image: z.string().trim().max(500).optional().default(""),
 });
 
-/** Admin → lead → Send email. Renders the chosen theme, sends via Resend, logs to the ledger. */
+const SAMPLE_LEAD = { name: "Asha Rao", service: "A new website" };
+
+/**
+ * Admin email send. mode=send → to the lead; mode=test → to your test inbox
+ * (Email settings) with "[Test]" in the subject, so you see the real thing
+ * in Gmail before the client does. Without a lead id (auto-reply editor)
+ * only test mode is allowed and a sample name fills the {variables}.
+ */
 export async function sendEmailAction(_prev: SendEmailState | null, formData: FormData): Promise<SendEmailState> {
   if (!(await isAuthenticated())) redirect("/admin/login");
-  const parsed = composeSchema.safeParse(Object.fromEntries(formData));
+  const fields = Object.fromEntries([...formData.entries()].filter(([, v]) => typeof v === "string"));
+  const parsed = composeSchema.safeParse(fields);
   if (!parsed.success) return { ok: false, message: parsed.error.issues[0]?.message ?? "Check the form." };
   const f = parsed.data;
-  if (f.ctaUrl && !/^https?:\/\//i.test(f.ctaUrl)) return { ok: false, message: "Button link must start with https://" };
+  if (f.ctaUrl && !/^https:\/\//i.test(f.ctaUrl)) return { ok: false, message: "Button link must start with https://" };
+  if (f.image && !/^https:\/\//i.test(f.image)) return { ok: false, message: "Picture must be an https:// link." };
+
+  const files = formData.getAll("files").filter((x): x is File => x instanceof File && x.size > 0);
+  const bad = checkAttachments(files);
+  if (bad) return { ok: false, message: bad };
   if (!mailOn()) return { ok: false, message: "Email isn't set up on this server yet (RESEND_API_KEY missing)." };
-  const lead = await getLead(f.id);
-  if (!lead) return { ok: false, message: "Lead not found." };
-  if (!lead.email) return { ok: false, message: "This lead didn't leave an email." };
+
+  const lead = f.id ? await getLead(f.id) : null;
+  if (f.id && !lead) return { ok: false, message: "Lead not found." };
+  if (f.mode === "send" && !lead) return { ok: false, message: "No lead to send to." };
+  if (f.mode === "send" && !lead!.email) return { ok: false, message: "This lead didn't leave an email." };
+  let to = lead?.email ?? "";
+  if (f.mode === "test") {
+    to = (await getEmailSettings()).testTo;
+    if (!to) return { ok: false, message: "Add your test email in Email settings first." };
+  }
 
   const theme = f.theme as Parameters<typeof renderEmail>[0];
-  const r = renderEmail(theme, f, lead);
-  const res = await sendMail({ to: lead.email, ...r, kind: "compose", leadId: lead.id, theme });
+  const r = renderEmail(theme, f, lead ?? SAMPLE_LEAD);
+  if (f.mode === "test") r.subject = `[Test] ${r.subject}`;
+  const attachments = await Promise.all(files.map(async (x) => ({
+    filename: x.name.replace(/[^\w.\- ]+/g, "_").slice(0, 120),
+    content: Buffer.from(await x.arrayBuffer()).toString("base64"),
+  })));
+  const res = await sendMail({ to, ...r, attachments, kind: f.mode === "test" ? "test" : "compose", leadId: lead?.id ?? null, theme });
   if (!res.ok) return { ok: false, message: `Not sent — ${res.error}` };
 
-  await addEmailNote(lead.id, `Email sent: "${r.subject}"`);
-  if (lead.status === "new") await moveLeadStatus(lead.id, "replied");
-  revalidatePath("/admin");
-  revalidatePath(`/admin/lead/${lead.id}`);
-  return { ok: true, message: `Sent to ${lead.email}.`, sentAt: Date.now() };
+  if (f.mode === "send" && lead) {
+    await addEmailNote(lead.id, `Email sent: "${r.subject}"${files.length ? ` (+${files.length} attachment${files.length > 1 ? "s" : ""})` : ""}`);
+    if (lead.status === "new") await moveLeadStatus(lead.id, "replied");
+    revalidatePath("/admin");
+    revalidatePath(`/admin/lead/${lead.id}`);
+  }
+  revalidatePath("/admin/email");
+  return { ok: true, message: f.mode === "test" ? `Test sent to ${to} — check your inbox.` : `Sent to ${to}.`, sentAt: Date.now() };
+}
+
+export interface SettingsState { ok?: boolean; message?: string }
+
+/** Email settings: auto-reply on/off, its content, and the test inbox. */
+export async function saveEmailSettingsAction(_prev: SettingsState | null, formData: FormData): Promise<SettingsState> {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+  const g = (k: string) => String(formData.get(k) ?? "").trim();
+  const testTo = g("testTo");
+  if (testTo && !z.string().email().safeParse(testTo).success) return { ok: false, message: "Test email doesn't look right." };
+  const patch: Partial<EmailSettings> = { autoReply: g("autoReply") === "on", testTo };
+  if (formData.has("subject")) {
+    const theme = g("theme");
+    if (!isTheme(theme)) return { ok: false, message: "Pick a theme." };
+    if (g("subject").length < 2 || g("body").length < 5) return { ok: false, message: "Auto-reply needs a subject and a message." };
+    const ctaUrl = g("ctaUrl"), image = g("image");
+    if ((ctaUrl && !/^https:\/\//i.test(ctaUrl)) || (image && !/^https:\/\//i.test(image))) return { ok: false, message: "Links must start with https://" };
+    patch.ackTheme = theme;
+    patch.ack = { subject: g("subject").slice(0, 160), heading: g("heading").slice(0, 120), body: g("body").slice(0, 8000), ctaLabel: g("ctaLabel").slice(0, 40), ctaUrl, image };
+  }
+  await saveEmailSettings(patch);
+  revalidatePath("/admin/email");
+  return { ok: true, message: patch.autoReply ? "Saved — new leads get the thank-you." : "Saved — auto thank-you is paused." };
 }

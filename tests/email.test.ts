@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { renderEmail, fillVars, PRESETS, LEAD_ACK, THEMES, safeUrl } from "@/lib/email-templates";
+import { renderEmail, fillVars, PRESETS, LEAD_ACK, THEMES, safeUrl, spamHints, checkAttachments } from "@/lib/email-templates";
 
 const q = vi.fn().mockResolvedValue({ rows: [] });
 vi.mock("@/lib/db", () => ({ getPool: () => ({ query: q }) }));
@@ -50,6 +50,39 @@ describe("sendMail", () => {
     process.env.RESEND_API_KEY = "re_x";
     const notes = await sendLeadEmails({ id: "00000000-0000-0000-0000-000000000000", name: "T", email: "t@example.com", message: "hello there" });
     expect(notes[0]).toMatch(/not sent — Test address/);
+    delete process.env.RESEND_API_KEY;
+  });
+});
+
+describe("deliverability guard rails", () => {
+  it("flags caps subjects, shorteners and salesy words; clean mail passes", () => {
+    expect(spamHints({ subject: "FREE OFFER FOR YOU", body: "x" })).toContain("Subject is mostly CAPITALS.");
+    expect(spamHints({ subject: "Hi", body: "see https://bit.ly/abc" }).join(" ")).toMatch(/shorteners/);
+    expect(spamHints({ subject: "Hi", body: "Click here now" }).join(" ")).toMatch(/Salesy/);
+    expect(spamHints(PRESETS[0].content)).toEqual([]);
+    expect(spamHints(LEAD_ACK.content)).toEqual([]);
+  });
+  it("limits attachments by type, count and size", () => {
+    const pdf = { name: "q.pdf", type: "application/pdf", size: 200_000 };
+    expect(checkAttachments([pdf])).toBeNull();
+    expect(checkAttachments([{ name: "a.zip", type: "application/zip", size: 10 }])).toMatch(/only PDF/);
+    expect(checkAttachments([pdf, pdf, pdf, pdf])).toMatch(/Up to 3/);
+    expect(checkAttachments([{ ...pdf, size: 6 * 1048576 }])).toMatch(/under 5 MB/);
+  });
+  it("renders an https picture, ignores anything else", () => {
+    expect(renderEmail("studio", { subject: "s", body: "b", image: "https://cdn.joyverse.fun/x.png" }).html).toContain('<img src="https://cdn.joyverse.fun/x.png"');
+    expect(renderEmail("studio", { subject: "s", body: "b", image: "data:image/png;base64,AAA" }).html).not.toContain("<img");
+  });
+});
+
+describe("auto-reply switch", () => {
+  it("sends nothing when paused in settings", async () => {
+    q.mockImplementation(async (sql: string) => sql.includes("app_settings") ? { rows: [{ value: { autoReply: false } }] } : { rows: [] });
+    const { sendLeadEmails } = await import("@/lib/mail");
+    process.env.RESEND_API_KEY = "re_x";
+    const notes = await sendLeadEmails({ id: "00000000-0000-0000-0000-000000000000", name: "T", email: "t@real.com", message: "hello there" });
+    expect(notes[0]).toMatch(/paused/);
+    expect(q).not.toHaveBeenCalledWith(expect.stringContaining("INSERT INTO email_log"), expect.arrayContaining(["t@real.com"]));
     delete process.env.RESEND_API_KEY;
   });
 });

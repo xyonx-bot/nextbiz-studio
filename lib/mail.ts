@@ -7,12 +7,14 @@
  * Every attempt lands in email_log.
  */
 import { getPool } from "./db";
-import { LEAD_ACK, renderEmail, type ThemeId } from "./email-templates";
+import { renderEmail, type ThemeId } from "./email-templates";
+import { getEmailSettings } from "./settings";
 
 export type MailKind = "lead_ack" | "lead_alert" | "compose" | "test";
 export interface Mail {
   to: string; subject: string; html: string; text: string; kind: MailKind;
   leadId?: string | null; theme?: ThemeId | null;
+  attachments?: { filename: string; content: string /* base64 */ }[];
 }
 export type MailResult = { ok: true; id: string } | { ok: false; skipped?: boolean; error: string };
 
@@ -30,6 +32,7 @@ async function viaResend(m: Mail): Promise<MailResult> {
       headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         from: FROM(), to: [m.to], subject: m.subject, html: m.html, text: m.text,
+        ...(m.attachments?.length ? { attachments: m.attachments } : {}),
         ...(process.env.MAIL_REPLY_TO ? { reply_to: process.env.MAIL_REPLY_TO } : {}),
         tags: [{ name: "app", value: "studio" }, { name: "kind", value: m.kind }],
       }),
@@ -52,7 +55,7 @@ export async function sendMail(m: Mail): Promise<MailResult> {
   await getPool().query(
     `INSERT INTO email_log (lead_id, to_email, kind, theme, subject, body, status, provider_id, error)
      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
-    [m.leadId ?? null, m.to, m.kind, m.theme ?? null, m.subject, m.text.slice(0, 8000), status,
+    [m.leadId ?? null, m.to, m.kind, m.theme ?? null, m.subject, m.text.slice(0, 8000) + (m.attachments?.length ? `\n\n[attached: ${m.attachments.map((a) => a.filename).join(", ")}]` : ""), status,
      res.ok ? res.id : null, res.ok ? null : res.error.slice(0, 500)],
   ).catch((e) => console.error("[mail] log failed:", (e as Error).message));
   if (status === "failed") console.error(`[mail] ${m.kind} to ${m.to.replace(/^(.).*@/, "$1•••@")} failed: ${(res as { error: string }).error}`);
@@ -63,6 +66,13 @@ export interface EmailLogRow {
   id: string; lead_id: string | null; to_email: string; kind: string; theme: string | null;
   subject: string; body: string | null; status: string; error: string | null; created_at: Date;
 }
+export async function listRecentEmails(limit = 50): Promise<(EmailLogRow & { lead_name: string | null })[]> {
+  const { rows } = await getPool().query<EmailLogRow & { lead_name: string | null }>(
+    `SELECT e.id, e.lead_id, e.to_email, e.kind, e.theme, e.subject, NULL AS body, e.status, e.error, e.created_at, l.name AS lead_name
+       FROM email_log e LEFT JOIN leads l ON l.id = e.lead_id ORDER BY e.created_at DESC LIMIT $1`, [limit]);
+  return rows;
+}
+
 export async function listEmailsForLead(leadId: string): Promise<EmailLogRow[]> {
   const { rows } = await getPool().query<EmailLogRow>(
     `SELECT id, lead_id, to_email, kind, theme, subject, body, status, error, created_at
@@ -80,9 +90,12 @@ export async function sendLeadEmails(lead: {
 }): Promise<string[]> {
   const notes: string[] = [];
   try {
-    if (lead.email) {
-      const r = renderEmail(LEAD_ACK.theme, LEAD_ACK.content, lead);
-      const res = await sendMail({ to: lead.email, ...r, kind: "lead_ack", leadId: lead.id, theme: LEAD_ACK.theme });
+    const cfg = await getEmailSettings();
+    if (lead.email && !cfg.autoReply) {
+      notes.push("Auto thank-you is paused in Email settings — nothing sent.");
+    } else if (lead.email) {
+      const r = renderEmail(cfg.ackTheme, cfg.ack, lead);
+      const res = await sendMail({ to: lead.email, ...r, kind: "lead_ack", leadId: lead.id, theme: cfg.ackTheme });
       notes.push(noteFor(res, "Auto thank-you email", lead.email));
     }
     const alertTo = process.env.LEAD_ALERT_TO;
