@@ -132,8 +132,14 @@ export function EmailComposer({ lead, history, enabled, testTo }: {
     if (state?.ok && state.message?.startsWith("Sent")) {
       setC(PRESETS.find((p) => p.id === "blank")!.content); setFiles([]);
       if (fileRef.current) fileRef.current.value = "";
+      return;
     }
-  }, [state?.sentAt, state?.ok, state?.message]);
+    // React resets the form after every action (a test send too) — put chosen files back so the real send keeps them
+    const input = fileRef.current;
+    if (input && files.length && input.files?.length !== files.length) {
+      const dt = new DataTransfer(); files.forEach((f) => dt.items.add(f)); input.files = dt.files;
+    }
+  }, [state, files]);
 
   const attachErr = checkAttachments(files);
   const warnings = [...spamHints(c, files.length), ...(attachErr ? [attachErr] : [])];
