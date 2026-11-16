@@ -75,7 +75,7 @@ export interface NoteRow {
   id: string;
   lead_id: string;
   note: string;
-  kind: string; // 'note' | 'status' | 'system' (migration 003)
+  kind: string; // 'note' | 'status' | 'system' (003) | 'email' (007)
   created_at: Date;
 }
 
@@ -155,6 +155,14 @@ export async function addLeadNote(leadId: string, note: string): Promise<NoteRow
     [leadId, note],
   );
   return rows[0];
+}
+
+/** Ledger entry for a sent email (kind 'email', migration 007). */
+export async function addEmailNote(leadId: string, note: string): Promise<void> {
+  await getPool().query(
+    `INSERT INTO lead_notes (lead_id, note, kind) VALUES ($1, $2, 'email')`,
+    [leadId, note],
+  );
 }
 
 /* ── subscribers (migration 006) ─────────────────────────── */

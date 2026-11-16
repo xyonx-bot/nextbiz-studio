@@ -10,7 +10,9 @@ import {
   createSession,
   isLeadStatus,
 } from "@/lib/auth";
-import { moveLeadStatus, addLeadNote } from "@/lib/db";
+import { moveLeadStatus, addLeadNote, getLead, addEmailNote } from "@/lib/db";
+import { sendMail, mailOn } from "@/lib/mail";
+import { renderEmail, isTheme } from "@/lib/email-templates";
 
 /**
  * Admin server actions (S4). Every mutating action re-checks the session
@@ -97,4 +99,40 @@ export async function addNoteAction(formData: FormData) {
   await addLeadNote(id, note);
   revalidatePath("/admin");
   revalidatePath(`/admin/lead/${id}`);
+}
+
+export interface SendEmailState { ok?: boolean; message?: string; sentAt?: number }
+
+const composeSchema = z.object({
+  id: z.string().uuid(),
+  theme: z.string().refine(isTheme, "Pick a theme."),
+  subject: z.string().trim().min(2, "Add a subject.").max(160),
+  heading: z.string().trim().max(120).optional().default(""),
+  body: z.string().trim().min(5, "Write a message.").max(8000),
+  ctaLabel: z.string().trim().max(40).optional().default(""),
+  ctaUrl: z.string().trim().max(500).optional().default(""),
+});
+
+/** Admin → lead → Send email. Renders the chosen theme, sends via Resend, logs to the ledger. */
+export async function sendEmailAction(_prev: SendEmailState | null, formData: FormData): Promise<SendEmailState> {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+  const parsed = composeSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) return { ok: false, message: parsed.error.issues[0]?.message ?? "Check the form." };
+  const f = parsed.data;
+  if (f.ctaUrl && !/^https?:\/\//i.test(f.ctaUrl)) return { ok: false, message: "Button link must start with https://" };
+  if (!mailOn()) return { ok: false, message: "Email isn't set up on this server yet (RESEND_API_KEY missing)." };
+  const lead = await getLead(f.id);
+  if (!lead) return { ok: false, message: "Lead not found." };
+  if (!lead.email) return { ok: false, message: "This lead didn't leave an email." };
+
+  const theme = f.theme as Parameters<typeof renderEmail>[0];
+  const r = renderEmail(theme, f, lead);
+  const res = await sendMail({ to: lead.email, ...r, kind: "compose", leadId: lead.id, theme });
+  if (!res.ok) return { ok: false, message: `Not sent — ${res.error}` };
+
+  await addEmailNote(lead.id, `Email sent: "${r.subject}"`);
+  if (lead.status === "new") await moveLeadStatus(lead.id, "replied");
+  revalidatePath("/admin");
+  revalidatePath(`/admin/lead/${lead.id}`);
+  return { ok: true, message: `Sent to ${lead.email}.`, sentAt: Date.now() };
 }
