@@ -29,8 +29,9 @@ export interface LeadVars { name?: string | null; service?: string | null }
 export const BRAND = {
   name: "NextBiz Studio",
   site: "https://nextbizstudio.com",
-  whatsapp: "https://wa.me/919088727191?text=START",
-  whatsappLabel: "+91 90887 27191",
+  // business app number — the one people chat/call. The API number (90887 27191) is for automation only.
+  whatsapp: "https://wa.me/919883608843?text=Hi%20NextBiz%20Studio",
+  whatsappLabel: "+91 98836 08843",
   signoff: "Team NextBiz Studio",
 };
 
@@ -58,6 +59,52 @@ export const PRESETS: { id: string; label: string; theme: ThemeId; content: Emai
     content: {
       subject: "Quick check-in",
       body: "Hi {first_name},\n\nJust checking in on the project you reached out about. Is it still on your list?\n\nIf now isn't the right time, no worries at all — reply \"later\" and we'll follow up in a few weeks.",
+    },
+  },
+  {
+    id: "delay", label: "Sorry for the late reply", theme: "plain",
+    content: {
+      subject: "Sorry for the slow reply, {first_name}",
+      body: "Hi {first_name},\n\nSorry for taking a while to get back to you — your message deserved a quicker answer.\n\n[Your actual reply here]\n\nIf it's easier to talk it through, message or call us on WhatsApp at +91 98836 08843.",
+    },
+  },
+  {
+    id: "in-progress", label: "Working on it — will update soon", theme: "light",
+    content: {
+      subject: "We're on it, {first_name}",
+      heading: "Quick update",
+      body: "Hi {first_name},\n\nJust letting you know we're working on {service} and haven't forgotten about you.\n\nWe'll come back with the next update by [day]. If anything changes on your side in the meantime, just reply here.",
+    },
+  },
+  {
+    id: "got-it", label: "Got it — quick acknowledgement", theme: "plain",
+    content: {
+      subject: "Got it, thanks",
+      body: "Hi {first_name},\n\nThanks — got your message. We'll look into it and get back to you shortly.",
+    },
+  },
+  {
+    id: "need-details", label: "Need a few more details", theme: "light",
+    content: {
+      subject: "A few quick questions about {service}",
+      heading: "Help us get this right",
+      body: "Hi {first_name},\n\nTo give you an accurate plan and price, could you share a little more?\n\n1. What's the main goal — more enquiries, sales, or something else?\n2. Any websites or accounts you like the look of?\n3. When would you like this live?\n\nShort answers are perfect. You can also send them on WhatsApp.",
+      ctaLabel: "Reply on WhatsApp", ctaUrl: "https://wa.me/919883608843?text=Hi%20NextBiz%20Studio",
+    },
+  },
+  {
+    id: "update", label: "Project update", theme: "studio",
+    content: {
+      subject: "Project update — {service}",
+      heading: "Here's where we are",
+      body: "Hi {first_name},\n\nDone this week:\n• [item]\n• [item]\n\nNext up:\n• [item]\n\nNothing needed from you right now — we'll share a preview by [day].",
+    },
+  },
+  {
+    id: "not-now", label: "Polite close (not a fit / later)", theme: "plain",
+    content: {
+      subject: "Thanks for thinking of us",
+      body: "Hi {first_name},\n\nThanks again for reaching out. Right now we don't think we're the best fit for this, and we'd rather tell you honestly than slow you down.\n\nIf your plans change, our door is always open — just reply to this email.",
     },
   },
   { id: "blank", label: "Blank", theme: "light", content: { subject: "", heading: "", body: "Hi {first_name},\n\n" } },

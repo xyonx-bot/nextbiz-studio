@@ -18,8 +18,8 @@ test.describe("contact details (real business number, chrome + deep links)", () 
     // topbar call cell (hidden ≤1050 — desktop width pinned above)
     const call = page.locator(".callcell");
     await expect(call).toBeVisible();
-    await expect(call).toHaveAttribute("href", "tel:+919088727191");
-    await expect(call).toContainText("+91 90887 27191");
+    await expect(call).toHaveAttribute("href", "tel:+919883608843");
+    await expect(call).toContainText("+91 98836 08843");
 
     // home inline calls (hero + contact band)
     const inline = page.locator(".inline-call");
@@ -27,7 +27,7 @@ test.describe("contact details (real business number, chrome + deep links)", () 
     const hrefs = await inline.evaluateAll((els) =>
       els.map((e) => (e as HTMLAnchorElement).getAttribute("href")),
     );
-    expect(hrefs).toEqual(["tel:+919088727191", "tel:+919088727191"]);
+    expect(hrefs).toEqual(["tel:+919883608843", "tel:+919883608843"]);
   });
 
   test("contact page: wa.me deep link + qclose tel link use the real number", async ({ page }) => {
@@ -39,12 +39,12 @@ test.describe("contact details (real business number, chrome + deep links)", () 
     await expect(wa).toBeVisible();
     await expect(wa).toHaveAttribute(
       "href",
-      new RegExp("^https://wa\\.me/919088727191\\?text="),
+      new RegExp("^https://wa\\.me/919883608843\\?text="),
     );
 
     // qclose CTA action dials the real number (label text is DB-driven — href pinned)
     const qcloseAction = page.locator(".qclose a.action");
     await expect(qcloseAction).toHaveCount(1);
-    await expect(qcloseAction).toHaveAttribute("href", "tel:+919088727191");
+    await expect(qcloseAction).toHaveAttribute("href", "tel:+919883608843");
   });
 });

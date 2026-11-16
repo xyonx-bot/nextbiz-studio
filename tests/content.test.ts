@@ -4,7 +4,7 @@ import contactSeed from "@/lib/seed/contact.json";
 
 /**
  * S6 (r-nbs-s6) — real contact details, supplied by Joydip Oct 23
- * (s6-content-inputs.md): phone/WhatsApp 9088727191, business email
+ * (s6-content-inputs.md): phone/WhatsApp 9883608843 (business app; 9088727191 is the WABA API number, automation only), business email
  * nextbizstudio@gmail.com. These tests pin BOTH surfaces:
  *  - the compiled chrome consts (topbar call cell, home inline calls, qclose
  *    tel link, wa.me fallback) — lib/content.ts
@@ -17,8 +17,8 @@ const PLACEHOLDERS = ["22 (00) 356 7890", "+910000000000", "910000000000", "hell
 
 describe("CONTACT consts (compiled chrome surfaces)", () => {
   it("carries the real Joydip-supplied details", () => {
-    expect(CONTACT.phoneDisplay).toBe("+91 90887 27191");
-    expect(CONTACT.phoneTel).toBe("+919088727191");
+    expect(CONTACT.phoneDisplay).toBe("+91 98836 08843");
+    expect(CONTACT.phoneTel).toBe("+919883608843");
     expect(CONTACT.email).toBe("nextbizstudio@gmail.com");
   });
 
@@ -37,7 +37,7 @@ describe("CONTACT consts (compiled chrome surfaces)", () => {
 describe("WhatsApp click-to-chat (env-driven, real default)", () => {
   it("falls back to the real business number when env is unset (CI)", () => {
     const expectDefault = !process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
-    if (expectDefault) expect(WHATSAPP_NUMBER).toBe("919088727191");
+    if (expectDefault) expect(WHATSAPP_NUMBER).toBe("919883608843");
     else expect(WHATSAPP_NUMBER).toBe(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER);
   });
 
@@ -59,7 +59,7 @@ describe("contact seed = honest fallback truth (desk channels + qclose)", () => 
   });
 
   it("qclose CTA calls the real number", () => {
-    expect(contactSeed.qclose.cta).toBe("Call +91 90887 27191");
+    expect(contactSeed.qclose.cta).toBe("Call +91 98836 08843");
   });
 
   it("no placeholder contact detail anywhere in the seed", () => {

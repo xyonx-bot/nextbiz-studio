@@ -33,13 +33,13 @@ export const SERVICE_LINKS = [
  * desk.channels content — configurator-driven.)
  */
 export const CONTACT = {
-  phoneDisplay: "+91 90887 27191",
-  phoneTel: "+919088727191",
+  phoneDisplay: "+91 98836 08843",
+  phoneTel: "+919883608843",
   email: "nextbizstudio@gmail.com",
 } as const;
 
 /** WhatsApp click-to-chat (P1.4) — env-driven number, prefilled message. */
-export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "919088727191";
+export const WHATSAPP_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "919883608843";
 export const WHATSAPP_PREFILL =
   process.env.NEXT_PUBLIC_WHATSAPP_PREFILL ??
   "Hi NextBiz Studio — I'd like to talk about a project.";

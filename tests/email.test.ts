@@ -36,7 +36,7 @@ describe("email templates", () => {
   it("auto thank-you greets the lead and links WhatsApp", () => {
     const r = renderEmail(LEAD_ACK.theme, LEAD_ACK.content, { name: "Asha Rao" });
     expect(r.subject).toBe("We got your message, Asha");
-    expect(r.html).toContain("wa.me/919088727191");
+    expect(r.html).toContain("wa.me/919883608843");
   });
 });
 
