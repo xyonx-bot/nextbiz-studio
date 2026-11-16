@@ -9,4 +9,4 @@ ALTER TABLE lead_notes ADD COLUMN IF NOT EXISTS kind text NOT NULL DEFAULT 'note
 
 ALTER TABLE lead_notes DROP CONSTRAINT IF EXISTS lead_notes_kind_check;
 ALTER TABLE lead_notes ADD CONSTRAINT lead_notes_kind_check
-  CHECK (kind IN ('note', 'status', 'system'));
+  CHECK (kind IN ('note', 'status', 'system', 'email')); -- 'email' since 007: every deploy re-runs this file, so it must allow later kinds
