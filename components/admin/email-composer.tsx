@@ -124,6 +124,7 @@ export function EmailComposer({ lead, history, enabled, testTo }: {
   const [c, setC] = useState<EmailContent>(first.content);
   const [files, setFiles] = useState<File[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
+  const modeRef = useRef<HTMLInputElement>(null);
   const [state, action, pending] = useActionState(sendEmailAction, null);
   const vars = useMemo(() => ({ name: lead.name, service: lead.service }), [lead.name, lead.service]);
 
@@ -153,10 +154,11 @@ export function EmailComposer({ lead, history, enabled, testTo }: {
         <span className="when">To {lead.email}</span>
       </div>
       <form action={action} onSubmit={(e) => {
-        const mode = ((e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null)?.value;
-        if (mode === "send" && !confirm(`Send "${renderEmail(theme, c, vars).subject}" to ${lead.email}?`)) e.preventDefault();
+        if (modeRef.current?.value !== "test" && !confirm(`Send "${renderEmail(theme, c, vars).subject}" to ${lead.email}?`)) e.preventDefault();
       }}>
         <input type="hidden" name="id" value={lead.id} />
+        {/* explicit mode field — never rely on the submit button's name/value reaching the action */}
+        <input type="hidden" name="mode" ref={modeRef} defaultValue="send" />
         <EmailEditor theme={theme} setTheme={setTheme} c={c} setC={setC} vars={vars} to={lead.email}
           presets onPreset={(id) => { const p = PRESETS.find((x) => x.id === id)!; setTheme(p.theme); setC({ heading: "", ctaLabel: "", ctaUrl: "", image: "", ...p.content }); }}
           warnings={warnings}
@@ -176,11 +178,11 @@ export function EmailComposer({ lead, history, enabled, testTo }: {
         <div className="nc-foot efoot">
           <Status state={state} idle={enabled ? "Sending moves a New lead to Replied and logs it below." : "Email isn't set up on this server yet."} />
           <div className="ebtns">
-            <button className="rbtn" type="submit" name="mode" value="test" disabled={pending || !enabled || !!attachErr}
+            <button className="rbtn" type="submit" data-mode="test" onClick={() => { if (modeRef.current) modeRef.current.value = "test"; }} disabled={pending || !enabled || !!attachErr}
               title={testTo ? `Sends a [Test] copy to ${testTo}` : "Set your test email in Email settings"}>
               {testTo ? "Send test to me" : "Send test…"}
             </button>
-            <button className="action" type="submit" name="mode" value="send" disabled={pending || !enabled || !!attachErr} data-testid="send-email">
+            <button className="action" type="submit" data-mode="send" onClick={() => { if (modeRef.current) modeRef.current.value = "send"; }} disabled={pending || !enabled || !!attachErr} data-testid="send-email">
               {pending ? "Sending…" : "Send email"}
             </button>
           </div>
@@ -248,8 +250,9 @@ export function AutoReplySettings({ initial, enabled }: {
         {(["theme", "subject", "heading", "body", "ctaLabel", "ctaUrl", "image"] as const).map((k) => (
           <input key={k} type="hidden" name={k} value={k === "theme" ? theme : (c[k as keyof EmailContent] ?? "")} />
         ))}
+        <input type="hidden" name="mode" value="test" />
         <Status state={testState} idle={initial.testTo ? `Test goes to ${initial.testTo} (saved).` : "Save a test inbox above to send yourself a copy."} />
-        <button className="rbtn" type="submit" name="mode" value="test" disabled={testing || !enabled}>{testing ? "Sending…" : "Send test to me"}</button>
+        <button className="rbtn" type="submit" disabled={testing || !enabled}>{testing ? "Sending…" : "Send test to me"}</button>
         <Link className="elink" href="/admin">Back to leads</Link>
       </form>
     </>

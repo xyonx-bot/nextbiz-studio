@@ -106,7 +106,7 @@ export interface SendEmailState { ok?: boolean; message?: string; sentAt?: numbe
 
 const composeSchema = z.object({
   id: z.string().uuid().optional().or(z.literal("")),
-  mode: z.enum(["send", "test"]).default("send"),
+  mode: z.enum(["send", "test"], { message: "Choose Send or Send test." }),
   theme: z.string().refine(isTheme, "Pick a theme."),
   subject: z.string().trim().min(2, "Add a subject.").max(160),
   heading: z.string().trim().max(120).optional().default(""),
