@@ -7,6 +7,8 @@ import { fmtRel, fmtStamp } from "@/lib/format";
 import { setStatusAction, addNoteAction } from "@/app/admin/actions";
 import { AdminShell } from "@/components/admin/shell";
 import { ArrowLeft, ArrowRight, Check } from "@/components/admin/icons";
+import { EmailComposer } from "@/components/admin/email-composer";
+import { listEmailsForLead, mailOn } from "@/lib/mail";
 
 /**
  * S4 (P1.7) — lead detail, ported from Mira's admin/lead/wireframe.html:
@@ -48,7 +50,7 @@ export default async function LeadDetailPage({
 }) {
   if (!(await isAuthenticated())) redirect("/admin/login");
   const { id } = await params;
-  const [lead, total] = await Promise.all([getLead(id), countLeads()]);
+  const [lead, total, emails] = await Promise.all([getLead(id), countLeads(), listEmailsForLead(id).catch(() => [])]);
   if (!lead) notFound();
 
   // stage dates from status ledger entries ("old → new" @ time)
@@ -97,6 +99,12 @@ export default async function LeadDetailPage({
             <div className="brow"><span className="bl">Message</span><span className="bv">{lead.message}</span></div>
           </div>
 
+          <EmailComposer
+            lead={{ id: lead.id, name: lead.name, email: lead.email, service: lead.service }}
+            enabled={mailOn()}
+            history={emails.map((e) => ({ id: e.id, subject: e.subject, status: e.status, kind: e.kind, error: e.error, at: `${noteWhen(e.created_at).join(" · ")}` }))}
+          />
+
           <div className="panel">
             <div className="phead">
               <span className="pt">Desk notes · {lead.notes.length}</span>
@@ -108,7 +116,7 @@ export default async function LeadDetailPage({
               return (
                 <div className={`note${sys ? " sys" : ""}`} key={n.id}>
                   <div className="nwho">
-                    <span className="av">{sys ? "SYS" : "J"}</span>
+                    <span className="av">{sys ? "SYS" : n.kind === "email" ? "@" : "J"}</span>
                     <time>{day}<br />{time}</time>
                   </div>
                   <div className="nbody">

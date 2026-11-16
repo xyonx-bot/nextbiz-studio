@@ -2,12 +2,13 @@ import { NextResponse } from "next/server";
 import { leadSchema, hashIp, clientIp } from "@/lib/leads";
 import { insertLead, countRecentLeadsByIp, addSystemNote } from "@/lib/db";
 import { notifySlack } from "@/lib/slack";
+import { sendLeadEmails } from "@/lib/mail";
 
 export const dynamic = "force-dynamic";
 
 const RATE_LIMIT_MAX = 5; // per IP per hour
 
-/** POST /api/leads — validate → rate-limit → save → Slack ping. */
+/** POST /api/leads — validate → rate-limit → save → Slack ping → thank-you email. */
 export async function POST(req: Request) {
   let body: unknown;
   try {
@@ -53,6 +54,10 @@ export async function POST(req: Request) {
       lead.id,
       "Lead captured via contact form. Slack notification delivered to #agent-org.",
     ).catch(() => {});
+    // thank-you email to the lead (+ optional alert to us); ledger gets a line per send
+    void sendLeadEmails(lead)
+      .then((notes) => Promise.all(notes.map((n) => addSystemNote(lead.id, n))))
+      .catch(() => {});
 
     return NextResponse.json({
       ok: true,
