@@ -233,10 +233,10 @@ export function AutoReplySettings({ initial, enabled }: {
       <form action={save} className="panel esettings">
         <div className="phead"><span className="pt">Auto thank-you · new leads</span><span className="when">{enabled ? "Resend connected" : "RESEND_API_KEY missing"}</span></div>
         <div className="eswitch">
-          <label className={`tog${on ? " on" : ""}`}>
+          <label className={`etog${on ? " etog-on" : ""}`}>
             <input type="checkbox" name="autoReply" checked={on} onChange={(e) => setOn(e.target.checked)} />
-            <i aria-hidden />
-            <span><b>{on ? "On — every new lead with an email gets this" : "Paused — new leads get nothing automatic"}</b>
+            <span className="etog-knob" aria-hidden />
+            <span className="etog-text"><b>{on ? "On — every new lead with an email gets this" : "Paused — new leads get nothing automatic"}</b>
               <small>Contact form and Instagram DM leads both count. Slack still pings you either way.</small></span>
           </label>
           <label className="ef etest"><span>Your test inbox</span>
