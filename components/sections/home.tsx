@@ -311,3 +311,36 @@ export function ContactBand({ content }: { content?: typeof homeContent.contactB
     </section>
   );
 }
+
+/* ═══ PLAN YOUR PROJECT — the door into /plan (step 1 happens right here) ═══ */
+const PLAN_TYPES: { id: string; label: string; blurb: string; d: string }[] = [
+  { id: "website", label: "Website", blurb: "A site that brings enquiries", d: "M3 5h18v14H3zM3 9h18M7 7h.01M10 7h.01" },
+  { id: "store", label: "Online store", blurb: "Sell online, take payments", d: "M4 7h16l-1.5 11a2 2 0 0 1-2 1.7H7.5a2 2 0 0 1-2-1.7zM9 7a3 3 0 0 1 6 0" },
+  { id: "whatsapp", label: "WhatsApp automation", blurb: "Instant replies, broadcasts", d: "M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z" },
+  { id: "instagram", label: "Instagram growth", blurb: "Content, reels, DMs", d: "M4 4h16v16H4zM12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM17 7h.01" },
+];
+export function PlanStart({ content }: { content?: typeof homeContent.planner }) {
+  const c = content ?? homeContent.planner;
+  const ico = (d: string) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d={d} /></svg>;
+  return (
+    <section className="planstart pad">
+      <div>
+        <Eyebrow label={c.eyebrow} />
+        <h2>{c.h2a}<br />{c.h2b}</h2>
+        <p className="lede">{c.lede}</p>
+        <div className="note">{c.notes.map((n: string) => <span key={n}>{n}</span>)}</div>
+      </div>
+      <div className="ps-cards">
+        {PLAN_TYPES.map((t) => (
+          <Link key={t.id} className="ps-card" href={`/plan?type=${t.id}`}>
+            <span className="ic">{ico(t.d)}</span><span><b>{t.label}</b><small>{t.blurb}</small></span><span className="go"><ArrowRight /></span>
+          </Link>
+        ))}
+        <Link className="ps-card wide" href="/plan?type=custom">
+          <span className="ic">{ico("M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z")}</span>
+          <span><b>Something custom</b><small>A tool, portal or app — let&apos;s shape it together</small></span><span className="go"><ArrowRight /></span>
+        </Link>
+      </div>
+    </section>
+  );
+}

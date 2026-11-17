@@ -588,3 +588,19 @@
   .adminui .dz-preview { height: 78vh; order: -1; }
 }
 @media (max-width: 520px) { .adminui .dz-sw { grid-template-columns: repeat(3, minmax(0, 1fr)); } .adminui .dz-two { grid-template-columns: minmax(0, 1fr); } }
+
+/* ── Planner pricing (Admin → Planner) ── */
+.adminui .pp { padding: 16px clamp(14px, 2.5vw, 28px) 90px; display: flex; flex-direction: column; gap: 12px; max-width: 980px; }
+.adminui .pp-warn { padding: 12px 14px; border-radius: 8px; background: #FFF4D6; border: 1px solid #F0D58A; font-size: 12px; }
+.adminui .pp-tiers { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.adminui .pp-tier { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; background: var(--card); }
+.adminui .pp-tier b { font-size: 12px; } .adminui .pp-tier small { font-size: 10px; color: var(--muted); }
+.adminui .pp-tier label { display: flex; flex-direction: column; gap: 3px; font-size: 10px; font-weight: 800; }
+.adminui .pp input[type=number] { font: inherit; font-size: 12.5px; padding: 7px 9px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); width: 100%; font-variant-numeric: tabular-nums; }
+.adminui .pp-feats summary { font-size: 11px; font-weight: 800; cursor: pointer; padding: 4px 0; }
+.adminui .pp-grid { display: grid; grid-template-columns: minmax(0, 1fr) 110px 80px; gap: 6px 10px; align-items: center; margin-top: 8px; font-size: 11.5px; }
+.adminui .pp-grid .h { font-size: 9px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+.adminui .pp-grid small { display: block; font-size: 10px; color: var(--muted); }
+.adminui .pp-save { position: sticky; bottom: 0; display: flex; gap: 14px; align-items: center; justify-content: flex-end; padding: 12px 14px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; font-size: 11.5px; }
+.adminui .pp-save span { margin-right: auto; color: var(--muted); } .adminui .pp-save a { font-weight: 800; color: var(--ink); }
+@media (max-width: 700px) { .adminui .pp-tiers { grid-template-columns: minmax(0, 1fr); } .adminui .pp-grid { grid-template-columns: minmax(0, 1fr) 90px 64px; } }

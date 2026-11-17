@@ -37,14 +37,20 @@ export async function insertLead(input: {
   budget?: string | null;
   message: string;
   ipHash?: string | null;
+  source?: string | null;           // e.g. "planner" (migration 009)
+  plan?: unknown;                   // the project plan from /plan (migration 009)
 }): Promise<LeadRow> {
+  const extra = input.source !== undefined || input.plan !== undefined;
   const { rows } = await getPool().query<LeadRow>(
-    `INSERT INTO leads (name, phone, email, service, budget, message, ip_hash)
-     VALUES ($1, $2, $3, $4, $5, $6, $7)
-     RETURNING *`,
+    extra
+      ? `INSERT INTO leads (name, phone, email, service, budget, message, ip_hash, source, plan)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`
+      : `INSERT INTO leads (name, phone, email, service, budget, message, ip_hash)
+         VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
     [input.name, input.phone ?? null, input.email ?? null,
      input.service ?? null, input.budget ?? null,
-     input.message, input.ipHash ?? null],
+     input.message, input.ipHash ?? null,
+     ...(extra ? [input.source ?? null, input.plan === undefined ? null : JSON.stringify(input.plan)] : [])],
   );
   return rows[0];
 }

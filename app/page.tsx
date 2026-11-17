@@ -1,7 +1,7 @@
 import { Topbar } from "@/components/chrome/Topbar";
 import { Footer } from "@/components/chrome/Footer";
 import {
-  Hero, Partners, About, ServicesSplit, Work, Industries, Testimonial, Team, ContactBand,
+  Hero, Partners, About, ServicesSplit, Work, Industries, Testimonial, Team, ContactBand, PlanStart,
 } from "@/components/sections/home";
 import { HomeLibrary, Waitlist } from "@/components/sections/resources";
 import { getResourceEntries, getSections } from "@/lib/config";
@@ -28,6 +28,7 @@ export default async function HomePage() {
           case "work": return <Work key={s.key} content={by("work") as typeof homeSeed.work} />;
           case "library": return <HomeLibrary key={s.key} content={by("library") as typeof homeSeed.library} entries={resources} />;
           case "waitlist": return <Waitlist key={s.key} content={by("waitlist") as typeof homeSeed.waitlist} />;
+          case "planner": return <PlanStart key={s.key} content={by("planner") as typeof homeSeed.planner} />;
           case "industries": return <Industries key={s.key} content={by("industries") as typeof homeSeed.industries} />;
           case "testimonial": return <Testimonial key={s.key} content={by("testimonial") as typeof homeSeed.testimonial} />;
           case "team": return <Team key={s.key} content={by("team") as typeof homeSeed.team} />;

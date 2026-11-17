@@ -31,6 +31,10 @@
           "label": "Free library teaser"
         },
         {
+          "key": "planner",
+          "label": "Plan your project"
+        },
+        {
           "key": "industries",
           "label": "Industries"
         },

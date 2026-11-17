@@ -1,0 +1,54 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import { savePlannerAction } from "@/app/admin/actions";
+import { TIERS, inr, type Pricing } from "@/lib/planner-core";
+
+/** Prices and timelines behind /plan. Every price is a "from" price; visitors always see three options. */
+export function PlannerPricing({ initial }: { initial: Pricing }) {
+  const [p, setP] = useState(initial);
+  const [msg, setMsg] = useState("");
+  const [pending, start] = useTransition();
+  const n = (v: string) => Math.max(0, Math.round(Number(v) || 0));
+  const setTier = (ti: number, tier: string, k: "price" | "weeks", v: string) => setP((x) => ({ ...x, types: x.types.map((t, i) => i !== ti ? t : { ...t, tiers: { ...t.tiers, [tier]: { ...t.tiers[tier as keyof typeof t.tiers], [k]: n(v) } } }) }));
+  const setFeat = (ti: number, fi: number, k: "price" | "weeks", v: string) => setP((x) => ({ ...x, types: x.types.map((t, i) => i !== ti ? t : { ...t, features: t.features.map((f, j) => j !== fi ? f : { ...f, [k]: n(v) }) }) }));
+  const save = () => start(async () => { const r = await savePlannerAction(p); setP((x) => ({ ...x, placeholder: false })); setMsg(r.message); });
+  return (
+    <div className="pp">
+      {p.placeholder && <div className="pp-warn"><b>These are sample prices.</b> Set your real starting prices below and press Save. Until then, visitors see a note that prices are samples.</div>}
+      <section className="dz-card">
+        <h2>How prices show</h2>
+        <label className="dz-toggle" htmlFor="pp-show"><span><b>Show “from ₹” prices to visitors</b><small>Off: visitors see the three options and timelines only, and you send prices after the call.</small></span>
+          <input id="pp-show" type="checkbox" checked={p.showPrices} onChange={(e) => setP({ ...p, showPrices: e.target.checked })} /><i aria-hidden /></label>
+        <label className="dz-field" htmlFor="pp-rush" style={{ maxWidth: 220 }}><span>Rush fee for “ASAP” (%)</span><input id="pp-rush" type="number" min={0} max={200} value={p.rushPct} onChange={(e) => setP({ ...p, rushPct: n(e.target.value) })} /></label>
+      </section>
+      {p.types.map((t, ti) => (
+        <section className="dz-card" key={t.id}>
+          <h2>{t.label} <em>{t.monthly ? "monthly prices" : "one-time prices"}</em></h2>
+          <div className="pp-tiers">
+            {TIERS.map(({ id, name }) => (
+              <div key={id} className="pp-tier"><b>{name}</b>
+                <label><span>From ₹</span><input type="number" min={0} step={1000} value={t.tiers[id].price} onChange={(e) => setTier(ti, id, "price", e.target.value)} aria-label={`${t.label} ${name} price`} /></label>
+                <label><span>{t.monthly ? "Starts in (weeks)" : "Weeks"}</span><input type="number" min={1} max={104} value={t.tiers[id].weeks} onChange={(e) => setTier(ti, id, "weeks", e.target.value)} aria-label={`${t.label} ${name} weeks`} /></label>
+                <small>Shows as {inr(t.tiers[id].price)}{t.monthly ? "/mo" : ""}</small>
+              </div>
+            ))}
+          </div>
+          <details className="pp-feats"><summary>Add-on prices ({t.features.length} features) — charged when a visitor picks one that an option doesn&apos;t include</summary>
+            <div className="pp-grid">
+              <span className="h">Feature</span><span className="h">+ ₹</span><span className="h">+ weeks</span>
+              {t.features.map((f, fi) => (
+                <div key={f.id} style={{ display: "contents" }}>
+                  <span>{f.label}<small>{TIERS.filter(({ id }) => t.tiers[id].includes.includes(f.id)).map((x) => x.name).join(", ") ? `Included in ${TIERS.filter(({ id }) => t.tiers[id].includes.includes(f.id)).map((x) => x.name).join(", ")}` : "Never included"}</small></span>
+                  <input type="number" min={0} step={1000} value={f.price} onChange={(e) => setFeat(ti, fi, "price", e.target.value)} aria-label={`${f.label} price`} />
+                  <input type="number" min={0} max={52} value={f.weeks} onChange={(e) => setFeat(ti, fi, "weeks", e.target.value)} aria-label={`${f.label} weeks`} />
+                </div>
+              ))}
+            </div>
+          </details>
+        </section>
+      ))}
+      <div className="pp-save"><span>{msg}</span><a href="/plan" target="_blank" rel="noreferrer">Open the planner ↗</a><button type="button" className="dz-btn pri" onClick={save} disabled={pending}>{pending ? "Saving…" : "Save prices"}</button></div>
+    </div>
+  );
+}

@@ -7,7 +7,7 @@
     "services",
     "work",
     "library",
-    "industries",
+    "planner",
     "testimonial",
     "team",
     "waitlist",
@@ -303,5 +303,16 @@
     "done": "You're on the list. We'll email you when your invite is ready.",
     "fine": "Early access is approval-based. We'll email you when your spot opens.",
     "ctaUrl": "https://one.nextbizstudio.com/request-access"
+  },
+  "planner": {
+    "eyebrow": "Project planner",
+    "h2a": "Plan your project",
+    "h2b": "in 60 seconds.",
+    "lede": "Pick what you want to build, answer four quick questions, and get three ways to do it with timelines. No sign-up, no obligation.",
+    "notes": [
+      "Three options, not one price",
+      "Fits any budget",
+      "About a minute"
+    ]
   }
 }

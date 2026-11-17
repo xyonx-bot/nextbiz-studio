@@ -25,7 +25,7 @@ export function AdminShell({
 }: {
   leadCount: number;
   pageCount?: number;
-  current?: "leads" | "pages" | "subscribers" | "email" | "design";
+  current?: "leads" | "pages" | "subscribers" | "email" | "design" | "planner";
   crumb: string;
   title: React.ReactNode;
   acts?: React.ReactNode;
@@ -52,6 +52,9 @@ export function AdminShell({
             </Link>
             <Link href="/admin/design" className={current === "design" ? "on" : ""} onClick={() => setOpen(false)} data-testid="nav-design">
               <Palette /> Design
+            </Link>
+            <Link href="/admin/planner" className={current === "planner" ? "on" : ""} onClick={() => setOpen(false)} data-testid="nav-planner">
+              <LayoutGrid /> Planner
             </Link>
             <Link href="/admin/email" className={current === "email" ? "on" : ""} onClick={() => setOpen(false)}>
               <Settings /> Email

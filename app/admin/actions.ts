@@ -15,6 +15,7 @@ import { sendMail, mailOn } from "@/lib/mail";
 import { renderEmail, isTheme, checkAttachments } from "@/lib/email-templates";
 import { getEmailSettings, saveEmailSettings, type EmailSettings } from "@/lib/settings";
 import { getDesignHistory, publishDesign, saveDraftDesign, type HistoryItem } from "@/lib/design";
+import { savePricing } from "@/lib/planner";
 
 /**
  * Admin server actions (S4). Every mutating action re-checks the session
@@ -208,4 +209,13 @@ export async function publishDesignAction(raw: unknown): Promise<DesignState> {
   await publishDesign(raw);
   revalidatePath("/", "layout");
   return { ok: true, message: "Published — nextbizstudio.com is using this design now.", history: await getDesignHistory() };
+}
+
+/* ── Planner pricing (Admin → Planner) ── */
+export async function savePlannerAction(raw: unknown): Promise<{ ok: boolean; message: string }> {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+  // saving from admin means these are now the studio's real numbers
+  await savePricing({ ...(raw as object), placeholder: false });
+  revalidatePath("/plan");
+  return { ok: true, message: "Saved — the planner uses these prices now." };
 }
