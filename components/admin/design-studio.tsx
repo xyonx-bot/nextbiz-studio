@@ -16,6 +16,7 @@ const SHOW: [keyof Design["show"], string, string][] = [
   ["highlight", "Headline highlight", "The chosen words in the homepage headline"],
   ["nav", "Current page", "Underline under the page you're on, and its arrow on phones"],
   ["details", "Small details", "Label dots, link underlines, the phone icon, form focus"],
+  ["dark", "Dark sections", "NextBiz One waitlist: accent badge, coloured heading line, soft glow"],
 ];
 const same = (a: Design, b: Design) => JSON.stringify(a) === JSON.stringify(b);
 const fmt = (iso: string) => { const d = new Date(iso); return isNaN(+d) ? "" : d.toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }); };
@@ -138,6 +139,7 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
         <section className="dz-card">
           <h2>Buttons</h2>
           <Seg label="Button shape" value={d.buttonShape} onChange={(v) => set({ buttonShape: v })} options={[["sharp", "Sharp"], ["rounded", "Rounded"], ["pill", "Pill"]]} />
+          <Toggle id="glow" on={d.glow} label="Glow" sub="A soft accent glow under main buttons and in dark sections" onChange={(v) => set({ glow: v })} />
           <h2 className="mt">Corners</h2>
           <p className="dz-sub">Photos and cards. “Signature” is the leaf shape your site uses now.</p>
           <Seg label="Corners" value={d.corners} onChange={(v) => set({ corners: v })} options={[["signature", "Signature"], ["soft", "Soft"], ["sharp", "Sharp"]]} />

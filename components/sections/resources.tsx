@@ -95,7 +95,7 @@ export function Waitlist({ content, as = "h2" }: { content?: typeof resources.wa
       <div className="wl-inner pad">
         <div>
           <span className="wl-micro"><i />{c.micro}</span>
-          <H>{c.h2[0]}<br />{c.h2[1]}</H>
+          <H>{c.h2[0]}<br /><span className="wl-hl">{c.h2[1]}</span></H>
           <p className="wl-body">{c.body}</p>
         </div>
         <div className="wl-side">

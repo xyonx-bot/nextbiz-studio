@@ -16,7 +16,8 @@ export const ACCENTS = [
 export type Design = {
   accent: string;                       // hex
   badge: string | null;                 // hex, or null = same as accent
-  show: { buttons: boolean; badges: boolean; highlight: boolean; nav: boolean; details: boolean };
+  show: { buttons: boolean; badges: boolean; highlight: boolean; nav: boolean; details: boolean; dark: boolean };
+  glow: boolean;
   buttonShape: "sharp" | "rounded" | "pill";
   corners: "signature" | "soft" | "sharp";
   highlight: { style: "marker" | "underline" | "color"; phrase: string };
@@ -27,7 +28,8 @@ export type Design = {
 export const DESIGN_DEFAULTS: Design = {
   accent: "#C6F23A",
   badge: null,
-  show: { buttons: true, badges: true, highlight: true, nav: true, details: true },
+  show: { buttons: true, badges: true, highlight: true, nav: true, details: true, dark: true },
+  glow: true,
   buttonShape: "sharp",
   corners: "signature",
   highlight: { style: "marker", phrase: "Need It" },
@@ -52,8 +54,9 @@ export function normalizeDesign(raw: unknown): Design {
     badge: typeof r.badge === "string" && HEX.test(r.badge) ? r.badge.toUpperCase() : null,
     show: {
       buttons: bool(r.show?.buttons, d.show.buttons), badges: bool(r.show?.badges, d.show.badges), highlight: bool(r.show?.highlight, d.show.highlight),
-      nav: bool(r.show?.nav, d.show.nav), details: bool(r.show?.details, d.show.details),
+      nav: bool(r.show?.nav, d.show.nav), details: bool(r.show?.details, d.show.details), dark: bool(r.show?.dark, d.show.dark),
     },
+    glow: bool(r.glow, d.glow),
     buttonShape: pick(r.buttonShape, ["sharp", "rounded", "pill"] as const, d.buttonShape),
     corners: pick(r.corners, ["signature", "soft", "sharp"] as const, d.corners),
     highlight: { style: pick(r.highlight?.style, ["marker", "underline", "color"] as const, d.highlight.style), phrase: str(r.highlight?.phrase, d.highlight.phrase, 60) },
@@ -95,5 +98,6 @@ export function designAttrs(d: Design): Record<string, string> {
   const a: Record<string, string> = { "data-btn": d.buttonShape, "data-corners": d.corners, "data-hl": d.show.highlight ? d.highlight.style : "none" };
   for (const k of Object.keys(d.show) as (keyof Design["show"])[]) if (d.show[k]) a[`data-acc-${k}`] = "";
   if (d.soon.pulse) a["data-soon-pulse"] = "";
+  if (d.glow) a["data-glow"] = "";
   return a;
 }

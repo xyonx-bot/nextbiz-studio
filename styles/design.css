@@ -11,6 +11,12 @@ html[data-acc-buttons] .action.dark:not(.adminui *):hover { filter: brightness(.
 html[data-btn="rounded"] .action:not(.adminui *) { border-radius: 10px; }
 html[data-btn="pill"] .action:not(.adminui *) { border-radius: 999px; padding-left: 22px; padding-right: 22px; }
 
+/* glow + round arrow chip (the NextBiz One look) */
+html[data-glow][data-acc-buttons] .action.dark:not(.adminui *) { box-shadow: 0 14px 30px -14px color-mix(in srgb, var(--acc) 90%, transparent); }
+html[data-glow][data-acc-buttons] .action.dark:not(.adminui *):hover { box-shadow: 0 18px 38px -12px var(--acc); transform: translateY(-1px); filter: none; }
+html[data-acc-buttons] .action.dark:not(.adminui *) svg { width: 24px; height: 24px; padding: 5px; border-radius: 50%; background: var(--acc-on); color: var(--acc); stroke: var(--acc); }
+html[data-acc-buttons] .news button { background: var(--acc); color: var(--acc-on); }
+
 /* ── SOON / New badges ── */
 .navtag:not(.adminui *) { display: inline-flex; align-items: center; gap: 4px; }
 html[data-acc-badges] .navtag:not(.adminui *) { background: var(--sig); color: var(--sig-on); border-color: var(--sig); }
@@ -34,6 +40,18 @@ html[data-acc-details] .orbit:not(.adminui *)::after { background: var(--acc); }
 html[data-acc-details] .text-link:not(.adminui *) { border-bottom: 2px solid var(--acc); }
 html[data-acc-details] .callcell svg, html[data-acc-details] .mobilenav .mn-call svg { color: var(--acc-text); stroke: var(--acc-text); }
 html[data-acc-details] :is(.f-row input, .f-row select, .f-row textarea):not(.adminui *):focus { border-color: var(--acc-text); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 35%, transparent); }
+
+/* ── dark sections (NextBiz One waitlist, industries panel) ── */
+html[data-acc-dark] .waitlist { background: radial-gradient(55% 75% at 100% 0%, color-mix(in srgb, var(--acc) 16%, transparent), transparent 70%), radial-gradient(40% 60% at 0% 100%, color-mix(in srgb, var(--acc) 8%, transparent), transparent 70%), var(--slab); }
+html[data-acc-dark] .wl-micro { background: var(--sig); color: var(--sig-on); border-color: var(--sig); border-radius: 6px; }
+html[data-acc-dark] .wl-micro i { background: currentColor; animation: nbs-pulse 1.6s ease-in-out infinite; }
+html[data-acc-dark] .waitlist .wl-hl { color: var(--acc); }
+html[data-acc-dark] .wl-side { border-top-color: var(--acc); }
+html[data-acc-dark] .wl-side li::before { color: var(--acc); opacity: 1; }
+html[data-acc-dark] :is(.waitlist .capture .action, .wl-cta) { background: var(--acc); color: var(--acc-on); border-color: var(--acc); }
+html[data-acc-dark][data-glow] :is(.waitlist .capture .action, .wl-cta) { box-shadow: 0 14px 34px -12px var(--acc); }
+html[data-acc-dark][data-glow] .waitlist .capture input:focus { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 40%, transparent); }
+html[data-acc-dark] .ind-img { background: radial-gradient(70% 70% at 85% 15%, color-mix(in srgb, var(--acc) 18%, transparent), transparent 70%), var(--slab); }
 
 /* ── corners ── */
 html[data-corners="soft"] :is(.hero-visual .ph, .slabph, .about-photo .imgph, .svc-photo .ph, .qimg .imgph, .team-photo .imgph, .stand-photo, .team-photo-accent,
@@ -59,4 +77,4 @@ html[data-corners="sharp"] :is(.hero-visual .ph, .slabph, .about-photo .imgph, .
 .nbs-preview a { color: var(--ink); background: var(--paper); border-radius: 999px; padding: 5px 11px; text-decoration: none; font-weight: 800; }
 
 @keyframes nbs-pulse { 50% { opacity: .35; } }
-@media (prefers-reduced-motion: reduce) { html[data-soon-pulse] .navtag::before, .nbs-bar .dot { animation: none; } }
+@media (prefers-reduced-motion: reduce) { html[data-soon-pulse] .navtag::before, .nbs-bar .dot, .wl-micro i { animation: none; } .action.dark { transition: none; } }
