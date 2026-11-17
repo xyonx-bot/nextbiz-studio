@@ -1,0 +1,62 @@
+/* ============================================================
+   DESIGN SETTINGS (Admin → Design) — lib/design-core.ts sets the variables
+   on :root and switches these rules on with data-* attributes on <html>.
+   Every rule skips the admin (:not(.adminui *)), so only the public site changes.
+   ============================================================ */
+:root { --acc: #C6F23A; --acc-on: #090B0F; --acc-text: #4D6B00; --sig: #C6F23A; --sig-on: #090B0F; }
+
+/* ── main buttons ── */
+html[data-acc-buttons] .action.dark:not(.adminui *) { background: var(--acc); color: var(--acc-on); border-color: var(--acc); transition: filter .15s ease, transform .15s ease; }
+html[data-acc-buttons] .action.dark:not(.adminui *):hover { filter: brightness(.94); }
+html[data-btn="rounded"] .action:not(.adminui *) { border-radius: 10px; }
+html[data-btn="pill"] .action:not(.adminui *) { border-radius: 999px; padding-left: 22px; padding-right: 22px; }
+
+/* ── SOON / New badges ── */
+.navtag:not(.adminui *) { display: inline-flex; align-items: center; gap: 4px; }
+html[data-acc-badges] .navtag:not(.adminui *) { background: var(--sig); color: var(--sig-on); border-color: var(--sig); }
+html[data-acc-badges] .entry .badge.live i { background: var(--acc); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 30%, transparent); }
+html[data-soon-pulse] .navtag:not(.adminui *)::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: nbs-pulse 1.6s ease-in-out infinite; }
+
+/* ── the highlighted words in the home headline ── */
+.hl { position: relative; z-index: 0; white-space: nowrap; }
+html[data-hl="marker"] .hl::after { content: ""; position: absolute; left: -.04em; right: -.06em; bottom: .07em; height: .3em; background: var(--acc); z-index: -1; border-radius: 2px; }
+html[data-hl="underline"] .hl { text-decoration: underline; text-decoration-color: var(--acc); text-decoration-thickness: .09em; text-underline-offset: .12em; }
+html[data-hl="color"] .hl { color: var(--acc-text); }
+
+/* ── where you are ── */
+html[data-acc-nav] .topnav a.on { opacity: 1; position: relative; }
+html[data-acc-nav] .topnav a.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -7px; height: 3px; border-radius: 2px; background: var(--acc); }
+html[data-acc-nav] .mobilenav nav a.on .arr { color: var(--acc-text); }
+html[data-acc-nav] .mobilenav nav a.on .no { color: var(--acc-text); }
+
+/* ── small details: label dots, link underlines, contact icons ── */
+html[data-acc-details] .orbit:not(.adminui *)::after { background: var(--acc); }
+html[data-acc-details] .text-link:not(.adminui *) { border-bottom: 2px solid var(--acc); }
+html[data-acc-details] .callcell svg, html[data-acc-details] .mobilenav .mn-call svg { color: var(--acc-text); stroke: var(--acc-text); }
+html[data-acc-details] :is(.f-row input, .f-row select, .f-row textarea):not(.adminui *):focus { border-color: var(--acc-text); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 35%, transparent); }
+
+/* ── corners ── */
+html[data-corners="soft"] :is(.hero-visual .ph, .slabph, .about-photo .imgph, .svc-photo .ph, .qimg .imgph, .team-photo .imgph, .stand-photo, .team-photo-accent,
+  .catalog-photo, .feat .entry-photo .shot, .case-cover .shot, .form-photo) { border-radius: 18px !important; }
+html[data-corners="sharp"] :is(.hero-visual .ph, .slabph, .about-photo .imgph, .svc-photo .ph, .qimg .imgph, .team-photo .imgph, .stand-photo, .team-photo-accent,
+  .catalog-photo, .feat .entry-photo .shot, .case-cover .shot, .form-photo, .stat, .proj .ph, .fit, .sheet, .compare-cols, .card.soon .soon-slot, .callout, .shot) { border-radius: 0 !important; }
+
+/* ── announcement bar ── */
+.nbs-bar { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 9px 44px 9px 18px; font-size: 12.5px; font-weight: 600; position: relative; text-align: center; line-height: 1.4; }
+.nbs-bar.dark { background: var(--ink); color: var(--paper); }
+.nbs-bar.accent { background: var(--acc); color: var(--acc-on); }
+.nbs-bar a { color: inherit; font-weight: 800; text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+.nbs-bar.dark a { color: var(--acc); }
+.nbs-bar a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.nbs-bar .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--acc); flex: none; animation: nbs-pulse 1.6s ease-in-out infinite; }
+.nbs-bar.accent .dot { background: var(--acc-on); }
+.nbs-bar button { position: absolute; right: 10px; top: 50%; translate: 0 -50%; width: 26px; height: 26px; border: 0; border-radius: 50%; background: transparent; color: inherit; opacity: .7; cursor: pointer; font-size: 16px; line-height: 1; }
+.nbs-bar button:hover { opacity: 1; background: color-mix(in srgb, currentColor 12%, transparent); }
+@media (max-width: 640px) { .nbs-bar { flex-wrap: wrap; gap: 4px 10px; font-size: 12px; } }
+
+/* ── draft preview pill (only for the signed-in admin, outside the preview frame) ── */
+.nbs-preview { position: fixed; z-index: 1000; left: 50%; bottom: 18px; translate: -50% 0; display: flex; gap: 10px; align-items: center; padding: 8px 8px 8px 14px; border-radius: 999px; background: var(--ink); color: var(--paper); font-size: 12px; font-weight: 700; box-shadow: 0 14px 30px -12px rgba(0, 0, 0, .5); }
+.nbs-preview a { color: var(--ink); background: var(--paper); border-radius: 999px; padding: 5px 11px; text-decoration: none; font-weight: 800; }
+
+@keyframes nbs-pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { html[data-soon-pulse] .navtag::before, .nbs-bar .dot { animation: none; } }

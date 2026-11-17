@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { logoutAction } from "@/app/admin/actions";
-import { Inbox, LayoutGrid, Settings, LogOut, Mail } from "./icons";
+import { Inbox, LayoutGrid, Settings, LogOut, Mail, Palette } from "./icons";
 
 /**
  * Admin shell (Mira's inbox/lead wireframes): FIXED 216px sidebar + main.
@@ -25,7 +25,7 @@ export function AdminShell({
 }: {
   leadCount: number;
   pageCount?: number;
-  current?: "leads" | "pages" | "subscribers" | "email";
+  current?: "leads" | "pages" | "subscribers" | "email" | "design";
   crumb: string;
   title: React.ReactNode;
   acts?: React.ReactNode;
@@ -49,6 +49,9 @@ export function AdminShell({
             </Link>
             <Link href="/admin/subscribers" className={current === "subscribers" ? "on" : ""} onClick={() => setOpen(false)}>
               <Mail /> Subscribers
+            </Link>
+            <Link href="/admin/design" className={current === "design" ? "on" : ""} onClick={() => setOpen(false)} data-testid="nav-design">
+              <Palette /> Design
             </Link>
             <Link href="/admin/email" className={current === "email" ? "on" : ""} onClick={() => setOpen(false)}>
               <Settings /> Email

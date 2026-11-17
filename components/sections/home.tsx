@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight, PhoneIcon } from "@/components/icons";
 import { CONTACT } from "@/lib/content";
 import homeContent from "@/lib/seed/home.json";
+import { Highlight } from "@/components/chrome/Design";
 
 /* ── shared bits ─────────────────────────────────────────── */
 const Eyebrow = ({ label }: { label: string }) => (
@@ -23,7 +24,7 @@ export function Hero({ content }: { content?: typeof homeContent.hero }) {
     <section className="hero pad">
       <div>
         <Eyebrow label={c.eyebrow} />
-        <h1>{c.h1a}<br />{c.h1b}</h1>
+        <h1>{c.h1a}<br /><Highlight text={c.h1b} /></h1>
         <p className="lede">{c.lede}</p>
         <div className="hero-actions">
           <Link className="action dark" href="/contact">{c.ctaPrimary} <ArrowRight /></Link>

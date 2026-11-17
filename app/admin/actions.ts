@@ -14,6 +14,7 @@ import { moveLeadStatus, addLeadNote, getLead, addEmailNote } from "@/lib/db";
 import { sendMail, mailOn } from "@/lib/mail";
 import { renderEmail, isTheme, checkAttachments } from "@/lib/email-templates";
 import { getEmailSettings, saveEmailSettings, type EmailSettings } from "@/lib/settings";
+import { getDesignHistory, publishDesign, saveDraftDesign, type HistoryItem } from "@/lib/design";
 
 /**
  * Admin server actions (S4). Every mutating action re-checks the session
@@ -189,4 +190,22 @@ export async function saveEmailSettingsAction(_prev: SettingsState | null, formD
   await saveEmailSettings(patch);
   revalidatePath("/admin/email");
   return { ok: true, message: patch.autoReply ? "Saved — new leads get the thank-you." : "Saved — auto thank-you is paused." };
+}
+
+/* ── Design (Admin → Design) ── */
+export interface DesignState { ok: boolean; message: string; history?: HistoryItem[] }
+
+/** Save the draft (visible only in the admin's preview). */
+export async function saveDesignDraftAction(raw: unknown): Promise<DesignState> {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+  await saveDraftDesign(raw);
+  return { ok: true, message: "Draft saved — only you can see it in the preview." };
+}
+
+/** Publish: visitors see it straight away; the previous version goes into history. */
+export async function publishDesignAction(raw: unknown): Promise<DesignState> {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+  await publishDesign(raw);
+  revalidatePath("/", "layout");
+  return { ok: true, message: "Published — nextbizstudio.com is using this design now.", history: await getDesignHistory() };
 }

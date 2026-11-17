@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { NAV_LINKS, CONTACT } from "@/lib/content";
+import { SoonTag } from "./Design";
 
 /**
  * Topbar — 3-zone hairline grid, 82px (brand / nav / call) + burger at ≤1050px.
@@ -39,7 +40,7 @@ export function Topbar({ current }: { current?: string }) {
               aria-current={l.href === current ? "page" : undefined}
             >
               {l.label}
-              {l.tag ? <span className="navtag">{l.tag}</span> : null}
+              {l.tag ? <SoonTag fallback={l.tag} /> : null}
             </Link>
           ))}
         </nav>
@@ -81,7 +82,7 @@ export function Topbar({ current }: { current?: string }) {
               <span className="no">{`0${i + 1}`}</span>
               <span className="lbl">
                 {l.label}
-                {l.tag ? <span className="navtag">{l.tag}</span> : null}
+                {l.tag ? <SoonTag fallback={l.tag} /> : null}
               </span>
               <svg className="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <path d="M5 12h14M13 6l6 6-6 6" />

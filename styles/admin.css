@@ -516,3 +516,75 @@
 .adminui .etog-text { flex: 1; min-width: 0; display: grid; gap: 3px; }
 .adminui .etog-text b { font-size: 11.5px; color: var(--ink); }
 .adminui .etog-text small { font-size: 9px; color: var(--muted); }
+
+/* ── Design studio (Admin → Design) ── */
+.adminui .dz { display: grid; grid-template-columns: minmax(320px, 400px) minmax(0, 1fr); gap: 16px; padding: 16px clamp(14px, 2.5vw, 28px) 16px; height: calc(100vh - 52px); min-height: 560px; }
+.adminui .dz-form { display: flex; flex-direction: column; gap: 12px; min-width: 0; min-height: 0; overflow-y: auto; padding-right: 4px; scrollbar-width: thin; }
+.adminui .dz-card { background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.adminui .dz-card h2 { font-size: 13px; font-weight: 800; margin: 0; letter-spacing: -.2px; display: flex; gap: 8px; align-items: baseline; }
+.adminui .dz-card h2 em { font-style: normal; font-size: 11px; font-weight: 700; color: var(--muted); }
+.adminui .dz-card h2.mt { margin-top: 6px; }
+.adminui .dz-sub { margin: -4px 0 0; font-size: 11.5px; color: var(--muted); line-height: 1.5; }
+.adminui .dz-sw { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.adminui .dz-sw button, .adminui .dz-sw label { display: flex; flex-direction: column; gap: 5px; align-items: flex-start; padding: 6px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); cursor: pointer; font: inherit; color: inherit; min-width: 0; }
+.adminui .dz-sw i { display: block; width: 100%; height: 26px; border-radius: 5px; }
+.adminui .dz-sw span { font-size: 10px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.adminui .dz-sw .on { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+.adminui .dz-sw .same { justify-content: center; align-items: center; background: repeating-linear-gradient(135deg, var(--card) 0 6px, var(--soft) 6px 12px); min-height: 52px; }
+.adminui .dz-sw .custom input { width: 100%; height: 26px; padding: 0; border: 0; border-radius: 5px; background: none; cursor: pointer; }
+.adminui .dz-ratios { display: flex; flex-wrap: wrap; gap: 5px; }
+.adminui .dz-ratios span { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 99px; background: var(--soft); font-variant-numeric: tabular-nums; }
+.adminui .dz-ratios span.no { background: #FCE8D9; color: #9A3412; }
+.adminui .dz-list { display: flex; flex-direction: column; }
+.adminui .dz-toggle { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--line); cursor: pointer; position: relative; }
+.adminui .dz-list .dz-toggle:last-child { border-bottom: 0; }
+.adminui .dz-toggle > span { flex: 1; min-width: 0; }
+.adminui .dz-toggle b { display: block; font-size: 12px; } .adminui .dz-toggle small { display: block; font-size: 10.5px; color: var(--muted); line-height: 1.4; }
+.adminui .dz-toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.adminui .dz-toggle i { flex: none; width: 34px; height: 20px; border-radius: 99px; background: var(--line); position: relative; transition: background .15s; }
+.adminui .dz-toggle i::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.25); transition: transform .15s; }
+.adminui .dz-toggle input:checked + i { background: var(--ink); }
+.adminui .dz-toggle input:checked + i::after { transform: translateX(14px); }
+.adminui .dz-toggle input:focus-visible + i { outline: 2px solid var(--ink); outline-offset: 2px; }
+.adminui .dz-seg { display: inline-flex; padding: 3px; background: var(--soft); border-radius: 8px; gap: 2px; flex-wrap: wrap; }
+.adminui .dz-seg button { border: 0; background: transparent; font: inherit; font-size: 11px; font-weight: 700; padding: 6px 11px; border-radius: 6px; cursor: pointer; color: var(--muted); }
+.adminui .dz-seg button.on { background: var(--paper); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.adminui .dz-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.adminui .dz-field span { font-size: 10.5px; font-weight: 800; }
+.adminui .dz-field small { font-size: 10px; color: var(--muted); }
+.adminui .dz-field input { font: inherit; font-size: 12.5px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--card); color: var(--ink); outline: none; width: 100%; }
+.adminui .dz-field input:focus { border-color: var(--ink); }
+.adminui .dz-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; align-items: end; }
+.adminui .dz-dim { opacity: .5; display: flex; flex-direction: column; gap: 10px; }
+.adminui .dz-card > div:not([class]) { display: flex; flex-direction: column; gap: 10px; }
+.adminui .dz-hist { display: flex; flex-direction: column; gap: 6px; }
+.adminui .dz-h { display: flex; align-items: center; gap: 10px; }
+.adminui .dz-h i { width: 22px; height: 22px; border-radius: 5px; flex: none; border: 1px solid rgba(0,0,0,.08); }
+.adminui .dz-h span { flex: 1; min-width: 0; } .adminui .dz-h b { display: block; font-size: 11.5px; } .adminui .dz-h small { font-size: 10px; color: var(--muted); }
+.adminui .dz-h button, .adminui .dz-reset { font: inherit; font-size: 10.5px; font-weight: 800; border: 1px solid var(--line); background: var(--card); border-radius: 6px; padding: 5px 10px; cursor: pointer; color: var(--ink); }
+.adminui .dz-reset { align-self: flex-start; margin-top: 4px; color: var(--muted); }
+
+.adminui .dz-preview { display: flex; flex-direction: column; gap: 10px; min-height: 0; min-width: 0; }
+.adminui .dz-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.adminui .dz-bar select { font: inherit; font-size: 12px; font-weight: 700; padding: 6px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); color: var(--ink); }
+.adminui .dz-open { margin-left: auto; font-size: 11px; font-weight: 800; color: var(--ink); }
+.adminui .dz-frame { flex: 1; min-height: 0; border: 1px solid var(--line); border-radius: 10px; background: var(--desk); overflow: hidden; position: relative; }
+.adminui .dz-frame iframe { border: 0; display: block; transform-origin: 0 0; background: var(--paper); }
+.adminui .dz-frame.mobile { display: flex; justify-content: center; padding-top: 12px; }
+.adminui .dz-frame.mobile iframe { transform-origin: 50% 0; border-radius: 22px; box-shadow: 0 0 0 8px var(--ink); flex: none; }
+.adminui .dz-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 10px 12px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; }
+.adminui .dz-actions .sp { flex: 1; }
+.adminui .dz-status { font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; }
+.adminui .dz-status::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+.adminui .dz-status.live::before { background: #2E9E5B; } .adminui .dz-status.saved::before { background: #E0A100; } .adminui .dz-status.dirty::before { background: #D9480F; }
+.adminui .dz-msg { font-size: 11px; color: var(--muted); } .adminui .dz-msg.err { color: #B42318; }
+.adminui .dz-btn { font: inherit; font-size: 11.5px; font-weight: 800; min-height: 34px; padding: 0 14px; border-radius: 6px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; }
+.adminui .dz-btn.pri { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.adminui .dz-btn.pri.confirm { background: #D9480F; border-color: #D9480F; }
+.adminui .dz-btn:disabled { opacity: .45; cursor: default; }
+@media (max-width: 1100px) {
+  .adminui .dz { grid-template-columns: minmax(0, 1fr); height: auto; }
+  .adminui .dz-form { overflow: visible; padding-right: 0; }
+  .adminui .dz-preview { height: 78vh; order: -1; }
+}
+@media (max-width: 520px) { .adminui .dz-sw { grid-template-columns: repeat(3, minmax(0, 1fr)); } .adminui .dz-two { grid-template-columns: minmax(0, 1fr); } }
