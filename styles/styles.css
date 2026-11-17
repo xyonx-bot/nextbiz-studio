@@ -1,0 +1,75 @@
+/* ============================================================
+   SITE STYLES (Admin → Design → Style)
+   html[data-style="soft"]       floating pill header, pill buttons, rounded cards that lift,
+                                 leaf photos, dark sections and footer as inset rounded cards
+   html[data-style="editorial"]  hairline-cell header, square buttons, ruled cells (optionally
+                                 numbered), square labels, sharp photos, full-bleed dark sections
+   Buttons (data-btn) and photo corners (data-corners) are set from the style in lib/design-core.ts.
+   Every rule skips the admin.
+   ============================================================ */
+
+/* ── SOFT ───────────────────────────────────────────────── */
+html[data-style="soft"] { --r-card: 18px; --r-big: 28px; }
+html[data-style="soft"][data-round="round"] { --r-card: 26px; --r-big: 36px; }
+html[data-style="soft"]:not([data-soft-blur]) .topbar.pill .pillnav { background: var(--card); -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+/* cards */
+html[data-style="soft"] :is(.rcard, .stat, .pl-type, .pl-feat, .pl-when button, .pl-opt, .pl-send, .ps-card, .pl-side, .fit, .callout, .sheet, .compare-cols, .card.soon .soon-slot):not(.adminui *) { border-radius: var(--r-card); }
+html[data-style="soft"] .rcard { overflow: hidden; }
+html[data-style="soft"] .proj .ph { border-radius: var(--r-card); }
+html[data-style="soft"][data-soft-lift] :is(.rcard, .stat, .proj, .ps-card):not(.adminui *) { transition: transform .3s cubic-bezier(.2, .7, .2, 1), box-shadow .3s ease; }
+html[data-style="soft"][data-soft-lift] :is(.rcard, .stat, .proj, .ps-card):not(.adminui *):hover { transform: translateY(-4px); box-shadow: 0 20px 36px -26px rgba(9, 11, 15, .4); }
+
+/* the planner route: five rounded stop cards with gaps instead of ruled cells */
+html[data-style="soft"] .prt-lane { gap: 10px; border: 0; padding: 0 var(--pad-x); }
+html[data-style="soft"] .prt-cell { border: 1px solid var(--line); border-radius: var(--r-card); background: var(--card); }
+html[data-style="soft"] .prt-cell::after { left: 20px; right: 20px; top: -1px; }
+html[data-style="soft"] .prt-end { border: 0; border-radius: var(--r-card); }
+html[data-style="soft"] .prt { padding-bottom: clamp(40px, 5vw, 70px); }
+
+/* dark sections and the footer become inset rounded cards */
+html[data-style="soft"] .waitlist { margin: 0 clamp(10px, 1.4vw, 18px); border-radius: var(--r-big); overflow: hidden; }
+html[data-style="soft"] .footer.dark { margin: clamp(10px, 1.4vw, 18px); border-radius: var(--r-big); overflow: hidden; }
+html[data-style="soft"] .nbs-bar { margin: 8px clamp(10px, 1.4vw, 18px) 0; border-radius: 999px; }
+html[data-style="soft"] .action:not(.adminui *) svg { transition: transform .25s ease; }
+
+/* ── EDITORIAL ──────────────────────────────────────────── */
+html[data-style="editorial"] .topbar.ed { position: sticky; top: 0; z-index: 40; background: var(--paper); }
+html[data-style="editorial"] .topbar.ed .brandcell { color: inherit; text-decoration: none; }
+html[data-style="editorial"] .mobilenav { top: 82px; }
+@media (max-width: 760px) { html[data-style="editorial"] .mobilenav { top: 70px; } }
+
+/* labels: square, outlined, uppercase */
+html[data-style="editorial"] .eyebrow:not(.adminui *) { border-radius: 0; background: transparent; border: 1px solid var(--line); text-transform: uppercase; letter-spacing: 1.3px; font-size: 9.5px; font-weight: 800; }
+html[data-style="editorial"] .navtag:not(.adminui *) { border-radius: 0; }
+
+/* cards: ruled cells, no rounding, no lift */
+html[data-style="editorial"] :is(.rcard, .stat, .pl-type, .pl-feat, .pl-when button, .pl-opt, .pl-send, .ps-card, .pl-side, .fit, .callout, .sheet, .compare-cols, .card.soon .soon-slot, .pl-chips button, .pl-phase, .pl-hint):not(.adminui *) { border-radius: 0; }
+html[data-style="editorial"] .proj .ph { border-radius: 0; }
+html[data-style="editorial"] .pl-opts, html[data-style="editorial"] .pl-feats, html[data-style="editorial"] .pl-types { gap: 0; }
+html[data-style="editorial"] :is(.pl-opts, .pl-types) > * + *, html[data-style="editorial"] .pl-feats > * { margin: 0 -1px -1px 0; }
+html[data-style="editorial"] .pl-opt.rec { box-shadow: inset 0 0 0 1px var(--ink); }
+
+/* optional numbers on cards (01, 02…) */
+/* resource cards already carry their own big 01/02/03 — in Editorial they join into ruled cells */
+html[data-style="editorial"] .lib-grid { gap: 0; }
+html[data-style="editorial"] .lib-grid > .rcard { margin: 0 -1px -1px 0; }
+html[data-style="editorial"][data-ed-num] .stats { counter-reset: eds; }
+html[data-style="editorial"][data-ed-num] .stat { counter-increment: eds; position: relative; }
+html[data-style="editorial"][data-ed-num] .stat::after { content: counter(eds, decimal-leading-zero); position: absolute; top: 14px; right: 16px; font-size: 10px; font-weight: 800; letter-spacing: 1px; color: var(--muted); }
+
+/* optional ink rule: section dividers drawn in ink instead of grey */
+html[data-style="editorial"][data-ed-rule] main.shell > :is(section, footer):not(.hero):not(.partners):not(.waitlist) { border-top-color: var(--ink); }
+html[data-style="editorial"][data-ed-rule] .prt-lane { border-top-color: var(--ink); }
+
+/* footer: full-bleed dark band with ruled cells (as built) */
+html[data-style="editorial"] .footer.dark { border-radius: 0; margin: 0; }
+
+/* Soft fixes: the dark plan card stays dark; small pieces follow the round language */
+html[data-style="soft"] .prt-cell.prt-end { background: radial-gradient(70% 80% at 90% 10%, color-mix(in srgb, var(--acc) 22%, transparent), transparent 70%), var(--slab); border: 0; }
+html[data-style="soft"] .prt-cell.prt-end:hover { background: radial-gradient(70% 80% at 90% 10%, color-mix(in srgb, var(--acc) 30%, transparent), transparent 70%), var(--slab); }
+html[data-style="soft"] .footer.dark .fghost { border-radius: 999px; }
+html[data-style="soft"] .navtag:not(.adminui *) { border-radius: 999px; padding-left: 8px; padding-right: 8px; }
+html[data-style="soft"] .footer .news .row, html[data-style="soft"] .footer .capture { border-radius: 999px; overflow: hidden; }
+html[data-style="soft"] .capture input { border-radius: 999px 0 0 999px; }
+html[data-style="soft"] .capture .action { border-radius: 0 999px 999px 0; }

@@ -19,8 +19,16 @@ export type Design = {
   show: { buttons: boolean; badges: boolean; highlight: boolean; nav: boolean; details: boolean; dark: boolean };
   glow: boolean;
   motion: "full" | "subtle" | "off";
-  buttonShape: "sharp" | "rounded" | "pill";
-  corners: "signature" | "soft" | "sharp";
+  /** The site's style. Each style brings its own header, cards, buttons and photo shapes (locked together). */
+  style: "soft" | "editorial";
+  /** Options that only exist in the Soft style. */
+  soft: { blur: boolean; lift: boolean; round: "soft" | "round" };
+  /** Options that only exist in the Editorial style. */
+  editorial: { numbers: boolean; inkRule: boolean };
+  /** Background tone, both styles. */
+  tone: "warm" | "white" | "cool";
+  header: { cta: string; phone: boolean };
+  footer: { line1: string; line2: string };
   highlight: { style: "marker" | "underline" | "color"; phrase: string };
   bar: { on: boolean; text: string; linkLabel: string; href: string; tone: "accent" | "dark" };
   soon: { text: string; pulse: boolean };
@@ -32,8 +40,12 @@ export const DESIGN_DEFAULTS: Design = {
   show: { buttons: true, badges: true, highlight: true, nav: true, details: true, dark: true },
   glow: true,
   motion: "full",
-  buttonShape: "sharp",
-  corners: "signature",
+  style: "soft",
+  soft: { blur: true, lift: true, round: "soft" },
+  editorial: { numbers: true, inkRule: true },
+  tone: "warm",
+  header: { cta: "Plan a project", phone: true },
+  footer: { line1: "Got an idea?", line2: "Let's make it work." },
   highlight: { style: "marker", phrase: "Need It" },
   bar: { on: false, text: "NextBiz One is coming soon — WhatsApp, Instagram and ads in one place.", linkLabel: "Join the waitlist", href: "/nextbiz-one", tone: "dark" },
   soon: { text: "Soon", pulse: true },
@@ -60,8 +72,12 @@ export function normalizeDesign(raw: unknown): Design {
     },
     glow: bool(r.glow, d.glow),
     motion: pick(r.motion, ["full", "subtle", "off"] as const, d.motion),
-    buttonShape: pick(r.buttonShape, ["sharp", "rounded", "pill"] as const, d.buttonShape),
-    corners: pick(r.corners, ["signature", "soft", "sharp"] as const, d.corners),
+    style: pick(r.style, ["soft", "editorial"] as const, d.style),
+    soft: { blur: bool(r.soft?.blur, d.soft.blur), lift: bool(r.soft?.lift, d.soft.lift), round: pick(r.soft?.round, ["soft", "round"] as const, d.soft.round) },
+    editorial: { numbers: bool(r.editorial?.numbers, d.editorial.numbers), inkRule: bool(r.editorial?.inkRule, d.editorial.inkRule) },
+    tone: pick(r.tone, ["warm", "white", "cool"] as const, d.tone),
+    header: { cta: str(r.header?.cta, d.header.cta, 28), phone: bool(r.header?.phone, d.header.phone) },
+    footer: { line1: str(r.footer?.line1, d.footer.line1, 40), line2: str(r.footer?.line2, d.footer.line2, 40) },
     highlight: { style: pick(r.highlight?.style, ["marker", "underline", "color"] as const, d.highlight.style), phrase: str(r.highlight?.phrase, d.highlight.phrase, 60) },
     bar: {
       on: bool(r.bar?.on, d.bar.on), text: str(r.bar?.text, d.bar.text, 140), linkLabel: str(r.bar?.linkLabel, d.bar.linkLabel, 40),
@@ -91,14 +107,23 @@ export function textShade(hex: string) {
 /** CSS variables for :root. */
 export function designVars(d: Design): string {
   const badge = d.badge ?? d.accent;
+  const tones = { warm: ["#F9F6F2", "#F2EEE4", "#FDFCF9"], white: ["#FFFFFF", "#F4F4F2", "#FFFFFF"], cool: ["#F5F6F8", "#ECEEF2", "#FBFCFD"] }[d.tone];
   return [
+    `--paper:${tones[0]}`, `--soft:${tones[1]}`, `--card:${tones[2]}`,
     `--acc:${d.accent}`, `--acc-on:${onColor(d.accent)}`, `--acc-text:${textShade(d.accent)}`,
     `--sig:${badge}`, `--sig-on:${onColor(badge)}`,
   ].join(";");
 }
 /** data-* attributes for <html> that switch the design rules on. */
 export function designAttrs(d: Design): Record<string, string> {
-  const a: Record<string, string> = { "data-motion": d.motion, "data-btn": d.buttonShape, "data-corners": d.corners, "data-hl": d.show.highlight ? d.highlight.style : "none" };
+  // shapes come from the style, never mixed: Soft = pill buttons + leaf photos, Editorial = square buttons + sharp photos
+  const a: Record<string, string> = {
+    "data-style": d.style, "data-motion": d.motion, "data-tone": d.tone,
+    "data-btn": d.style === "soft" ? "pill" : "sharp", "data-corners": d.style === "soft" ? "signature" : "sharp",
+    "data-hl": d.show.highlight ? d.highlight.style : "none",
+  };
+  if (d.style === "soft") { if (d.soft.blur) a["data-soft-blur"] = ""; if (d.soft.lift) a["data-soft-lift"] = ""; a["data-round"] = d.soft.round; }
+  else { if (d.editorial.numbers) a["data-ed-num"] = ""; if (d.editorial.inkRule) a["data-ed-rule"] = ""; }
   for (const k of Object.keys(d.show) as (keyof Design["show"])[]) if (d.show[k]) a[`data-acc-${k}`] = "";
   if (d.soon.pulse) a["data-soon-pulse"] = "";
   if (d.glow) a["data-glow"] = "";

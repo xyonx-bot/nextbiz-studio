@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LEGAL_LINKS, NAV_LINKS, SERVICE_LINKS, WHATSAPP_NUMBER, WHATSAPP_PREFILL } from "@/lib/content";
 import { EmailCapture } from "@/components/sections/resources-client";
+import { FooterLines } from "./Design";
 
 const SOCIALS = [
   {
@@ -48,7 +49,7 @@ export function Footer() {
   return (
     <footer className="footer dark">
       <div className="fcta">
-        <h2>Got an idea?<br /><em>Let&apos;s make it work.</em></h2>
+        <FooterLines />
         <div className="fcta-acts">
           <Link className="action dark" href="/plan">Plan a project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M5 12h14M13 6l6 6-6 6" /></svg></Link>
           <a className="fghost" href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_PREFILL)}`} target="_blank" rel="noreferrer">

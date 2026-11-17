@@ -80,7 +80,7 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
   const scale = device === "desktop" ? Math.min(1, fit.w / W) : Math.min(1, (fit.h - 24) / 844);
 
   const set = (patch: Partial<Design>) => { setD((v) => normalizeDesign({ ...v, ...patch })); setConfirmPub(false); };
-  const setIn = <K extends "show" | "highlight" | "bar" | "soon">(k: K, patch: Partial<Design[K]>) => set({ [k]: { ...d[k], ...patch } } as Partial<Design>);
+  const setIn = <K extends "show" | "highlight" | "bar" | "soon" | "soft" | "editorial" | "header">(k: K, patch: Partial<Design[K]>) => set({ [k]: { ...d[k], ...patch } } as Partial<Design>);
 
   // keep the preview in sync: on every change, and whenever the framed page (re)loads
   const post = () => frame.current?.contentWindow?.postMessage({ type: "nbs-design", design: d }, window.location.origin);
@@ -114,6 +114,32 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
   return (
     <div className="dz" data-testid="design-studio">
       <div className="dz-form">
+        <section className="dz-card dz-style">
+          <h2>Style</h2>
+          <p className="dz-sub">Each style has its own header, buttons, cards and photo shapes, designed to work together.</p>
+          <div className="dz-styles" role="radiogroup" aria-label="Site style">
+            {([["soft", "Soft", "Floating pill header, round buttons, rounded cards, leaf photos"], ["editorial", "Editorial", "Hairline header, square buttons, ruled cells, sharp photos"]] as const).map(([id, name, sub]) => (
+              <button key={id} type="button" role="radio" aria-checked={d.style === id} className={`dz-st ${id}${d.style === id ? " on" : ""}`} onClick={() => set({ style: id })} data-testid={`style-${id}`}>
+                <span className="mini" aria-hidden><i className="h" /><i className="b" /><i className="c" /><i className="c" /><i className="c" /></span>
+                <b>{name}</b><small>{sub}</small>
+              </button>
+            ))}
+          </div>
+          {d.style === "soft" ? (
+            <div className="dz-list">
+              <Toggle id="soft-blur" on={d.soft.blur} label="Glass header" sub="The floating header lets the page blur through" onChange={(v) => setIn("soft", { blur: v })} />
+              <Toggle id="soft-lift" on={d.soft.lift} label="Cards lift on hover" sub="Cards rise slightly when you point at them" onChange={(v) => setIn("soft", { lift: v })} />
+              <div className="dz-toggle as-row"><span><b>Roundness</b><small>How round cards and dark sections are</small></span>
+                <Seg label="Roundness" value={d.soft.round} onChange={(v) => setIn("soft", { round: v })} options={[["soft", "Soft"], ["round", "Extra round"]]} /></div>
+            </div>
+          ) : (
+            <div className="dz-list">
+              <Toggle id="ed-num" on={d.editorial.numbers} label="Numbered cards" sub="01, 02, 03 in the corner of cards and stats" onChange={(v) => setIn("editorial", { numbers: v })} />
+              <Toggle id="ed-rule" on={d.editorial.inkRule} label="Ink rules" sub="Section dividers in black instead of grey" onChange={(v) => setIn("editorial", { inkRule: v })} />
+            </div>
+          )}
+        </section>
+
         <section className="dz-card">
           <h2>Accent colour <em>{accName}</em></h2>
           <p className="dz-sub">One colour for the things that should catch the eye. Your site stays black and off-white.</p>
@@ -137,12 +163,26 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
         </section>
 
         <section className="dz-card">
-          <h2>Buttons</h2>
-          <Seg label="Button shape" value={d.buttonShape} onChange={(v) => set({ buttonShape: v })} options={[["sharp", "Sharp"], ["rounded", "Rounded"], ["pill", "Pill"]]} />
+          <h2>Glow</h2>
           <Toggle id="glow" on={d.glow} label="Glow" sub="A soft accent glow under main buttons and in dark sections" onChange={(v) => set({ glow: v })} />
-          <h2 className="mt">Corners</h2>
-          <p className="dz-sub">Photos and cards. “Signature” is the leaf shape your site uses now.</p>
-          <Seg label="Corners" value={d.corners} onChange={(v) => set({ corners: v })} options={[["signature", "Signature"], ["soft", "Soft"], ["sharp", "Sharp"]]} />
+        </section>
+
+        <section className="dz-card">
+          <h2>Background tone</h2>
+          <p className="dz-sub">The page colour behind everything.</p>
+          <Seg label="Background tone" value={d.tone} onChange={(v) => set({ tone: v })} options={[["warm", "Warm off-white"], ["white", "Clean white"], ["cool", "Cool grey"]]} />
+        </section>
+
+        <section className="dz-card">
+          <h2>Header &amp; footer</h2>
+          <div className="dz-two">
+            <label className="dz-field" htmlFor="hd-cta"><span>Header button text</span><input id="hd-cta" value={d.header.cta} maxLength={28} onChange={(e) => setD((v) => ({ ...v, header: { ...v.header, cta: e.target.value } }))} onBlur={() => set({})} placeholder="Plan a project" /></label>
+            <Toggle id="hd-phone" on={d.header.phone} label="Call button" sub="Round phone button in the header" onChange={(v) => setIn("header", { phone: v })} />
+          </div>
+          <div className="dz-two">
+            <label className="dz-field" htmlFor="ft-1"><span>Footer line 1</span><input id="ft-1" value={d.footer.line1} maxLength={40} onChange={(e) => setD((v) => ({ ...v, footer: { ...v.footer, line1: e.target.value } }))} onBlur={() => set({})} placeholder="Got an idea?" /></label>
+            <label className="dz-field" htmlFor="ft-2"><span>Footer line 2 <small>in accent</small></span><input id="ft-2" value={d.footer.line2} maxLength={40} onChange={(e) => setD((v) => ({ ...v, footer: { ...v.footer, line2: e.target.value } }))} onBlur={() => set({})} placeholder="Let's make it work." /></label>
+          </div>
         </section>
 
         <section className="dz-card">

@@ -11,7 +11,7 @@ import { DESIGN_DEFAULTS, designAttrs, designVars, normalizeDesign, type Design 
 const Ctx = createContext<Design>(DESIGN_DEFAULTS);
 export const useDesign = () => useContext(Ctx);
 
-const ATTRS = ["data-motion", "data-btn", "data-corners", "data-hl", "data-acc-buttons", "data-acc-badges", "data-acc-highlight", "data-acc-nav", "data-acc-details", "data-acc-dark", "data-soon-pulse", "data-glow"];
+const ATTRS = ["data-style", "data-tone", "data-soft-blur", "data-soft-lift", "data-round", "data-ed-num", "data-ed-rule", "data-motion", "data-btn", "data-corners", "data-hl", "data-acc-buttons", "data-acc-badges", "data-acc-highlight", "data-acc-nav", "data-acc-details", "data-acc-dark", "data-soon-pulse", "data-glow"];
 function apply(d: Design) {
   const el = document.getElementById("nbs-design");
   if (el) el.textContent = `:root{${designVars(d)}}`;
@@ -76,4 +76,10 @@ export function Highlight({ text }: { text: string }) {
 export function SoonTag({ fallback }: { fallback: string }) {
   const d = useDesign();
   return <span className="navtag">{d.soon.text.trim() || fallback}</span>;
+}
+
+/** The footer's closing statement, editable in Admin → Design. */
+export function FooterLines() {
+  const d = useDesign();
+  return <h2>{d.footer.line1.trim() || "Got an idea?"}<br /><em>{d.footer.line2.trim() || "Let\u2019s make it work."}</em></h2>;
 }
