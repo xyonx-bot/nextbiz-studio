@@ -59,13 +59,25 @@ export function Partners({ content }: { content?: typeof homeContent.partners })
   return (
     <section className="partners">
       <Eyebrow label={p.eyebrow} />
-      <div className="partner-row">
+      <div className="mo-track">
+      <div className="partner-row mo-marquee">
         {items.map((it, i) => (
           <span key={i} style={{ display: "contents" }}>
             {it.strong ? <b>{it.label}</b> : <span>{it.label}</span>}
             {i < items.length - 1 && <i>•</i>}
           </span>
         ))}
+        {/* a second copy so the moving strip (Animation: Full) loops without a jump; hidden otherwise */}
+        <span className="mo-dup" aria-hidden="true">
+          <i>•</i>
+          {items.map((it, i) => (
+            <span key={i} style={{ display: "contents" }}>
+              {it.strong ? <b>{it.label}</b> : <span>{it.label}</span>}
+              <i>•</i>
+            </span>
+          ))}
+        </span>
+      </div>
       </div>
     </section>
   );

@@ -1,0 +1,67 @@
+/* ============================================================
+   MOTION (Admin → Design → Animation: full · subtle · off)
+   Only transform and opacity animate, so the browser never re-lays out the page.
+   Everything here is skipped for visitors who ask for reduced motion.
+   ============================================================ */
+:root { --mo-ease: cubic-bezier(.2, .7, .2, 1); --mo-d: 22px; --mo-t: .75s; }
+html[data-motion="subtle"] { --mo-d: 10px; --mo-t: .5s; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ── hero: a short entrance on load ── */
+  html:not([data-motion="off"]) .hero > div:first-child > * { animation: mo-up var(--mo-t) var(--mo-ease) both; }
+  html:not([data-motion="off"]) .hero > div:first-child > :nth-child(2) { animation-delay: .08s; }
+  html:not([data-motion="off"]) .hero > div:first-child > :nth-child(3) { animation-delay: .16s; }
+  html:not([data-motion="off"]) .hero > div:first-child > :nth-child(4) { animation-delay: .24s; }
+  html[data-motion="full"] .hero .hero-visual { animation: mo-in .9s .1s var(--mo-ease) both; }
+  html[data-motion="full"] .hero .slabph { animation: mo-slab 1s .05s var(--mo-ease) both; }
+  html[data-motion="full"] .hero .hero-note { animation: mo-fade .8s .7s ease both; }
+  /* the highlight marker draws itself in, left to right */
+  html:not([data-motion="off"])[data-hl="marker"] .hero .hl::after { transform-origin: left center; animation: mo-draw .7s .45s var(--mo-ease) both; }
+
+  /* ── sections rise in as they scroll into view (Motion.tsx adds .is-in) ── */
+  html.mo-ready:not([data-motion="off"]) main.shell > :is(section, footer):not(.hero):not(.is-in) > * { opacity: 0; transform: translate3d(0, var(--mo-d), 0); }
+  html.mo-ready:not([data-motion="off"]) main.shell > :is(section, footer).is-in > * { animation: mo-up var(--mo-t) var(--mo-ease) both; }
+  html.mo-ready:not([data-motion="off"]) main.shell > :is(section, footer).is-in > :nth-child(2) { animation-delay: .07s; }
+  html.mo-ready:not([data-motion="off"]) main.shell > :is(section, footer).is-in > :nth-child(3) { animation-delay: .14s; }
+  html.mo-ready:not([data-motion="off"]) main.shell > :is(section, footer).is-in > :nth-child(4) { animation-delay: .21s; }
+  html.mo-ready:not([data-motion="off"]) main.shell > :is(section, footer).is-in > :nth-child(n+5) { animation-delay: .26s; }
+
+  /* ── hover: small, quick, physical ── */
+  html:not([data-motion="off"]) .action:not(.adminui *) { transition: transform .2s var(--mo-ease), box-shadow .25s ease, filter .15s ease; }
+  html:not([data-motion="off"]) .action:not(.adminui *):hover { transform: translateY(-2px); }
+  html:not([data-motion="off"]) .action:not(.adminui *):active { transform: translateY(0) scale(.98); }
+  html:not([data-motion="off"]) .action:not(.adminui *) svg, html:not([data-motion="off"]) .text-link svg { transition: transform .25s var(--mo-ease); }
+  html:not([data-motion="off"]) .action:not(.adminui *):hover svg, html:not([data-motion="off"]) .text-link:hover svg { transform: translateX(3px); }
+  html:not([data-motion="off"]) :is(.proj, .rcard, .stat) { transition: transform .3s var(--mo-ease), box-shadow .3s ease; }
+  html:not([data-motion="off"]) :is(.proj, .rcard, .stat):hover { transform: translateY(-4px); box-shadow: 0 18px 34px -24px rgba(9, 11, 15, .35); }
+  html:not([data-motion="off"]) :is(.proj .ph, .rcard) { overflow: hidden; }
+  html:not([data-motion="off"]) :is(.proj, .card, .feat) img { transition: transform .6s var(--mo-ease); }
+  html:not([data-motion="off"]) :is(.proj, .card, .feat):hover img { transform: scale(1.035); }
+  /* menu: an underline slides in under the link you point at */
+  html:not([data-motion="off"]) .topnav a:not(.on) { position: relative; }
+  html:not([data-motion="off"]) .topnav a:not(.on)::after { content: ""; position: absolute; left: 0; right: 0; bottom: -7px; height: 2px; border-radius: 2px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .3s var(--mo-ease); opacity: .35; }
+  html:not([data-motion="off"]) .topnav a:not(.on):hover::after { transform: scaleX(1); transform-origin: left; }
+  html:not([data-motion="off"]) .mobilenav.open nav a { animation: mo-up .4s var(--mo-ease) both; }
+  html:not([data-motion="off"]) .mobilenav.open nav a:nth-child(2) { animation-delay: .03s; } html:not([data-motion="off"]) .mobilenav.open nav a:nth-child(3) { animation-delay: .06s; }
+  html:not([data-motion="off"]) .mobilenav.open nav a:nth-child(4) { animation-delay: .09s; } html:not([data-motion="off"]) .mobilenav.open nav a:nth-child(n+5) { animation-delay: .12s; }
+
+  /* ── full only: a gently moving audience strip and a breathing glow on the dark NextBiz One section ── */
+  html[data-motion="full"] .partner-row.mo-marquee { display: flex; width: max-content; flex-wrap: nowrap; justify-content: flex-start; gap: 0; animation: mo-marquee 38s linear infinite; }
+  html[data-motion="full"] .partner-row.mo-marquee :is(b, span:not(.mo-dup):not([style]), i) { margin-right: clamp(26px, 3.4vw, 50px); white-space: nowrap; }
+  html[data-motion="full"] .partner-row.mo-marquee i { display: inline; }
+  html[data-motion="full"] .mo-track:hover .partner-row.mo-marquee { animation-play-state: paused; }
+  html[data-motion="full"] .mo-track { overflow: hidden; -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  html[data-motion="full"][data-acc-dark] .waitlist { position: relative; isolation: isolate; overflow: hidden; }
+  html[data-motion="full"][data-acc-dark] .waitlist::before { content: ""; position: absolute; inset: -20% -10% auto auto; width: 55%; height: 90%; background: radial-gradient(closest-side, color-mix(in srgb, var(--acc) 22%, transparent), transparent); z-index: -1; pointer-events: none; animation: mo-breathe 7s ease-in-out infinite; }
+}
+/* the copy of the audience strip only exists to make the loop seamless */
+.partner-row .mo-dup { display: none; }
+@media (prefers-reduced-motion: no-preference) { html[data-motion="full"] .partner-row.mo-marquee .mo-dup { display: contents; } }
+
+@keyframes mo-up { from { opacity: 0; transform: translate3d(0, var(--mo-d), 0); } to { opacity: 1; transform: none; } }
+@keyframes mo-in { from { opacity: 0; transform: scale(.97) translate3d(0, 14px, 0); } to { opacity: 1; transform: none; } }
+@keyframes mo-slab { from { opacity: 0; transform: translate3d(-18px, 18px, 0); } to { opacity: 1; transform: none; } }
+@keyframes mo-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes mo-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes mo-marquee { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-50%, 0, 0); } }
+@keyframes mo-breathe { 0%, 100% { opacity: .55; transform: translate3d(0, 0, 0) scale(1); } 50% { opacity: 1; transform: translate3d(-3%, 4%, 0) scale(1.06); } }

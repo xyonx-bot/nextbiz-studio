@@ -146,6 +146,12 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
         </section>
 
         <section className="dz-card">
+          <h2>Animation</h2>
+          <p className="dz-sub">Full: sections rise in as you scroll, the headline marker draws itself, numbers count up, the audience strip moves. Subtle: shorter, smaller movements only. Visitors who turn off motion on their device never see any.</p>
+          <Seg label="Animation" value={d.motion} onChange={(v) => set({ motion: v })} options={[["full", "Full"], ["subtle", "Subtle"], ["off", "Off"]]} />
+        </section>
+
+        <section className="dz-card">
           <h2>Headline highlight</h2>
           <p className="dz-sub">Marks a few words of the homepage headline. Turn it off under “Where the accent shows”.</p>
           <Seg label="Highlight style" value={d.highlight.style} onChange={(v) => setIn("highlight", { style: v })} options={[["marker", "Marker"], ["underline", "Underline"], ["color", "Coloured text"]]} />

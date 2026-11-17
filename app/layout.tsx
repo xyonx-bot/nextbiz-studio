@@ -6,6 +6,7 @@ import { isAuthenticated } from "@/lib/auth";
 import { getDraftDesign, getPublishedDesign } from "@/lib/design";
 import { designAttrs, designVars } from "@/lib/design-core";
 import { AnnouncementBar, DesignProvider } from "@/components/chrome/Design";
+import { Motion } from "@/components/chrome/Motion";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -55,6 +56,7 @@ export default async function RootLayout({
         <DesignProvider initial={design} preview={preview}>
           <AnnouncementBar />
           {children}
+          <Motion />
         </DesignProvider>
       </body>
     </html>

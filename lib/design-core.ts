@@ -18,6 +18,7 @@ export type Design = {
   badge: string | null;                 // hex, or null = same as accent
   show: { buttons: boolean; badges: boolean; highlight: boolean; nav: boolean; details: boolean; dark: boolean };
   glow: boolean;
+  motion: "full" | "subtle" | "off";
   buttonShape: "sharp" | "rounded" | "pill";
   corners: "signature" | "soft" | "sharp";
   highlight: { style: "marker" | "underline" | "color"; phrase: string };
@@ -30,6 +31,7 @@ export const DESIGN_DEFAULTS: Design = {
   badge: null,
   show: { buttons: true, badges: true, highlight: true, nav: true, details: true, dark: true },
   glow: true,
+  motion: "full",
   buttonShape: "sharp",
   corners: "signature",
   highlight: { style: "marker", phrase: "Need It" },
@@ -57,6 +59,7 @@ export function normalizeDesign(raw: unknown): Design {
       nav: bool(r.show?.nav, d.show.nav), details: bool(r.show?.details, d.show.details), dark: bool(r.show?.dark, d.show.dark),
     },
     glow: bool(r.glow, d.glow),
+    motion: pick(r.motion, ["full", "subtle", "off"] as const, d.motion),
     buttonShape: pick(r.buttonShape, ["sharp", "rounded", "pill"] as const, d.buttonShape),
     corners: pick(r.corners, ["signature", "soft", "sharp"] as const, d.corners),
     highlight: { style: pick(r.highlight?.style, ["marker", "underline", "color"] as const, d.highlight.style), phrase: str(r.highlight?.phrase, d.highlight.phrase, 60) },
@@ -95,7 +98,7 @@ export function designVars(d: Design): string {
 }
 /** data-* attributes for <html> that switch the design rules on. */
 export function designAttrs(d: Design): Record<string, string> {
-  const a: Record<string, string> = { "data-btn": d.buttonShape, "data-corners": d.corners, "data-hl": d.show.highlight ? d.highlight.style : "none" };
+  const a: Record<string, string> = { "data-motion": d.motion, "data-btn": d.buttonShape, "data-corners": d.corners, "data-hl": d.show.highlight ? d.highlight.style : "none" };
   for (const k of Object.keys(d.show) as (keyof Design["show"])[]) if (d.show[k]) a[`data-acc-${k}`] = "";
   if (d.soon.pulse) a["data-soon-pulse"] = "";
   if (d.glow) a["data-glow"] = "";
