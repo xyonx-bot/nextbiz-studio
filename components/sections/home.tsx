@@ -193,27 +193,20 @@ export function Work({ content }: { content?: typeof homeContent.work }) {
 /* ═══ 6 · INDUSTRIES ═══ */
 export function Industries({ content }: { content?: typeof homeContent.industries }) {
   const c = content ?? homeContent.industries;
+  const names = c.items.filter((it) => !/^and more$/i.test(it.label));
+  // each lane holds the list twice so the loop never jumps; the copy is hidden from screen readers
+  const solid = (copy: boolean) => names.map((it) => <span key={`${copy}-${it.label}`} aria-hidden={copy || undefined}>{it.label}<em aria-hidden /></span>);
+  const outline = (copy: boolean) => [...names].reverse().map((it) => (
+    <span key={`${copy}-${it.label}`} aria-hidden="true"><span className="ic" dangerouslySetInnerHTML={{ __html: it.icon }} />{it.label}</span>
+  ));
   return (
-    <section className="industries">
-      <div className="ind-img">
-        <div>
-          {c.panelLines.map((l: string, i: number) => <span key={i}>{l}<br /></span>)}
-          <span style={{ display: "block", width: 75, height: 5, background: "var(--primary-fg)", marginTop: 25, borderRadius: 4 }} />
-        </div>
-      </div>
-      <div className="ind-copy pad">
-        <Eyebrow label={c.eyebrow} />
-        <h2>{c.h2a}<br />{c.h2b}</h2>
+    <section className="indband" aria-label={c.eyebrow}>
+      <div className="indband-top pad">
+        <div><Eyebrow label={c.eyebrow} /><h2>{c.h2a} {c.h2b}</h2></div>
         <p className="lede">{c.lede}</p>
-        <div className="ind-icons">
-          {c.items.map((it) => (
-            <span key={it.label}>
-              <span dangerouslySetInnerHTML={{ __html: it.icon }} />
-              {it.label}
-            </span>
-          ))}
-        </div>
       </div>
+      <div className="ind-mask"><div className="ind-lane">{solid(false)}{solid(true)}</div></div>
+      <div className="ind-mask"><div className="ind-lane rev out">{outline(false)}{outline(true)}</div></div>
     </section>
   );
 }
@@ -312,35 +305,37 @@ export function ContactBand({ content }: { content?: typeof homeContent.contactB
   );
 }
 
-/* ═══ PLAN YOUR PROJECT — the door into /plan (step 1 happens right here) ═══ */
-const PLAN_TYPES: { id: string; label: string; blurb: string; d: string }[] = [
-  { id: "website", label: "Website", blurb: "A site that brings enquiries", d: "M3 5h18v14H3zM3 9h18M7 7h.01M10 7h.01" },
-  { id: "store", label: "Online store", blurb: "Sell online, take payments", d: "M4 7h16l-1.5 11a2 2 0 0 1-2 1.7H7.5a2 2 0 0 1-2-1.7zM9 7a3 3 0 0 1 6 0" },
-  { id: "whatsapp", label: "WhatsApp automation", blurb: "Instant replies, broadcasts", d: "M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z" },
-  { id: "instagram", label: "Instagram growth", blurb: "Content, reels, DMs", d: "M4 4h16v16H4zM12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM17 7h.01" },
+/* ═══ PLAN YOUR PROJECT — "the route": five numbered stops, ending in the plan (opens /plan) ═══ */
+const PLAN_STOPS: { t: string; q: string; ans: { l: string; href?: string }[] }[] = [
+  { t: "What", q: "What are we building?", ans: [
+    { l: "Website", href: "/plan?type=website" }, { l: "Online store", href: "/plan?type=store" }, { l: "WhatsApp automation", href: "/plan?type=whatsapp" },
+    { l: "Instagram", href: "/plan?type=instagram" }, { l: "Custom tool", href: "/plan?type=custom" }] },
+  { t: "You", q: "Your business and team", ans: [{ l: "Just me" }, { l: "Small team" }, { l: "Growing" }] },
+  { t: "Must-haves", q: "Tick what you need", ans: [{ l: "Bookings" }, { l: "Payments" }, { l: "AI replies" }, { l: "CRM" }] },
+  { t: "When", q: "How soon?", ans: [{ l: "No rush" }, { l: "Next month" }, { l: "ASAP" }] },
+  { t: "Budget", q: "What feels comfortable", ans: [{ l: "Under ₹25k" }, { l: "₹25–75k" }, { l: "₹75k+" }] },
 ];
 export function PlanStart({ content }: { content?: typeof homeContent.planner }) {
   const c = content ?? homeContent.planner;
-  const ico = (d: string) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d={d} /></svg>;
   return (
-    <section className="planstart pad">
-      <div>
-        <Eyebrow label={c.eyebrow} />
-        <h2>{c.h2a}<br />{c.h2b}</h2>
+    <section className="prt">
+      <div className="prt-top pad">
+        <div><Eyebrow label={c.eyebrow} /><h2>{c.h2a}</h2></div>
         <p className="lede">{c.lede}</p>
-        <div className="note">{c.notes.map((n: string) => <span key={n}>{n}</span>)}</div>
       </div>
-      <div className="ps-cards">
-        {PLAN_TYPES.map((t) => (
-          <Link key={t.id} className="ps-card" href={`/plan?type=${t.id}`}>
-            <span className="ic">{ico(t.d)}</span><span><b>{t.label}</b><small>{t.blurb}</small></span><span className="go"><ArrowRight /></span>
-          </Link>
+      <ol className="prt-lane">
+        {PLAN_STOPS.map((s, i) => (
+          <li key={s.t} className="prt-cell">
+            <span className="no">0{i + 1}</span><b>{s.t}</b><span className="q">{s.q}</span>
+            <span className="ans">{s.ans.map((x) => x.href ? <Link key={x.l} href={x.href}>{x.l}</Link> : <em key={x.l}>{x.l}</em>)}</span>
+          </li>
         ))}
-        <Link className="ps-card wide" href="/plan?type=custom">
-          <span className="ic">{ico("M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8l-6.2 4.5 2.4-7.4L2 9.4h7.6z")}</span>
-          <span><b>Something custom</b><small>A tool, portal or app — let&apos;s shape it together</small></span><span className="go"><ArrowRight /></span>
-        </Link>
-      </div>
+        <li className="prt-cell prt-end">
+          <span className="no">{c.endLabel}</span>
+          <div><b>{c.endTitle}</b><p className="q">{c.endNote}</p></div>
+          <Link className="action dark" href="/plan">{c.cta} <ArrowRight /></Link>
+        </li>
+      </ol>
     </section>
   );
 }

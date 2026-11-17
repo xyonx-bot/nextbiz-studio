@@ -18,10 +18,11 @@ export default async function PlanPage({ searchParams }: { searchParams: Promise
   return (
     <main className="shell">
       <Topbar current="/plan" />
-      <section className="plan-head pad">
-        <span className="eyebrow"><span className="orbit" />Project planner</span>
-        <h1>Plan your project<br />in <span className="hl">60 seconds</span>.</h1>
-        <p className="lede">Five quick questions. You get three ways to build it, with timelines. No sign-up.</p>
+      <section className="plan-strip" aria-label="Project planner">
+        <div className="ps-title"><span className="eyebrow"><span className="orbit" />Project planner</span><h1>Let&apos;s plan your project.</h1></div>
+        <div><span className="k"><em>5</em> questions</span><small>Most take one tap</small></div>
+        <div><span className="k"><em>3</em> options</span><small>With a timeline for each</small></div>
+        <div><span className="k">~<em>60</em>s</span><small>No sign-up needed</small></div>
       </section>
       <section className="plan-body pad">
         <Planner pricing={pricing} industries={industries} start={type} wa={WHATSAPP_NUMBER} />

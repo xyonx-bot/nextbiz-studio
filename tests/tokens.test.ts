@@ -28,20 +28,16 @@ describe("tokens.css matches design-sheet.html", () => {
 
 /** Content seed sanity: every home section key exists and is non-empty. */
 describe("home content seed", () => {
-  it("has all 9 sections the home page renders", async () => {
+  it("has all the sections the home page renders", async () => {
     const seed = (await import("@/lib/seed/home.json")).default;
     const required = [
       "hero", "partners", "about", "services", "work",
-      "planner", "testimonial", "team", "contactBand",
+      "industries", "planner", "testimonial", "team", "contactBand",
     ];
     for (const key of required) {
       expect(seed.sectionOrder).toContain(key);
       expect((seed as Record<string, unknown>)[key]).toBeTruthy();
     }
-  });
-  it("keeps the Industries content so it can be switched back on in Admin → Pages", async () => {
-    const seed = (await import("@/lib/seed/home.json")).default as Record<string, unknown>;
-    expect(seed.industries).toBeTruthy();
   });
   it("no lorem ipsum, no Lovable references (design-sheet hard rules)", async () => {
     const raw = JSON.stringify((await import("@/lib/seed/home.json")).default);

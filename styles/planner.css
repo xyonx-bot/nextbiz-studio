@@ -180,3 +180,65 @@ html[data-glow] .ps-card.wide { box-shadow: 0 18px 36px -22px var(--acc); }
   .pl-prog button { font-size: 0; gap: 0; }
   .pl-side { display: none; }
 }
+
+/* ── /plan header: a hairline strip in the same style as the site header ── */
+.plan-strip { display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+.plan-strip > div { padding: clamp(26px, 3.4vw, 44px) clamp(18px, 2.4vw, 32px) 26px; border-right: 1px solid var(--line); display: flex; flex-direction: column; justify-content: flex-end; gap: 8px; min-height: 170px; }
+.plan-strip > div:last-child { border-right: 0; }
+.plan-strip .ps-title { padding-left: var(--pad-x); gap: 14px; }
+.plan-strip h1 { margin: 0; font-size: clamp(30px, 3.4vw, 46px); font-weight: 500; letter-spacing: -.035em; line-height: 1.04; }
+.plan-strip .k { font-size: clamp(26px, 2.6vw, 36px); font-weight: 300; letter-spacing: -.03em; line-height: 1; }
+.plan-strip .k em { font-style: normal; font-weight: 600; color: var(--acc-text); }
+.plan-strip small { font-size: 12px; color: var(--muted); }
+@media (max-width: 900px) {
+  .plan-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .plan-strip .ps-title { grid-column: 1 / -1; border-right: 0; border-bottom: 1px solid var(--line); min-height: 0; padding-left: 22px; }
+  .plan-strip > div { min-height: 110px; padding: 18px 14px; }
+}
+
+/* ── homepage: "the route" — five numbered stops ending in the plan ── */
+.prt { border-top: 1px solid var(--line); padding-top: clamp(50px, 6vw, 84px); }
+.prt-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; padding-bottom: 30px; }
+.prt-top h2 { margin: 16px 0 0; font-size: clamp(32px, 3.8vw, 52px); font-weight: 500; letter-spacing: -.04em; line-height: 1.02; }
+.prt-top .lede { max-width: 40ch; margin: 0; }
+.prt-lane { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) minmax(0, 1.3fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.prt-cell { position: relative; padding: 24px 22px 26px; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; min-height: 250px; transition: background .25s ease; min-width: 0; }
+.prt-cell .no { font-size: 10px; font-weight: 800; letter-spacing: 1px; color: var(--muted); transition: color .2s; }
+.prt-cell b { font-size: 18px; letter-spacing: -.01em; }
+.prt-cell .q { font-size: 13px; color: var(--muted); margin: 0; }
+.prt-cell .ans { margin-top: auto; display: flex; flex-wrap: wrap; gap: 5px; opacity: .5; transition: opacity .25s ease; }
+.prt-cell .ans em, .prt-cell .ans a { font-style: normal; font-size: 11.5px; font-weight: 700; border: 1px solid var(--line); border-radius: 99px; padding: 4px 9px; background: var(--card); color: inherit; text-decoration: none; transition: background .2s, border-color .2s; }
+.prt-cell .ans a:hover { background: var(--acc); border-color: var(--acc); color: var(--acc-on); }
+.prt-cell::after { content: ""; position: absolute; left: 22px; right: 22px; top: -1px; height: 3px; border-radius: 0 0 3px 3px; background: var(--acc); transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.2, .7, .2, 1); }
+.prt-cell:hover, .prt-cell:focus-within { background: var(--card); }
+.prt-cell:hover .ans, .prt-cell:focus-within .ans { opacity: 1; }
+.prt-cell:hover .no, .prt-cell:focus-within .no { color: var(--acc-text); }
+.prt-cell:hover::after, .prt-cell:focus-within::after { transform: scaleX(1); }
+.prt-cell:first-child .ans { opacity: 1; }
+.prt-end { background: radial-gradient(70% 80% at 90% 10%, color-mix(in srgb, var(--acc) 22%, transparent), transparent 70%), var(--slab); color: #F4F1EC; border-right: 0; justify-content: space-between; }
+.prt-end .no { color: var(--acc); } .prt-end b { font-size: 22px; line-height: 1.2; } .prt-end .q { color: #A9ACB2; margin-top: 6px; }
+.prt-end:hover { background: radial-gradient(70% 80% at 90% 10%, color-mix(in srgb, var(--acc) 30%, transparent), transparent 70%), var(--slab); }
+.prt-end::after { display: none; }
+.prt-end .action { align-self: flex-start; }
+@media (max-width: 1100px) { .prt-lane { grid-template-columns: repeat(3, minmax(0, 1fr)); } .prt-cell { border-bottom: 1px solid var(--line); min-height: 200px; } .prt-cell:nth-child(3n) { border-right: 0; } .prt-end { grid-column: span 3; min-height: 180px; } }
+@media (max-width: 640px) { .prt-lane { grid-template-columns: minmax(0, 1fr); } .prt-cell { border-right: 0; min-height: 0; } .prt-cell .ans { opacity: 1; } .prt-end { grid-column: auto; } }
+
+/* ── homepage: Industries as giant moving type (no links — it says who we work with) ── */
+.indband { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: clamp(50px, 6vw, 84px) 0; display: flex; flex-direction: column; gap: clamp(22px, 3vw, 36px); overflow: hidden; }
+.indband-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+.indband-top h2 { margin: 16px 0 0; font-size: clamp(32px, 3.8vw, 52px); font-weight: 500; letter-spacing: -.04em; line-height: 1.02; }
+.indband-top .lede { max-width: 44ch; margin: 0; }
+.ind-mask { overflow: hidden; -webkit-mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.ind-lane { display: flex; width: max-content; }
+.ind-lane > span { display: inline-flex; align-items: center; gap: clamp(14px, 2vw, 28px); padding-right: clamp(14px, 2vw, 28px); font-size: clamp(42px, 7.4vw, 104px); letter-spacing: -.05em; line-height: 1.08; white-space: nowrap; font-weight: 400; }
+.ind-lane > span em { display: inline-block; width: .4em; height: .4em; border-radius: 50%; background: var(--acc); box-shadow: 0 0 0 .1em color-mix(in srgb, var(--acc) 28%, transparent); flex: none; }
+.ind-lane.out > span { color: transparent; -webkit-text-stroke: 1.2px var(--ink); }
+.ind-lane .ic { display: inline-grid; width: .5em; height: .5em; color: var(--ink); -webkit-text-stroke: 0; }
+.ind-lane .ic svg { width: 100%; height: 100%; stroke-width: 1.4; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="off"]) .ind-lane { animation: ind-slide 42s linear infinite; }
+  html:not([data-motion="off"]) .ind-lane.rev { animation-direction: reverse; animation-duration: 50s; }
+  html[data-motion="subtle"] .ind-lane { animation-duration: 70s; } html[data-motion="subtle"] .ind-lane.rev { animation-duration: 80s; }
+  .indband:hover .ind-lane { animation-play-state: paused; }
+}
+@keyframes ind-slide { to { transform: translateX(-50%); } }

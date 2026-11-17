@@ -7,6 +7,7 @@
     "services",
     "work",
     "library",
+    "industries",
     "planner",
     "testimonial",
     "team",
@@ -306,13 +307,11 @@
   },
   "planner": {
     "eyebrow": "Project planner",
-    "h2a": "Plan your project",
-    "h2b": "in 60 seconds.",
-    "lede": "Pick what you want to build, answer four quick questions, and get three ways to do it with timelines. No sign-up, no obligation.",
-    "notes": [
-      "Three options, not one price",
-      "Fits any budget",
-      "About a minute"
-    ]
+    "h2a": "Five questions to a real plan.",
+    "lede": "No forms, no sign-up. Answer five quick questions and get three ways to build it, each with a timeline.",
+    "endLabel": "Your plan",
+    "endTitle": "3 options, each with a timeline.",
+    "endNote": "About a minute. No sign-up.",
+    "cta": "Start planning"
   }
 }
