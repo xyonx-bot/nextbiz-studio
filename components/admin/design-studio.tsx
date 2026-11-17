@@ -90,6 +90,18 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
     window.addEventListener("message", on); return () => window.removeEventListener("message", on);
   });
 
+  // the two styles render different section components, so a style switch saves the draft and reloads the preview
+  const lastStyle = useRef(d.style);
+  useEffect(() => {
+    if (lastStyle.current === d.style) return;
+    lastStyle.current = d.style;
+    start(async () => {
+      await saveDesignDraftAction(d);
+      setSaved(d);
+      frame.current?.contentWindow?.location.reload();
+    });
+  }, [d.style]);
+
   const ratios = useMemo(() => {
     const on = onColor(d.accent);
     return [

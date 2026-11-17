@@ -1,9 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, Nothing_You_Could_Do } from "next/font/google";
-import { cookies } from "next/headers";
 import "./globals.css";
-import { isAuthenticated } from "@/lib/auth";
-import { getDraftDesign, getPublishedDesign } from "@/lib/design";
+import { getActiveDesign } from "@/lib/design";
 import { designAttrs, designVars } from "@/lib/design-core";
 import { AnnouncementBar, DesignProvider } from "@/components/chrome/Design";
 import { Motion } from "@/components/chrome/Motion";
@@ -44,8 +42,7 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   // Admin → Design: visitors get the published design; the signed-in admin previewing gets the draft.
-  const preview = (await cookies()).get("nbs_preview")?.value === "1" && (await isAuthenticated());
-  const design = preview ? await getDraftDesign() : await getPublishedDesign();
+  const { design, preview } = await getActiveDesign();
   return (
     <html lang="en" className={`${manrope.variable} ${scribbleFont.variable}`} {...designAttrs(design)} suppressHydrationWarning>
       <head>

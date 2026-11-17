@@ -62,3 +62,11 @@ export async function publishDesign(raw: unknown): Promise<Design> {
   lastGood = d;
   return d;
 }
+
+/** The design for this request: the draft when the signed-in admin is previewing, otherwise the published one.
+ *  Used by the root layout and by pages that render a different section layout per style. */
+export async function getActiveDesign(): Promise<{ design: Design; preview: boolean }> {
+  const [{ cookies }, { isAuthenticated }] = await Promise.all([import("next/headers"), import("./auth")]);
+  const preview = (await cookies()).get("nbs_preview")?.value === "1" && (await isAuthenticated());
+  return { design: preview ? await getDraftDesign() : await getPublishedDesign(), preview };
+}
