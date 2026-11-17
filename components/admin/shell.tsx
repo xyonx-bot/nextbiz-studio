@@ -38,7 +38,7 @@ export function AdminShell({
       <div className={`scrim${open ? " open" : ""}`} onClick={() => setOpen(false)} />
       <div className="shell">
         <aside className={`side${open ? " open" : ""}`}>
-          <div className="sbrand"><span className="logo-ph">NB</span> Studio Desk</div>
+          <div className="sbrand"><img className="logo-img" src="/brand/nb-logo-web.png" alt="" width={29} height={22} /> Studio Desk</div>
           <span className="slabel">Desk</span>
           <nav>
             <Link href="/admin" className={current === "leads" ? "on" : ""} onClick={() => setOpen(false)}>

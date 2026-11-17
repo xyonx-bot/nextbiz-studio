@@ -177,7 +177,7 @@
 /* footer: the same five columns, now as hairline cells */
 .footer { display: grid; grid-template-columns: 1.3fr .8fr .9fr .8fr 1.3fr; gap: 0; padding: 0; border-top: 1px solid var(--line); }
 .footer > .fcol { padding: 32px 24px 36px; border-right: 1px solid var(--line); gap: 10px; font-size: 13px; min-width: 0; }
-.footer > .fcol:first-child { padding-left: var(--pad-x); }
+.footer > .fcol.brand { padding-left: var(--pad-x); }
 .footer > .fcol.news { border-right: 0; padding-right: var(--pad-x); }
 .footer .fcol > b { font-size: 10px; font-weight: 800; letter-spacing: 1.3px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
 .footer .fcol.brand .fbrand { font-size: 15px; color: var(--ink); text-transform: none; letter-spacing: -.01em; margin-bottom: 0; }
@@ -200,14 +200,81 @@
   .footer { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .footer > .fcol { border-bottom: 1px solid var(--line); }
   .footer > .fcol.brand, .footer > .fcol.news { grid-column: 1 / -1; border-right: 0; padding-left: var(--pad-x); padding-right: var(--pad-x); }
-  .footer > .fcol:nth-child(4) { border-right: 0; }
+  .footer > .fcol:nth-child(5) { border-right: 0; }
 }
 @media (max-width: 760px) {
   .footer { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .footer > .fcol { padding: 24px 22px 26px; }
-  .footer > .fcol:nth-child(2) { padding-left: 22px; }
-  .footer > .fcol:nth-child(3) { border-right: 0; }
-  .footer > .fcol:nth-child(4) { grid-column: 1 / -1; border-right: 0; }
+  .footer > .fcol:nth-child(3) { padding-left: 22px; }
+  .footer > .fcol:nth-child(4) { border-right: 0; }
+  .footer > .fcol:nth-child(5) { grid-column: 1 / -1; border-right: 0; }
   .footer > .fcol.brand, .footer > .fcol.news { padding-left: 22px; padding-right: 22px; }
   .footer .copyright { padding-left: 22px; padding-right: 22px; }
 }
+
+/* ============================================================
+   Variant 2 (Nov 17): floating pill header — logo · glass pill (menu + Plan a project) · call.
+   Sticks to the top while scrolling; the page fades under it.
+   ============================================================ */
+.topbar.pill { position: sticky; top: 0; z-index: 40; display: flex; align-items: center; gap: 16px; height: 84px; padding: 0 clamp(16px, 2.4vw, 32px); border-bottom: 0;
+  background: linear-gradient(180deg, var(--paper) 55%, color-mix(in srgb, var(--paper) 0%, transparent)); }
+.topbar.pill .brandcell { padding: 0; border: 0; gap: 10px; font-size: 15px; font-weight: 800; color: inherit; text-decoration: none; flex: none; }
+.topbar.pill .pillnav { margin: 0 auto; display: flex; align-items: center; gap: clamp(14px, 1.6vw, 22px); padding: 6px 6px 6px 24px; border-radius: 999px;
+  border: 1px solid var(--line); background: color-mix(in srgb, var(--card) 84%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: 0 16px 34px -26px rgba(9, 11, 15, .45); min-width: 0; }
+.topbar.pill .topnav { justify-content: flex-start; gap: clamp(12px, 1.5vw, 22px); padding: 0; }
+.topbar.pill .topnav a { padding: 6px 0; }
+html[data-acc-nav] .topbar.pill .topnav a.on::after { bottom: -1px; }
+html:not([data-motion="off"]) .topbar.pill .topnav a:not(.on)::after { bottom: -1px; }
+.topbar.pill .pillnav .plancta { border-radius: 999px; min-height: 42px; gap: 12px; padding: 0 6px 0 18px; white-space: nowrap; }
+.topbar.pill .callbtn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; background: var(--card); flex: none; color: inherit; transition: border-color .2s ease; }
+.topbar.pill .callbtn:hover { border-color: var(--ink); }
+.topbar.pill .callbtn svg { width: 16px; height: 16px; }
+html[data-acc-details] .topbar.pill .callbtn svg { color: var(--acc-text); stroke: var(--acc-text); }
+/* the pill needs ~1280px; below that the menu button takes over (the call button stays) */
+@media (max-width: 1279px) {
+  .topbar.pill .pillnav { display: none; }
+  .topbar.pill .callbtn { margin-left: auto; }
+  .topbar.pill .burger { display: block; margin-left: 0; border-radius: 50%; }
+}
+@media (max-width: 760px) { .topbar.pill { height: 70px; padding: 0 18px; gap: 10px; } .topbar.pill .brandcell { font-size: 13px; } }
+.mobilenav { position: sticky; top: 70px; z-index: 39; background: var(--paper); }
+@media (min-width: 761px) { .mobilenav { top: 84px; } }
+
+/* ============================================================
+   Variant 2 (Nov 17): dark footer — closing line, columns in hairline cells,
+   lime glow and a lime-outlined wordmark. The logo turns light on dark.
+   ============================================================ */
+.footer.dark { background: radial-gradient(55% 70% at 100% 0%, color-mix(in srgb, var(--acc) 15%, transparent), transparent 70%),
+  radial-gradient(40% 50% at 0% 100%, color-mix(in srgb, var(--acc) 7%, transparent), transparent 70%), #14161A; color: #F4F1EC; border-top: 0; }
+.footer.dark .fcta { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; padding: clamp(56px, 7vw, 96px) var(--pad-x) clamp(36px, 4vw, 52px); }
+.footer.dark .fcta h2 { margin: 0; font-size: clamp(40px, 5.4vw, 78px); font-weight: 400; letter-spacing: -.05em; line-height: .98; color: #F4F1EC; }
+.footer.dark .fcta h2 em { font-style: normal; color: var(--acc); }
+.footer.dark .fcta-acts { display: flex; gap: 10px; flex-wrap: wrap; }
+.footer.dark .fghost { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 18px; border: 1px solid rgba(244, 241, 236, .35); border-radius: 3px; font-size: 12px; font-weight: 700; color: #F4F1EC; text-decoration: none; transition: border-color .2s, background .2s; }
+.footer.dark .fghost:hover { border-color: #F4F1EC; background: rgba(255, 255, 255, .06); }
+.footer.dark .fghost svg { width: 16px; height: 16px; }
+.footer.dark > .fcol { border-right-color: rgba(255, 255, 255, .12); border-top: 1px solid rgba(255, 255, 255, .12); }
+.footer.dark .fcol > b { color: #9EA2A9; }
+.footer.dark .fcol.brand .fbrand { color: #F4F1EC; }
+.footer.dark .fcol.brand p, .footer.dark .news p { color: #A9ACB2; }
+.footer.dark .socials a { border-color: rgba(255, 255, 255, .22); color: #F4F1EC; }
+.footer.dark .socials a:hover { background: var(--acc); border-color: var(--acc); color: var(--ink); }
+.footer.dark .news input { background: rgba(255, 255, 255, .06); border-color: rgba(255, 255, 255, .28); color: #F4F1EC; }
+.footer.dark .news input::placeholder { color: #8E929A; }
+.footer.dark .capture-done { border-color: rgba(255, 255, 255, .3); }
+.footer.dark .fword { border-top-color: rgba(255, 255, 255, .12); }
+.footer.dark .fword span { -webkit-text-stroke-color: color-mix(in srgb, var(--acc) 75%, #fff); }
+.footer.dark .copyright { border-top-color: rgba(255, 255, 255, .12); color: #9EA2A9; }
+.footer.dark .copyright a:hover { color: #F4F1EC; }
+@media (max-width: 1050px) { .footer.dark > .fcol { border-bottom-color: rgba(255, 255, 255, .12); } }
+@media (max-width: 760px) { .footer.dark .fcta { grid-template-columns: minmax(0, 1fr); padding-left: 22px; padding-right: 22px; } }
+
+/* the floating menu follows Admin → Design → Button shape, so it always matches the site's buttons */
+:root { --nav-r: 8px; }
+html[data-btn="rounded"] { --nav-r: 16px; }
+html[data-btn="pill"] { --nav-r: 999px; }
+.topbar.pill .pillnav { border-radius: var(--nav-r); }
+html .topbar.pill .pillnav .plancta { border-radius: calc(var(--nav-r) - 4px); }
+html[data-btn="pill"] .topbar.pill .pillnav .plancta { border-radius: 999px; }
+.topbar.pill .burger { border-radius: var(--nav-r); }

@@ -604,3 +604,5 @@
 .adminui .pp-save { position: sticky; bottom: 0; display: flex; gap: 14px; align-items: center; justify-content: flex-end; padding: 12px 14px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; font-size: 11.5px; }
 .adminui .pp-save span { margin-right: auto; color: var(--muted); } .adminui .pp-save a { font-weight: 800; color: var(--ink); }
 @media (max-width: 700px) { .adminui .pp-tiers { grid-template-columns: minmax(0, 1fr); } .adminui .pp-grid { grid-template-columns: minmax(0, 1fr) 90px 64px; } }
+
+.adminui .logo-img { height: 22px; width: auto; flex: none; object-fit: contain; }

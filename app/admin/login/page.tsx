@@ -16,7 +16,7 @@ export default function AdminLoginPage() {
   return (
     <>
       <div className="topstrip">
-        <Link className="brand" href="/"><span className="logo-ph">NB</span> NextBiz Studio</Link>
+        <Link className="brand" href="/"><img className="logo-img" src="/brand/nb-logo-web.png" alt="" width={29} height={22} /> NextBiz Studio</Link>
         <Link className="back" href="/">← Back to site <ArrowLeft size={12} /></Link>
       </div>
       <main className="stage">

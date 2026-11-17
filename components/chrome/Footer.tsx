@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { LEGAL_LINKS, NAV_LINKS, SERVICE_LINKS } from "@/lib/content";
+import { LEGAL_LINKS, NAV_LINKS, SERVICE_LINKS, WHATSAPP_NUMBER, WHATSAPP_PREFILL } from "@/lib/content";
 import { EmailCapture } from "@/components/sections/resources-client";
 
 const SOCIALS = [
@@ -45,15 +45,24 @@ const SOCIALS = [
  * Newsletter posts to /api/subscribe (list=newsletter) since Nov 15.
  */
 export function Footer() {
-  const cdn = process.env.NEXT_PUBLIC_CDN_BASE ?? "https://cdn.joyverse.fun";
   return (
-    <footer className="footer">
+    <footer className="footer dark">
+      <div className="fcta">
+        <h2>Got an idea?<br /><em>Let&apos;s make it work.</em></h2>
+        <div className="fcta-acts">
+          <Link className="action dark" href="/plan">Plan a project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M5 12h14M13 6l6 6-6 6" /></svg></Link>
+          <a className="fghost" href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_PREFILL)}`} target="_blank" rel="noreferrer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 21l2.1-5.4A8.4 8.4 0 1 1 21 11.5z" /></svg>
+            WhatsApp us
+          </a>
+        </div>
+      </div>
       <div className="fcol brand">
         <b className="fbrand">
           <Image
-            src={`${cdn}/nextbiz-studio-dark.png`}
+            src="/brand/nb-logo-light-web.png"
             alt="NextBiz Studio logo"
-            width={34}
+            width={35}
             height={27}
             className="brandlogo"
             unoptimized
@@ -105,6 +114,7 @@ export function Footer() {
         <span className="legal">
           <Link href="/legal/privacy">Privacy Policy</Link>
           <Link href="/legal/terms">Terms & Conditions</Link>
+          <a href="#top">Back to top ↑</a>
         </span>
       </div>
     </footer>
