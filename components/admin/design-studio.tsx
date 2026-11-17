@@ -90,17 +90,19 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
     window.addEventListener("message", on); return () => window.removeEventListener("message", on);
   });
 
-  // the two styles render different section components, so a style switch saves the draft and reloads the preview
-  const lastStyle = useRef(d.style);
+  // the two styles (and the planner section choice) render different section components,
+  // so switching saves the draft and reloads the preview
+  const layoutKey = `${d.style}:${d.editorial.planner}`;
+  const lastStyle = useRef(layoutKey);
   useEffect(() => {
-    if (lastStyle.current === d.style) return;
-    lastStyle.current = d.style;
+    if (lastStyle.current === layoutKey) return;
+    lastStyle.current = layoutKey;
     start(async () => {
       await saveDesignDraftAction(d);
       setSaved(d);
       frame.current?.contentWindow?.location.reload();
     });
-  }, [d.style]);
+  }, [layoutKey]);
 
   const ratios = useMemo(() => {
     const on = onColor(d.accent);
@@ -157,6 +159,8 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
                 <Seg label="Cards" value={d.editorial.cards} onChange={(v) => setIn("editorial", { cards: v })} options={[["separate", "Separate"], ["joined", "Joined"]]} /></div>
               <div className="dz-toggle as-row"><span><b>Footer</b><small>Light is the live look</small></span>
                 <Seg label="Footer" value={d.editorial.footer} onChange={(v) => setIn("editorial", { footer: v })} options={[["light", "Light"], ["dark", "Dark"]]} /></div>
+              <div className="dz-toggle as-row"><span><b>Planner section</b><small>Sentence: one line with tappable words. Route: five numbered steps</small></span>
+                <Seg label="Planner section" value={d.editorial.planner} onChange={(v) => setIn("editorial", { planner: v })} options={[["sentence", "Sentence"], ["route", "Route"]]} /></div>
               <Toggle id="ed-cta" on={d.editorial.headerCta} label="Button in the header" sub="Off (live look): “Call Any Time” + number. On: call button + your header button" onChange={(v) => setIn("editorial", { headerCta: v })} />
               <Toggle id="ed-num" on={d.editorial.numbers} label="Numbered stat cards" sub="01, 02, 03 in the corner of the About step cards" onChange={(v) => setIn("editorial", { numbers: v })} />
               <Toggle id="ed-rule" on={d.editorial.inkRule} label="Ink rules" sub="Section dividers in black instead of grey" onChange={(v) => setIn("editorial", { inkRule: v })} />

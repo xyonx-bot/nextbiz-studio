@@ -7,6 +7,7 @@ import { HomeLibrary, Waitlist } from "@/components/sections/resources";
 import { getResourceEntries, getSections } from "@/lib/config";
 import { getActiveDesign } from "@/lib/design";
 import { AboutF, ContactBandF, HeroF, IndustriesF, PartnersF, ServicesF, WorkF } from "@/components/sections/home-floating";
+import { PlanSentence } from "@/components/sections/plan-sentence";
 import homeSeed from "@/lib/seed/home.json";
 
 // S5: sections resolve as seed ⊕ admin config (dynamic — config edits must
@@ -18,7 +19,9 @@ export default async function HomePage() {
   const by = (k: string) => sections.find((s) => s.key === k)?.content;
   const resources = sections.some((s) => s.key === "library") ? await getResourceEntries() : [];
   // Soft (floating) has its own layout for each section; Editorial (hairline) keeps the original components
-  const soft = (await getActiveDesign()).design.style === "soft";
+  const design = (await getActiveDesign()).design;
+  const soft = design.style === "soft";
+  const sentence = !soft && design.editorial.planner === "sentence";
 
   return (
     <main className="shell">
@@ -32,7 +35,7 @@ export default async function HomePage() {
           case "work": return soft ? <WorkF key={s.key} content={by("work") as typeof homeSeed.work} /> : <Work key={s.key} content={by("work") as typeof homeSeed.work} />;
           case "library": return <HomeLibrary key={s.key} content={by("library") as typeof homeSeed.library} entries={resources} />;
           case "waitlist": return <Waitlist key={s.key} content={by("waitlist") as typeof homeSeed.waitlist} />;
-          case "planner": return <PlanStart key={s.key} content={by("planner") as typeof homeSeed.planner} />;
+          case "planner": return sentence ? <PlanSentence key={s.key} content={by("planner") as typeof homeSeed.planner} /> : <PlanStart key={s.key} content={by("planner") as typeof homeSeed.planner} />;
           case "industries": return soft ? <IndustriesF key={s.key} content={by("industries") as typeof homeSeed.industries} /> : <Industries key={s.key} content={by("industries") as typeof homeSeed.industries} />;
           case "testimonial": return <Testimonial key={s.key} content={by("testimonial") as typeof homeSeed.testimonial} />;
           case "team": return <Team key={s.key} content={by("team") as typeof homeSeed.team} />;

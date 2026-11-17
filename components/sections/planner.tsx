@@ -8,7 +8,8 @@ import { BUDGETS, SIZES, TIERS, WHEN, buildPlan, inr, planText, type Answers, ty
  * then three options (never one price). Saving sends the plan to the studio as a lead; the server
  * recomputes it from the admin's pricing, so nothing the browser sends can change the numbers.
  */
-type Props = { pricing: Pricing; industries: string[]; start?: string; wa: string };
+type Preset = { size?: string; industry?: string; when?: string };
+type Props = { pricing: Pricing; industries: string[]; start?: string; preset?: Preset; wa: string };
 const STEPS = ["What", "About you", "Must-haves", "When", "Budget"] as const;
 const ICON: Record<ProjectType["id"], string> = {
   website: "M3 5h18v14H3zM3 9h18M7 7h.01M10 7h.01",
@@ -19,11 +20,15 @@ const ICON: Record<ProjectType["id"], string> = {
 };
 const Ico = ({ d }: { d: string }) => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d={d} /></svg>;
 
-export function Planner({ pricing, industries, start, wa }: Props) {
+export function Planner({ pricing, industries, start, preset = {}, wa }: Props) {
   const types = pricing.types;
   const first = types.find((t) => t.id === start);
-  const [step, setStep] = useState(first ? 1 : 0);
-  const [a, setA] = useState<Answers>(() => ({ type: first?.id ?? "website", industry: "", size: "", features: [...(first ?? types[0]).tiers.lean.includes], when: "normal", budget: "" }));
+  // the homepage sentence sends size/industry/when too: only accept known values, and skip to Must-haves when "About you" is answered
+  const size = SIZES.some((s) => s.id === preset.size) ? preset.size! : "";
+  const industry = industries.includes(preset.industry ?? "") ? preset.industry! : "";
+  const when = WHEN.some((w) => w.id === preset.when) ? preset.when! : "normal";
+  const [step, setStep] = useState(first ? (size ? 2 : 1) : 0);
+  const [a, setA] = useState<Answers>(() => ({ type: first?.id ?? "website", industry, size, features: [...(first ?? types[0]).tiers.lean.includes], when, budget: "" }));
   const [done, setDone] = useState(false);
   const type = types.find((t) => t.id === a.type) ?? types[0];
   const plan = useMemo(() => buildPlan(pricing, a), [pricing, a]);

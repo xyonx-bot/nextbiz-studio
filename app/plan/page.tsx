@@ -12,8 +12,8 @@ export const metadata: Metadata = {
   description: "Answer five quick questions and get three ways to build it, with timelines — in about a minute.",
 };
 
-export default async function PlanPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
-  const [{ type }, pricing] = await Promise.all([searchParams, getPricing()]);
+export default async function PlanPage({ searchParams }: { searchParams: Promise<{ type?: string; size?: string; industry?: string; when?: string }> }) {
+  const [{ type, size, industry, when }, pricing] = await Promise.all([searchParams, getPricing()]);
   const industries = (homeSeed.industries.items as { label: string }[]).map((i) => i.label === "and More" ? "Something else" : i.label);
   return (
     <main className="shell">
@@ -25,7 +25,7 @@ export default async function PlanPage({ searchParams }: { searchParams: Promise
         <div><span className="k">~<em>60</em>s</span><small>No sign-up needed</small></div>
       </section>
       <section className="plan-body pad">
-        <Planner pricing={pricing} industries={industries} start={type} wa={WHATSAPP_NUMBER} />
+        <Planner pricing={pricing} industries={industries} start={type} preset={{ size, industry, when }} wa={WHATSAPP_NUMBER} />
       </section>
       <Footer />
     </main>

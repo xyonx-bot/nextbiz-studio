@@ -32,6 +32,7 @@ export type Design = {
     button: "sharp" | "rounded" | "pill";
     headerCta: boolean;                           // header right side: call text (off) or call + main button (on)
     footer: "light" | "dark";
+    planner: "sentence" | "route";                // homepage planner section
   };
   /** Background tone, both styles. */
   tone: "warm" | "white" | "cool";
@@ -50,7 +51,7 @@ export const DESIGN_DEFAULTS: Design = {
   motion: "full",
   style: "editorial",
   soft: { blur: true, lift: true, round: "soft" },
-  editorial: { numbers: false, inkRule: false, corners: "signature", labels: "pill", cards: "separate", button: "sharp", headerCta: false, footer: "light" },
+  editorial: { numbers: false, inkRule: false, corners: "signature", labels: "pill", cards: "separate", button: "sharp", headerCta: false, footer: "light", planner: "sentence" },
   tone: "warm",
   header: { cta: "Plan a project", phone: true },
   footer: { line1: "Got an idea?", line2: "Let's make it work." },
@@ -90,6 +91,7 @@ export function normalizeDesign(raw: unknown): Design {
       button: pick(r.editorial?.button, ["sharp", "rounded", "pill"] as const, d.editorial.button),
       headerCta: bool(r.editorial?.headerCta, d.editorial.headerCta),
       footer: pick(r.editorial?.footer, ["light", "dark"] as const, d.editorial.footer),
+      planner: pick(r.editorial?.planner, ["sentence", "route"] as const, d.editorial.planner),
     },
     tone: pick(r.tone, ["warm", "white", "cool"] as const, d.tone),
     header: { cta: str(r.header?.cta, d.header.cta, 28), phone: bool(r.header?.phone, d.header.phone) },
