@@ -159,7 +159,7 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
                 <Seg label="Cards" value={d.editorial.cards} onChange={(v) => setIn("editorial", { cards: v })} options={[["separate", "Separate"], ["joined", "Joined"]]} /></div>
               <div className="dz-toggle as-row"><span><b>Footer</b><small>Light is the live look</small></span>
                 <Seg label="Footer" value={d.editorial.footer} onChange={(v) => setIn("editorial", { footer: v })} options={[["light", "Light"], ["dark", "Dark"]]} /></div>
-              <div className="dz-toggle as-row"><span><b>Planner section</b><small>Sentence: one line with tappable words. Route: five numbered steps</small></span>
+              <div className="dz-toggle as-row"><span><b>Planner section</b><small>Sentence: one big line and a button. Route: five numbered steps</small></span>
                 <Seg label="Planner section" value={d.editorial.planner} onChange={(v) => setIn("editorial", { planner: v })} options={[["sentence", "Sentence"], ["route", "Route"]]} /></div>
               <Toggle id="ed-cta" on={d.editorial.headerCta} label="Button in the header" sub="Off (live look): “Call Any Time” + number. On: call button + your header button" onChange={(v) => setIn("editorial", { headerCta: v })} />
               <Toggle id="ed-num" on={d.editorial.numbers} label="Numbered stat cards" sub="01, 02, 03 in the corner of the About step cards" onChange={(v) => setIn("editorial", { numbers: v })} />
