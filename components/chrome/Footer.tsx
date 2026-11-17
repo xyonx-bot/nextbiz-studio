@@ -47,7 +47,7 @@ const SOCIALS = [
 export function Footer() {
   const cdn = process.env.NEXT_PUBLIC_CDN_BASE ?? "https://cdn.joyverse.fun";
   return (
-    <footer className="footer pad">
+    <footer className="footer">
       <div className="fcol brand">
         <b className="fbrand">
           <Image
@@ -75,6 +75,7 @@ export function Footer() {
         {NAV_LINKS.map((l) => (
           <Link key={l.href} href={l.href}>{l.label}</Link>
         ))}
+        <Link href="/plan">Project planner <em className="ftag">New</em></Link>
       </div>
 
       <div className="fcol">
@@ -96,6 +97,8 @@ export function Footer() {
         <p>New templates, prompts and workflows in your inbox — free.</p>
         <EmailCapture list="newsletter" placeholder="Your email address" cta="Subscribe" done="Subscribed — the next drop comes to your inbox." compact />
       </div>
+
+      <div className="fword" aria-hidden="true"><span>NextBiz Studio</span></div>
 
       <div className="copyright">
         <span>© {new Date().getFullYear()} NextBiz Studio. All rights reserved.</span>

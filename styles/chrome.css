@@ -161,3 +161,53 @@
   .fcol.brand, .news, .copyright { grid-column: 1 / -1; }
   .copyright { gap: 15px; flex-direction: column; }
 }
+
+/* ============================================================
+   Nov 17 refresh — same header/footer content, containers updated to match
+   the new sections (hairline cells, readable sizes, lime actions)
+   ============================================================ */
+/* header right cell: round call button + Plan a project */
+.callcell { gap: 10px; padding: 0 14px; }
+.callcell .callbtn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; background: var(--card); flex: none; transition: border-color .2s ease; }
+.callcell .callbtn:hover { border-color: var(--ink); }
+.callcell .callbtn svg { width: 16px; height: 16px; }
+.callcell .plancta { min-height: 42px; gap: 12px; padding: 0 8px 0 16px; white-space: nowrap; }
+.mobilenav .mn-plan { display: flex; justify-content: space-between; width: auto; margin: 14px 22px; min-height: 50px; }
+
+/* footer: the same five columns, now as hairline cells */
+.footer { display: grid; grid-template-columns: 1.3fr .8fr .9fr .8fr 1.3fr; gap: 0; padding: 0; border-top: 1px solid var(--line); }
+.footer > .fcol { padding: 32px 24px 36px; border-right: 1px solid var(--line); gap: 10px; font-size: 13px; min-width: 0; }
+.footer > .fcol:first-child { padding-left: var(--pad-x); }
+.footer > .fcol.news { border-right: 0; padding-right: var(--pad-x); }
+.footer .fcol > b { font-size: 10px; font-weight: 800; letter-spacing: 1.3px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.footer .fcol.brand .fbrand { font-size: 15px; color: var(--ink); text-transform: none; letter-spacing: -.01em; margin-bottom: 0; }
+.footer .fcol.brand p, .footer .news p { font-size: 13px; line-height: 1.6; max-width: 32ch; }
+.footer .fcol > a { width: max-content; max-width: 100%; display: inline-flex; align-items: center; gap: 6px; }
+.footer .fcol > a:hover { text-decoration: underline; text-decoration-color: var(--acc); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.footer .socials { gap: 8px; margin-top: 12px; }
+.footer .socials a { width: 36px; height: 36px; border: 1px solid var(--line); border-radius: 50%; transition: border-color .2s, background .2s; }
+.footer .socials a:hover { border-color: var(--ink); background: var(--acc); }
+.footer .ftag { font-style: normal; font-size: 9px; font-weight: 800; letter-spacing: .6px; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; background: var(--acc); color: var(--acc-on); }
+.footer .news .row, .footer .news input, .footer .news button { height: 42px; }
+.footer .news input { font-size: 13px; }
+/* the big outlined wordmark — fills with the accent when you point at it */
+.footer .fword { grid-column: 1 / -1; border-top: 1px solid var(--line); overflow: hidden; padding: 0 12px; }
+.footer .fword span { display: block; font-size: clamp(56px, 12.6vw, 210px); font-weight: 500; letter-spacing: -.065em; line-height: .86; white-space: nowrap; text-align: center; color: transparent; -webkit-text-stroke: 1.2px var(--ink); transform: translateY(12%); transition: color .5s ease; user-select: none; }
+.footer .fword:hover span { color: var(--acc); }
+.footer .copyright { grid-column: 1 / -1; padding: 16px var(--pad-x) 18px; border-top: 1px solid var(--line); font-size: 12px; margin: 0; }
+@media (prefers-reduced-motion: reduce) { .footer .fword span { transition: none; } }
+@media (max-width: 1050px) {
+  .footer { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .footer > .fcol { border-bottom: 1px solid var(--line); }
+  .footer > .fcol.brand, .footer > .fcol.news { grid-column: 1 / -1; border-right: 0; padding-left: var(--pad-x); padding-right: var(--pad-x); }
+  .footer > .fcol:nth-child(4) { border-right: 0; }
+}
+@media (max-width: 760px) {
+  .footer { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .footer > .fcol { padding: 24px 22px 26px; }
+  .footer > .fcol:nth-child(2) { padding-left: 22px; }
+  .footer > .fcol:nth-child(3) { border-right: 0; }
+  .footer > .fcol:nth-child(4) { grid-column: 1 / -1; border-right: 0; }
+  .footer > .fcol.brand, .footer > .fcol.news { padding-left: 22px; padding-right: 22px; }
+  .footer .copyright { padding-left: 22px; padding-right: 22px; }
+}
