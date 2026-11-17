@@ -94,6 +94,7 @@ export function Planner({ pricing, industries, start, wa }: Props) {
             {step === 4 && (<>
               <h2>What budget feels comfortable?</h2>
               <p className="pl-sub">This only shapes our suggestion. You'll still see every option.</p>
+              {pricing.showPrices && <p className="pl-hint">For what you picked, the smallest version starts from <b>{inr(plan.core)}{type.monthly ? "/mo" : ""}</b>{plan.options[0].price > plan.core ? <> — or <b>{inr(plan.options[0].price)}</b> with all your must-haves</> : null}.</p>}
               <div className="pl-chips big">
                 {BUDGETS.map((b) => <button key={b.id} type="button" className={a.budget === b.id ? "on" : ""} onClick={() => setA((v) => ({ ...v, budget: b.id }))}>{b.label}{type.monthly && b.id !== "unsure" ? " /mo" : ""}</button>)}
               </div>
@@ -106,7 +107,8 @@ export function Planner({ pricing, industries, start, wa }: Props) {
             </div>
           </div>
         ) : (
-          <Result pricing={pricing} a={a} plan={plan} wa={wa} done={done} setDone={setDone} edit={() => go(2)} restart={() => { setDone(false); go(0); }} />
+          <Result pricing={pricing} a={a} plan={plan} wa={wa} done={done} setDone={setDone} edit={() => go(2)} restart={() => { setDone(false); go(0); }}
+            switchTo={(id) => { const t = types.find((x) => x.id === id)!; setA((v) => ({ ...v, type: id, features: [...t.tiers.lean.includes] })); go(2); }} />
         )}
       </div>
       <aside className="pl-side" aria-label="Live preview"><Preview type={type} features={a.features} industry={a.industry} /></aside>
@@ -116,7 +118,7 @@ export function Planner({ pricing, industries, start, wa }: Props) {
 
 const Arrow = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M5 12h14M13 6l6 6-6 6" /></svg>;
 
-function Result({ pricing, a, plan, wa, done, setDone, edit, restart }: { pricing: Pricing; a: Answers; plan: ReturnType<typeof buildPlan>; wa: string; done: boolean; setDone: (v: boolean) => void; edit: () => void; restart: () => void }) {
+function Result({ pricing, a, plan, wa, done, setDone, edit, restart, switchTo }: { pricing: Pricing; a: Answers; plan: ReturnType<typeof buildPlan>; wa: string; done: boolean; setDone: (v: boolean) => void; edit: () => void; restart: () => void; switchTo: (id: ProjectType["id"]) => void }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
   const per = plan.type.monthly ? "/month" : "";
@@ -147,10 +149,18 @@ function Result({ pricing, a, plan, wa, done, setDone, edit, restart }: { pricin
               {o.features.map((x) => <li key={x.id}>{x.label}</li>)}
               {o.extras.map((x) => <li key={x.id} className="extra">{x.label}<small>added for you</small></li>)}
             </ul>
+            {o.later.length > 0 && <div className="later"><span>Phase 2 · later</span>{o.later.map((x) => <em key={x.id}>{x.label}</em>)}</div>}
           </div>
         ))}
       </div>
-      {plan.phased && <p className="pl-phase"><b>Tip:</b> start with <b>Lean</b> now, and add the rest in a second phase when it starts paying off. Lots of our clients grow this way.</p>}
+      {plan.tight ? (
+        <div className="pl-phase tight">
+          <b>Honest note:</b> {BUDGETS.find((x) => x.id === a.budget)?.label} is tight for {plan.type.label.toLowerCase()} — the smallest version starts from {inr(plan.core)}.
+          {plan.alt && <> A good way in: <b>{plan.alt.label}</b> from {inr(plan.alt.price)}, then grow from there. <button type="button" onClick={() => switchTo(plan.alt!.id)}>Plan {plan.alt.label.toLowerCase()} instead →</button></>}
+        </div>
+      ) : plan.phased ? (
+        <p className="pl-phase"><b>To fit your budget</b>, Lean starts with the essentials and we add {plan.options[0].later.map((x) => x.label).join(", ")} in a second phase, once it starts paying off.</p>
+      ) : null}
       {pricing.placeholder && <p className="pl-ph">Sample prices for the preview — real prices are set by the studio.</p>}
 
       <div className="pl-send">

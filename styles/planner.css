@@ -75,7 +75,13 @@
 .pl-opt li { padding-left: 20px; position: relative; } .pl-opt li::before { content: "✓"; position: absolute; left: 0; font-weight: 800; color: var(--acc-text); }
 .pl-opt li.extra small { display: block; font-size: 11px; color: var(--muted); }
 .pl-opt.rec { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink), 0 22px 44px -26px color-mix(in srgb, var(--acc) 90%, transparent); background: linear-gradient(180deg, color-mix(in srgb, var(--acc) 14%, var(--card)), var(--card) 55%); }
-.pl-phase { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--soft); font-size: 13.5px; }
+.pl-phase { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; background: var(--soft); font-size: 13.5px; line-height: 1.55; }
+.pl-phase.tight { background: color-mix(in srgb, var(--acc) 20%, var(--card)); border: 1px solid var(--line); }
+.pl-phase button { appearance: none; border: 0; background: var(--ink); color: var(--acc); font: inherit; font-size: 12.5px; font-weight: 800; padding: 6px 12px; border-radius: 99px; margin-left: 6px; cursor: pointer; }
+.pl-hint { margin: -6px 0 16px; font-size: 13px; padding: 10px 12px; border-radius: 10px; background: var(--soft); }
+.pl-opt .later { margin-top: 2px; padding-top: 10px; border-top: 1px dashed var(--line); display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.pl-opt .later span { flex-basis: 100%; font-size: 10px; font-weight: 800; letter-spacing: .8px; text-transform: uppercase; color: var(--muted); }
+.pl-opt .later em { font-style: normal; font-size: 11.5px; padding: 3px 8px; border-radius: 99px; border: 1px dashed #B9B5AE; color: var(--muted); }
 .pl-ph { margin: 10px 0 0; font-size: 11.5px; color: var(--muted); font-style: italic; }
 
 .pl-send { margin-top: 22px; border: 1px solid var(--line); border-radius: 18px; background: var(--card); padding: 20px; display: flex; flex-direction: column; gap: 14px; }

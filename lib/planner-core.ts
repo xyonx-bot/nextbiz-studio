@@ -111,8 +111,9 @@ export const SIZES = [{ id: "solo", label: "Just me" }, { id: "small", label: "S
 export const WHEN = [{ id: "relaxed", label: "No rush" }, { id: "normal", label: "In a month or two" }, { id: "asap", label: "ASAP" }] as const;
 
 export type Answers = { type: ProjectType["id"]; industry: string; size: string; features: string[]; when: string; budget: string };
-export type Option = { tier: TierId; name: string; tag: string; price: number; weeks: number; features: Feature[]; extras: Feature[] };
-export type Plan = { options: Option[]; recommended: TierId; phased: boolean; type: ProjectType };
+export type Option = { tier: TierId; name: string; tag: string; price: number; weeks: number; features: Feature[]; extras: Feature[]; later: Feature[] };
+/** tight: even the smallest version is over the stated budget — `alt` is a cheaper way in that fits. */
+export type Plan = { options: Option[]; recommended: TierId; phased: boolean; tight: boolean; alt: { id: ProjectType["id"]; label: string; price: number } | null; core: number; type: ProjectType };
 
 export const roundPrice = (n: number) => (n >= 100000 ? Math.round(n / 5000) * 5000 : Math.round(n / 1000) * 1000);
 export const inr = (n: number) => n >= 100000 ? `₹${(n / 100000).toFixed(n % 100000 === 0 ? 0 : 1)}L` : `₹${Math.round(n / 1000)}k`;
@@ -121,25 +122,40 @@ export const inr = (n: number) => n >= 100000 ? `₹${(n / 100000).toFixed(n % 1
 export function buildPlan(p: Pricing, a: Answers): Plan {
   const type = p.types.find((t) => t.id === a.type) ?? p.types[0];
   const rush = a.when === "asap" ? 1 + p.rushPct / 100 : 1;
+  const weeksOf = (raw: number) => Math.max(1, Math.round(a.when === "asap" ? raw * 0.75 : raw));
   const options: Option[] = TIERS.map(({ id, name, tag }) => {
     const t = type.tiers[id];
     const incl = type.features.filter((x) => t.includes.includes(x.id));
     // anything the visitor asked for that this option doesn't include is added on top
     const extras = type.features.filter((x) => a.features.includes(x.id) && !t.includes.includes(x.id));
-    const price = roundPrice((t.price + extras.reduce((s, x) => s + x.price, 0)) * rush);
-    const raw = t.weeks + extras.reduce((s, x) => s + x.weeks, 0);
-    const weeks = Math.max(1, Math.round(a.when === "asap" ? raw * 0.75 : raw));
-    return { tier: id, name, tag, price, weeks, features: incl, extras };
+    return { tier: id, name, tag, price: roundPrice((t.price + extras.reduce((s, x) => s + x.price, 0)) * rush),
+      weeks: weeksOf(t.weeks + extras.reduce((s, x) => s + x.weeks, 0)), features: incl, extras, later: [] };
   });
+  const core = roundPrice(type.tiers.lean.price * rush);
   const b = BUDGETS.find((x) => x.id === a.budget);
-  let recommended: TierId = "rec", phased = false;
+  let recommended: TierId = "rec", phased = false, tight = false;
+  let alt: Plan["alt"] = null;
   if (b && b.max !== null) {
-    const fits = options.filter((o) => o.price <= b.max!);
-    if (fits.length === 0) { recommended = "lean"; phased = true; }
-    else recommended = fits[fits.length - 1].tier;
+    const max = b.max;
+    const lean = options[0];
+    // over budget with the extras? keep the smallest version to its core and move the extras to phase 2
+    if (lean.price > max && lean.extras.length) {
+      lean.later = lean.extras; lean.extras = [];
+      lean.price = core; lean.weeks = weeksOf(type.tiers.lean.weeks);
+      phased = true;
+    }
+    const fits = options.filter((o) => o.price <= max);
+    recommended = fits.length ? fits[fits.length - 1].tier : "lean";
+    if (lean.price > max) {
+      // even the core is over budget: say so, and point to the cheapest thing that fits
+      tight = true;
+      const c = p.types.filter((t) => t.id !== type.id).map((t) => ({ id: t.id, label: t.label, price: roundPrice(t.tiers.lean.price * rush) }))
+        .filter((t) => t.price <= max).sort((x, y) => x.price - y.price)[0];
+      alt = c ?? null;
+    }
   } else if (a.size === "solo") recommended = "lean";
   else if (a.size === "growing") recommended = "premium";
-  return { options, recommended, phased, type };
+  return { options, recommended, phased, tight, alt, core, type };
 }
 
 /** A plain-text summary (WhatsApp message, the lead's message in admin). */
@@ -150,7 +166,8 @@ export function planText(p: Plan, a: Answers, showPrices: boolean) {
     `Size: ${SIZES.find((s) => s.id === a.size)?.label ?? "—"} · Timing: ${WHEN.find((w) => w.id === a.when)?.label ?? "—"} · Budget: ${BUDGETS.find((x) => x.id === a.budget)?.label ?? "—"}`,
     `Must-haves: ${p.type.features.filter((x) => a.features.includes(x.id)).map((x) => x.label).join(", ") || "none picked"}`,
     `Recommended: ${rec.name} — ${rec.weeks} week${rec.weeks > 1 ? "s" : ""}${showPrices ? `, from ${inr(rec.price)}${p.type.monthly ? "/month" : ""}` : ""}`,
-    ...(p.phased ? ["Suggested: start with Lean now, add the rest in phase 2."] : []),
+    ...(p.phased ? [`Phase 2 (later): ${p.options[0].later.map((x) => x.label).join(", ")}`] : []),
+    ...(p.tight ? [`Budget is tight for this — smallest version starts from ${inr(p.core)}${p.alt ? `; suggested way in: ${p.alt.label} from ${inr(p.alt.price)}` : ""}.`] : []),
   ];
   return lines.join("\n");
 }
