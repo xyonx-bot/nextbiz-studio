@@ -73,3 +73,53 @@ html[data-style="soft"] .navtag:not(.adminui *) { border-radius: 999px; padding-
 html[data-style="soft"] .footer .news .row, html[data-style="soft"] .footer .capture { border-radius: 999px; overflow: hidden; }
 html[data-style="soft"] .capture input { border-radius: 999px 0 0 999px; }
 html[data-style="soft"] .capture .action { border-radius: 0 999px 999px 0; }
+
+/* ============================================================
+   SOFT PORTS — existing homepage sections, one by one (Nov 17).
+   Only html[data-style="soft"]; the Editorial (hairline) look is untouched.
+   ============================================================ */
+
+/* 1 · section dividers: Soft separates sections with space, not full-width hairlines */
+html[data-style="soft"] main.shell > section:not(.adminui *) { border-top-color: transparent; border-bottom-color: transparent; }
+
+/* 2 · audience strip: the words sit in a rounded capsule, the label above it */
+html[data-style="soft"] .partners { padding: 8px clamp(14px, 2.4vw, 32px) 34px; }
+html[data-style="soft"] .partners .eyebrow { margin: 0 auto 16px; box-shadow: none; }
+html[data-style="soft"] .partners .mo-track { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 20px clamp(18px, 3vw, 40px); box-shadow: 0 18px 40px -34px rgba(9, 11, 15, .5); }
+@media (max-width: 760px) { html[data-style="soft"] .partners .mo-track { border-radius: var(--r-card); } }
+
+/* 3 · About: step cards as clean white cards; icon in a round chip; call link with a round icon */
+html[data-style="soft"] .about .stat { background: var(--card); border: 1px solid var(--line); box-shadow: 0 16px 34px -30px rgba(9, 11, 15, .45); }
+html[data-style="soft"] .about .stat > span:first-child { width: 42px; height: 42px; border-radius: 50%; background: var(--soft); display: grid; place-items: center; flex: none; }
+html[data-style="soft"] .about .stat > span:first-child svg { width: 20px; height: 20px; margin: 0; }
+html[data-style="soft"] .about .stat:hover > span:first-child { background: var(--acc); }
+html[data-style="soft"] .inline-call svg { width: 38px; height: 38px; padding: 10px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); }
+
+/* 4 · Services: each service is its own rounded card; number in a round chip; arrow fills on hover */
+html[data-style="soft"] .svc-list { display: grid; gap: 8px; }
+html[data-style="soft"] .svc-list a, html[data-style="soft"] .svc-list a:first-child { border: 1px solid var(--line); border-radius: var(--r-card); background: var(--card); padding: 14px 14px 14px 12px; min-height: 0; grid-template-columns: 32px 1fr 32px; align-items: center; transition: transform .25s cubic-bezier(.2, .7, .2, 1), border-color .2s, box-shadow .25s; }
+html[data-style="soft"] .svc-list a > span { width: 30px; height: 30px; border-radius: 50%; background: var(--soft); display: grid; place-items: center; font-size: 10px; }
+html[data-style="soft"] .svc-list a > svg { width: 32px; height: 32px; padding: 8px; border-radius: 50%; border: 1px solid var(--line); transition: background .2s, border-color .2s, transform .25s; }
+html[data-style="soft"] .svc-list a:hover { border-color: var(--ink); box-shadow: 0 16px 30px -24px rgba(9, 11, 15, .45); }
+html[data-style="soft"][data-soft-lift] .svc-list a:hover { transform: translateY(-2px); }
+html[data-style="soft"] .svc-list a:hover > svg { background: var(--acc); border-color: var(--acc); transform: rotate(45deg); }
+html[data-style="soft"] .photo-card { border-radius: 16px; }
+html[data-style="soft"] .sticky { border-radius: 14px; transform: rotate(3deg); }
+
+/* 5 · Work: each project is a rounded card around its picture */
+html[data-style="soft"] .proj { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card); padding: 8px 8px 14px; }
+html[data-style="soft"] .proj .ph { border-radius: calc(var(--r-card) - 6px); }
+html[data-style="soft"] .proj h3, html[data-style="soft"] .proj p { padding: 0 6px; }
+
+/* 6 · Industries band: the moving type sits on a rounded sand panel, inset from the edges */
+html[data-style="soft"] .indband { margin: 0 clamp(10px, 1.4vw, 18px); border-radius: var(--r-big); background: var(--soft); border: 0; padding-top: clamp(44px, 5vw, 70px); padding-bottom: clamp(44px, 5vw, 70px); }
+html[data-style="soft"] .indband .ind-mask { -webkit-mask: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); mask: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent); }
+
+/* 7 · Contact band: a rounded card; the photo sits inside with rounded corners instead of running off the edge */
+html[data-style="soft"] .contact { margin: clamp(20px, 3vw, 40px) clamp(10px, 1.4vw, 18px); border-radius: var(--r-big); background: var(--card); border: 1px solid var(--line); padding-top: 26px; padding-bottom: 26px; box-shadow: 0 24px 50px -40px rgba(9, 11, 15, .5); }
+html[data-style="soft"] .contact .cimg { margin-right: 0; border-radius: var(--r-card); }
+html[data-style="soft"] .contact .cimg .imgph { border-radius: var(--r-card); }
+
+/* sticky Soft header: frosted glass (or solid when "Glass header" is off) so text scrolling behind it never shows through */
+html[data-style="soft"] .topbar.pill { background: var(--paper); }
+html[data-style="soft"][data-soft-blur] .topbar.pill { background: color-mix(in srgb, var(--paper) 80%, transparent); -webkit-backdrop-filter: blur(16px) saturate(1.2); backdrop-filter: blur(16px) saturate(1.2); }

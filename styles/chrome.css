@@ -274,3 +274,10 @@ html[data-acc-details] .topbar.pill .callbtn svg { color: var(--acc-text); strok
 .topbar.pill .pillnav { border-radius: 999px; }
 html .topbar.pill .pillnav .plancta { border-radius: 999px; }
 .topbar.pill .burger { border-radius: 50%; }
+
+/* logo size: the cleaned logo has no empty margin, so it sits smaller to match its old visible size */
+.brandcell .brandlogo { height: 24px; }
+.topbar.pill .brandcell { font-size: 14px; gap: 9px; }
+.footer .fcol.brand .brandlogo { height: 21px; }
+@media (max-width: 900px) { .brandcell .brandlogo { height: 20px; } }
+@media (max-width: 760px) { .brandcell .brandlogo { height: 18px; } .topbar.pill .brandcell { font-size: 13px; } }
