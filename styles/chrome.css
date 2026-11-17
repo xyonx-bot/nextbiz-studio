@@ -270,11 +270,7 @@ html[data-acc-details] .topbar.pill .callbtn svg { color: var(--acc-text); strok
 @media (max-width: 1050px) { .footer.dark > .fcol { border-bottom-color: rgba(255, 255, 255, .12); } }
 @media (max-width: 760px) { .footer.dark .fcta { grid-template-columns: minmax(0, 1fr); padding-left: 22px; padding-right: 22px; } }
 
-/* the floating menu follows Admin → Design → Button shape, so it always matches the site's buttons */
-:root { --nav-r: 8px; }
-html[data-btn="rounded"] { --nav-r: 16px; }
-html[data-btn="pill"] { --nav-r: 999px; }
-.topbar.pill .pillnav { border-radius: var(--nav-r); }
-html .topbar.pill .pillnav .plancta { border-radius: calc(var(--nav-r) - 4px); }
-html[data-btn="pill"] .topbar.pill .pillnav .plancta { border-radius: 999px; }
-.topbar.pill .burger { border-radius: var(--nav-r); }
+/* the floating header is always a pill — square corners don't suit a floating bar (Nov 17) */
+.topbar.pill .pillnav { border-radius: 999px; }
+html .topbar.pill .pillnav .plancta { border-radius: 999px; }
+.topbar.pill .burger { border-radius: 50%; }
