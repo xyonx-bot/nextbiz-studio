@@ -32,12 +32,16 @@ describe("home content seed", () => {
     const seed = (await import("@/lib/seed/home.json")).default;
     const required = [
       "hero", "partners", "about", "services", "work",
-      "industries", "testimonial", "team", "contactBand",
+      "planner", "testimonial", "team", "contactBand",
     ];
     for (const key of required) {
       expect(seed.sectionOrder).toContain(key);
       expect((seed as Record<string, unknown>)[key]).toBeTruthy();
     }
+  });
+  it("keeps the Industries content so it can be switched back on in Admin → Pages", async () => {
+    const seed = (await import("@/lib/seed/home.json")).default as Record<string, unknown>;
+    expect(seed.industries).toBeTruthy();
   });
   it("no lorem ipsum, no Lovable references (design-sheet hard rules)", async () => {
     const raw = JSON.stringify((await import("@/lib/seed/home.json")).default);
