@@ -53,7 +53,7 @@ export function Footer() {
           <Image
             src={`${cdn}/nextbiz-studio-dark.png`}
             alt="NextBiz Studio logo"
-            width={27}
+            width={34}
             height={27}
             className="brandlogo"
             unoptimized

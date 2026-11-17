@@ -22,7 +22,7 @@ export function Topbar({ current }: { current?: string }) {
           <Image
             src={`${process.env.NEXT_PUBLIC_CDN_BASE ?? "https://cdn.joyverse.fun"}/nextbiz-studio-dark.png`}
             alt="NextBiz Studio logo"
-            width={31}
+            width={39}
             height={31}
             className="brandlogo"
             unoptimized
@@ -79,9 +79,13 @@ export function Topbar({ current }: { current?: string }) {
               onClick={() => setOpen(false)}
             >
               <span className="no">{`0${i + 1}`}</span>
-              {l.label}
-              {l.tag ? <span className="navtag">{l.tag}</span> : null}
-              <span className="st"></span>
+              <span className="lbl">
+                {l.label}
+                {l.tag ? <span className="navtag">{l.tag}</span> : null}
+              </span>
+              <svg className="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
             </Link>
           ))}
         </nav>
