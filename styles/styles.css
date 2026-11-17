@@ -39,30 +39,34 @@ html[data-style="editorial"] .topbar.ed .brandcell { color: inherit; text-decora
 html[data-style="editorial"] .mobilenav { top: 82px; }
 @media (max-width: 760px) { html[data-style="editorial"] .mobilenav { top: 70px; } }
 
-/* labels: square, outlined, uppercase */
-html[data-style="editorial"] .eyebrow:not(.adminui *) { border-radius: 0; background: transparent; border: 1px solid var(--line); text-transform: uppercase; letter-spacing: 1.3px; font-size: 9.5px; font-weight: 800; }
-html[data-style="editorial"] .navtag:not(.adminui *) { border-radius: 0; }
+/* Editorial options — each applies only when switched on; the defaults are the live site's original look */
 
-/* cards: ruled cells, no rounding, no lift */
-html[data-style="editorial"] :is(.rcard, .stat, .pl-type, .pl-feat, .pl-when button, .pl-opt, .pl-send, .ps-card, .pl-side, .fit, .callout, .sheet, .compare-cols, .card.soon .soon-slot, .pl-chips button, .pl-phase, .pl-hint):not(.adminui *) { border-radius: 0; }
-html[data-style="editorial"] .proj .ph { border-radius: 0; }
-html[data-style="editorial"] .pl-opts, html[data-style="editorial"] .pl-feats, html[data-style="editorial"] .pl-types { gap: 0; }
-html[data-style="editorial"] :is(.pl-opts, .pl-types) > * + *, html[data-style="editorial"] .pl-feats > * { margin: 0 -1px -1px 0; }
-html[data-style="editorial"] .pl-opt.rec { box-shadow: inset 0 0 0 1px var(--ink); }
+/* Labels: Square */
+html[data-style="editorial"][data-ed-labels="square"] .eyebrow:not(.adminui *) { border-radius: 0; background: transparent; border: 1px solid var(--line); text-transform: uppercase; letter-spacing: 1.3px; font-size: 9.5px; font-weight: 800; }
+html[data-style="editorial"][data-ed-labels="square"] .navtag:not(.adminui *) { border-radius: 0; }
 
-/* optional numbers on cards (01, 02…) */
-/* resource cards already carry their own big 01/02/03 — in Editorial they join into ruled cells */
-html[data-style="editorial"] .lib-grid { gap: 0; }
-html[data-style="editorial"] .lib-grid > .rcard { margin: 0 -1px -1px 0; }
+/* Photo corners: Sharp — cards and photos lose their rounding too */
+html[data-style="editorial"][data-corners="sharp"] :is(.rcard, .stat, .pl-type, .pl-feat, .pl-when button, .pl-opt, .pl-send, .ps-card, .pl-side, .fit, .callout, .sheet, .compare-cols, .card.soon .soon-slot, .pl-chips button, .pl-phase, .pl-hint):not(.adminui *) { border-radius: 0; }
+html[data-style="editorial"][data-corners="sharp"] .proj .ph { border-radius: 0; }
+
+/* Resource and planner cards: Joined — shared borders, ruled cells */
+html[data-style="editorial"][data-ed-cards="joined"] .lib-grid { gap: 0; }
+html[data-style="editorial"][data-ed-cards="joined"] .lib-grid > .rcard { margin: 0 -1px -1px 0; border-radius: 0; }
+html[data-style="editorial"][data-ed-cards="joined"] :is(.pl-opts, .pl-feats, .pl-types) { gap: 0; }
+html[data-style="editorial"][data-ed-cards="joined"] :is(.pl-opts, .pl-types) > * + *, html[data-style="editorial"][data-ed-cards="joined"] .pl-feats > * { margin: 0 -1px -1px 0; }
+html[data-style="editorial"][data-ed-cards="joined"] :is(.pl-opt, .pl-feat, .pl-type) { border-radius: 0; }
+html[data-style="editorial"][data-ed-cards="joined"] .pl-opt.rec { box-shadow: inset 0 0 0 1px var(--ink); }
+
+/* Numbered stat cards */
 html[data-style="editorial"][data-ed-num] .stats { counter-reset: eds; }
 html[data-style="editorial"][data-ed-num] .stat { counter-increment: eds; position: relative; }
 html[data-style="editorial"][data-ed-num] .stat::after { content: counter(eds, decimal-leading-zero); position: absolute; top: 14px; right: 16px; font-size: 10px; font-weight: 800; letter-spacing: 1px; color: var(--muted); }
 
-/* optional ink rule: section dividers drawn in ink instead of grey */
+/* Ink rules: section dividers in ink instead of grey */
 html[data-style="editorial"][data-ed-rule] main.shell > :is(section, footer):not(.hero):not(.partners):not(.waitlist) { border-top-color: var(--ink); }
 html[data-style="editorial"][data-ed-rule] .prt-lane { border-top-color: var(--ink); }
 
-/* footer: full-bleed dark band with ruled cells (as built) */
+/* footer framing in Editorial: full-bleed */
 html[data-style="editorial"] .footer.dark { border-radius: 0; margin: 0; }
 
 /* Soft fixes: the dark plan card stays dark; small pieces follow the round language */

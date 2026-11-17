@@ -11,7 +11,7 @@ import { DESIGN_DEFAULTS, designAttrs, designVars, normalizeDesign, type Design 
 const Ctx = createContext<Design>(DESIGN_DEFAULTS);
 export const useDesign = () => useContext(Ctx);
 
-const ATTRS = ["data-style", "data-tone", "data-soft-blur", "data-soft-lift", "data-round", "data-ed-num", "data-ed-rule", "data-motion", "data-btn", "data-corners", "data-hl", "data-acc-buttons", "data-acc-badges", "data-acc-highlight", "data-acc-nav", "data-acc-details", "data-acc-dark", "data-soon-pulse", "data-glow"];
+const ATTRS = ["data-footer", "data-ed-labels", "data-ed-cards", "data-style", "data-tone", "data-soft-blur", "data-soft-lift", "data-round", "data-ed-num", "data-ed-rule", "data-motion", "data-btn", "data-corners", "data-hl", "data-acc-buttons", "data-acc-badges", "data-acc-highlight", "data-acc-nav", "data-acc-details", "data-acc-dark", "data-soon-pulse", "data-glow"];
 function apply(d: Design) {
   const el = document.getElementById("nbs-design");
   if (el) el.textContent = `:root{${designVars(d)}}`;

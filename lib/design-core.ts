@@ -23,8 +23,16 @@ export type Design = {
   style: "soft" | "editorial";
   /** Options that only exist in the Soft style. */
   soft: { blur: boolean; lift: boolean; round: "soft" | "round" };
-  /** Options that only exist in the Editorial style. */
-  editorial: { numbers: boolean; inkRule: boolean };
+  /** Options that only exist in the Editorial style. Every default matches the live site's original look. */
+  editorial: {
+    numbers: boolean; inkRule: boolean;
+    corners: "signature" | "soft" | "sharp";      // photo corners
+    labels: "pill" | "square";                    // the small section labels
+    cards: "separate" | "joined";                 // resource cards: separate, or joined ruled cells
+    button: "sharp" | "rounded" | "pill";
+    headerCta: boolean;                           // header right side: call text (off) or call + main button (on)
+    footer: "light" | "dark";
+  };
   /** Background tone, both styles. */
   tone: "warm" | "white" | "cool";
   header: { cta: string; phone: boolean };
@@ -40,9 +48,9 @@ export const DESIGN_DEFAULTS: Design = {
   show: { buttons: true, badges: true, highlight: true, nav: true, details: true, dark: true },
   glow: true,
   motion: "full",
-  style: "soft",
+  style: "editorial",
   soft: { blur: true, lift: true, round: "soft" },
-  editorial: { numbers: true, inkRule: true },
+  editorial: { numbers: false, inkRule: false, corners: "signature", labels: "pill", cards: "separate", button: "sharp", headerCta: false, footer: "light" },
   tone: "warm",
   header: { cta: "Plan a project", phone: true },
   footer: { line1: "Got an idea?", line2: "Let's make it work." },
@@ -74,7 +82,15 @@ export function normalizeDesign(raw: unknown): Design {
     motion: pick(r.motion, ["full", "subtle", "off"] as const, d.motion),
     style: pick(r.style, ["soft", "editorial"] as const, d.style),
     soft: { blur: bool(r.soft?.blur, d.soft.blur), lift: bool(r.soft?.lift, d.soft.lift), round: pick(r.soft?.round, ["soft", "round"] as const, d.soft.round) },
-    editorial: { numbers: bool(r.editorial?.numbers, d.editorial.numbers), inkRule: bool(r.editorial?.inkRule, d.editorial.inkRule) },
+    editorial: {
+      numbers: bool(r.editorial?.numbers, d.editorial.numbers), inkRule: bool(r.editorial?.inkRule, d.editorial.inkRule),
+      corners: pick(r.editorial?.corners, ["signature", "soft", "sharp"] as const, d.editorial.corners),
+      labels: pick(r.editorial?.labels, ["pill", "square"] as const, d.editorial.labels),
+      cards: pick(r.editorial?.cards, ["separate", "joined"] as const, d.editorial.cards),
+      button: pick(r.editorial?.button, ["sharp", "rounded", "pill"] as const, d.editorial.button),
+      headerCta: bool(r.editorial?.headerCta, d.editorial.headerCta),
+      footer: pick(r.editorial?.footer, ["light", "dark"] as const, d.editorial.footer),
+    },
     tone: pick(r.tone, ["warm", "white", "cool"] as const, d.tone),
     header: { cta: str(r.header?.cta, d.header.cta, 28), phone: bool(r.header?.phone, d.header.phone) },
     footer: { line1: str(r.footer?.line1, d.footer.line1, 40), line2: str(r.footer?.line2, d.footer.line2, 40) },
@@ -116,14 +132,20 @@ export function designVars(d: Design): string {
 }
 /** data-* attributes for <html> that switch the design rules on. */
 export function designAttrs(d: Design): Record<string, string> {
-  // shapes come from the style, never mixed: Soft = pill buttons + leaf photos, Editorial = square buttons + sharp photos
+  // Soft fixes its shapes (pill buttons, leaf photos); Editorial lets each be chosen, defaulting to the live look
   const a: Record<string, string> = {
     "data-style": d.style, "data-motion": d.motion, "data-tone": d.tone,
-    "data-btn": d.style === "soft" ? "pill" : "sharp", "data-corners": d.style === "soft" ? "signature" : "sharp",
+    "data-btn": d.style === "soft" ? "pill" : d.editorial.button,
+    "data-corners": d.style === "soft" ? "signature" : d.editorial.corners,
+    "data-footer": d.style === "soft" ? "dark" : d.editorial.footer,
     "data-hl": d.show.highlight ? d.highlight.style : "none",
   };
   if (d.style === "soft") { if (d.soft.blur) a["data-soft-blur"] = ""; if (d.soft.lift) a["data-soft-lift"] = ""; a["data-round"] = d.soft.round; }
-  else { if (d.editorial.numbers) a["data-ed-num"] = ""; if (d.editorial.inkRule) a["data-ed-rule"] = ""; }
+  else {
+    if (d.editorial.numbers) a["data-ed-num"] = ""; if (d.editorial.inkRule) a["data-ed-rule"] = "";
+    if (d.editorial.labels === "square") a["data-ed-labels"] = "square";
+    if (d.editorial.cards === "joined") a["data-ed-cards"] = "joined";
+  }
   for (const k of Object.keys(d.show) as (keyof Design["show"])[]) if (d.show[k]) a[`data-acc-${k}`] = "";
   if (d.soon.pulse) a["data-soon-pulse"] = "";
   if (d.glow) a["data-glow"] = "";

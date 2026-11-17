@@ -281,3 +281,35 @@ html .topbar.pill .pillnav .plancta { border-radius: 999px; }
 .footer .fcol.brand .brandlogo { height: 21px; }
 @media (max-width: 900px) { .brandcell .brandlogo { height: 20px; } }
 @media (max-width: 760px) { .brandcell .brandlogo { height: 18px; } .topbar.pill .brandcell { font-size: 13px; } }
+/* Editorial header, original right cell (Call Any Time + number) */
+.topbar.ed .callcell.calltext { justify-content: center; text-decoration: none; color: inherit; }
+
+/* ============================================================
+   Footer: Light = the live site's original footer (Editorial default); Dark = the newer dark footer.
+   ============================================================ */
+.footer .brandlogo.on-light { display: none; }
+html[data-footer="light"] .footer .brandlogo.on-light { display: block; }
+html[data-footer="light"] .footer .brandlogo.on-dark { display: none; }
+html[data-footer="light"] .footer.dark { background: var(--paper); color: var(--ink); border-top: 1px solid var(--line);
+  display: grid; grid-template-columns: 1.2fr .65fr .8fr .65fr 1.25fr; gap: 45px; padding: 40px var(--pad-x) 25px; margin: 0; border-radius: 0; }
+html[data-footer="light"] .footer.dark .fcta, html[data-footer="light"] .footer.dark .fword { display: none; }
+html[data-footer="light"] .footer.dark > .fcol { padding: 0; border: 0; gap: 7px; font-size: 10px; }
+html[data-footer="light"] .footer.dark .fcol > b { font-size: 11px; font-weight: 700; letter-spacing: 0; text-transform: none; color: var(--ink); margin-bottom: 4px; }
+html[data-footer="light"] .footer.dark .fcol.brand .fbrand { font-size: 13px; color: var(--ink); gap: 7px; }
+html[data-footer="light"] .footer.dark .fcol.brand .brandlogo { height: 21px; }
+html[data-footer="light"] .footer.dark .fcol.brand p, html[data-footer="light"] .footer.dark .news p { color: var(--muted); font-size: 10px; line-height: 1.6; max-width: 200px; margin: 6px 0 0; }
+html[data-footer="light"] .footer.dark .news p { margin: 0 0 8px; max-width: none; }
+html[data-footer="light"] .footer.dark .fcol > a:hover { text-decoration: underline; }
+html[data-footer="light"] .footer.dark .socials { gap: 16px; margin-top: 10px; }
+html[data-footer="light"] .footer.dark .socials a { width: auto; height: auto; border: 0; border-radius: 0; background: none; color: inherit; }
+html[data-footer="light"] .footer.dark .news .row, html[data-footer="light"] .footer.dark .news input, html[data-footer="light"] .footer.dark .news button { height: 38px; }
+html[data-footer="light"] .footer.dark .news input { background: transparent; border-color: var(--line); color: var(--ink); font-size: 10px; }
+html[data-footer="light"] .footer.dark .news input::placeholder { color: var(--muted); }
+html[data-footer="light"] .footer.dark .copyright { padding: 18px 0 0; margin-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 9px; }
+html[data-footer="light"] .footer.dark .copyright a:hover { color: var(--ink); }
+@media (max-width: 1050px) { html[data-footer="light"] .footer.dark { grid-template-columns: repeat(3, minmax(0, 1fr)); } html[data-footer="light"] .footer.dark > .fcol.brand, html[data-footer="light"] .footer.dark > .fcol.news { grid-column: 1 / -1; padding: 0; } }
+@media (max-width: 760px) {
+  html[data-footer="light"] .footer.dark { grid-template-columns: 1fr 1fr; padding-left: 22px; padding-right: 22px; }
+  html[data-footer="light"] .footer.dark > .fcol { padding: 0; } html[data-footer="light"] .footer.dark > .fcol:nth-child(5) { grid-column: auto; }
+  html[data-footer="light"] .footer.dark .copyright { flex-direction: column; gap: 15px; padding-left: 0; padding-right: 0; }
+}

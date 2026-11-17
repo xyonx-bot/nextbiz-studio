@@ -60,14 +60,9 @@ export function Footer() {
       </div>
       <div className="fcol brand">
         <b className="fbrand">
-          <Image
-            src="/brand/nb-logo-light-web.png"
-            alt="NextBiz Studio logo"
-            width={35}
-            height={27}
-            className="brandlogo"
-            unoptimized
-          />
+          {/* dark logo on the light footer, light logo on the dark one (CSS shows the right one) */}
+          <Image src="/brand/nb-logo-web.png" alt="NextBiz Studio logo" width={35} height={27} className="brandlogo on-light" unoptimized />
+          <Image src="/brand/nb-logo-light-web.png" alt="" width={35} height={27} className="brandlogo on-dark" unoptimized />
           NextBiz Studio
         </b>
         <p>A creative agency focused on building brands, products and experiences that make a difference.</p>

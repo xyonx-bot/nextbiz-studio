@@ -130,7 +130,7 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
           <h2>Style</h2>
           <p className="dz-sub">Each style has its own header, buttons, cards and photo shapes, designed to work together.</p>
           <div className="dz-styles" role="radiogroup" aria-label="Site style">
-            {([["soft", "Soft", "Floating pill header, round buttons, rounded cards, leaf photos"], ["editorial", "Editorial", "Hairline header, square buttons, ruled cells, sharp photos"]] as const).map(([id, name, sub]) => (
+            {([["editorial", "Editorial", "Your live site's look: hairline header, leaf photos — with options below"], ["soft", "Soft (floating)", "Floating pill header, round buttons, rounded cards — still being refined"]] as const).map(([id, name, sub]) => (
               <button key={id} type="button" role="radio" aria-checked={d.style === id} className={`dz-st ${id}${d.style === id ? " on" : ""}`} onClick={() => set({ style: id })} data-testid={`style-${id}`}>
                 <span className="mini" aria-hidden><i className="h" /><i className="b" /><i className="c" /><i className="c" /><i className="c" /></span>
                 <b>{name}</b><small>{sub}</small>
@@ -146,7 +146,19 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
             </div>
           ) : (
             <div className="dz-list">
-              <Toggle id="ed-num" on={d.editorial.numbers} label="Numbered cards" sub="01, 02, 03 in the corner of cards and stats" onChange={(v) => setIn("editorial", { numbers: v })} />
+              <p className="dz-sub" style={{ margin: "4px 0 2px" }}>Every option below starts at your live site&apos;s original look.</p>
+              <div className="dz-toggle as-row"><span><b>Photo corners</b><small>Leaf is the live look</small></span>
+                <Seg label="Photo corners" value={d.editorial.corners} onChange={(v) => setIn("editorial", { corners: v })} options={[["signature", "Leaf"], ["soft", "Soft"], ["sharp", "Sharp"]]} /></div>
+              <div className="dz-toggle as-row"><span><b>Buttons</b><small>Sharp is the live look</small></span>
+                <Seg label="Button shape" value={d.editorial.button} onChange={(v) => setIn("editorial", { button: v })} options={[["sharp", "Sharp"], ["rounded", "Rounded"], ["pill", "Pill"]]} /></div>
+              <div className="dz-toggle as-row"><span><b>Section labels</b><small>Pill is the live look</small></span>
+                <Seg label="Section labels" value={d.editorial.labels} onChange={(v) => setIn("editorial", { labels: v })} options={[["pill", "Pill"], ["square", "Square"]]} /></div>
+              <div className="dz-toggle as-row"><span><b>Resource &amp; planner cards</b><small>Separate is the live look</small></span>
+                <Seg label="Cards" value={d.editorial.cards} onChange={(v) => setIn("editorial", { cards: v })} options={[["separate", "Separate"], ["joined", "Joined"]]} /></div>
+              <div className="dz-toggle as-row"><span><b>Footer</b><small>Light is the live look</small></span>
+                <Seg label="Footer" value={d.editorial.footer} onChange={(v) => setIn("editorial", { footer: v })} options={[["light", "Light"], ["dark", "Dark"]]} /></div>
+              <Toggle id="ed-cta" on={d.editorial.headerCta} label="Button in the header" sub="Off (live look): “Call Any Time” + number. On: call button + your header button" onChange={(v) => setIn("editorial", { headerCta: v })} />
+              <Toggle id="ed-num" on={d.editorial.numbers} label="Numbered stat cards" sub="01, 02, 03 in the corner of the About step cards" onChange={(v) => setIn("editorial", { numbers: v })} />
               <Toggle id="ed-rule" on={d.editorial.inkRule} label="Ink rules" sub="Section dividers in black instead of grey" onChange={(v) => setIn("editorial", { inkRule: v })} />
             </div>
           )}
@@ -243,7 +255,7 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
               ))}
             </div>
           )}
-          <button type="button" className="dz-reset" onClick={() => { setD(DESIGN_DEFAULTS); setConfirmPub(false); }}>Reset to the original design (Volt Lime)</button>
+          <button type="button" className="dz-reset" onClick={() => { setD(DESIGN_DEFAULTS); setConfirmPub(false); }}>Reset to the original design (Editorial, Volt Lime)</button>
         </section>
       </div>
 
