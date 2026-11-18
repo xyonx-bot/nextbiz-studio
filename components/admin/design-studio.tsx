@@ -92,7 +92,7 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
 
   // the two styles (and the planner section choice) render different section components,
   // so switching saves the draft and reloads the preview
-  const layoutKey = `${d.style}:${d.editorial.planner}:${d.editorial.industries}:${d.covers}`;
+  const layoutKey = `${d.style}:${d.editorial.planner}:${d.editorial.industries}`;
   const lastStyle = useRef(layoutKey);
   useEffect(() => {
     if (lastStyle.current === layoutKey) return;
@@ -168,12 +168,6 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
               <Toggle id="ed-rule" on={d.editorial.inkRule} label="Ink rules" sub="Section dividers in black instead of grey" onChange={(v) => setIn("editorial", { inkRule: v })} />
             </div>
           )}
-        </section>
-
-        <section className="dz-card">
-          <h2>Project covers</h2>
-          <p className="dz-sub">Made by the site: a designed cover from each project&apos;s name, kind and year, with the screenshot in a small browser window. Real photo: your uploaded image (projects without one still get the made cover).</p>
-          <Seg label="Project covers" value={d.covers} onChange={(v) => set({ covers: v })} options={[["made", "Made by the site"], ["photo", "Real photo"]]} />
         </section>
 
         <section className="dz-card">

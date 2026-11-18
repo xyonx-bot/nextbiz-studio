@@ -118,7 +118,7 @@ export function ServicesF({ content }: { content?: typeof homeContent.services }
 }
 
 /* ═══ WORK — head row, then a sideways-scrolling row of large rounded project cards ═══ */
-export function WorkF({ content, covers = "made" }: { content?: typeof homeContent.work; covers?: "made" | "photo" }) {
+export function WorkF({ content }: { content?: typeof homeContent.work }) {
   const c = content ?? homeContent.work;
   return (
     <section className="fl-work" id="projects">
@@ -129,9 +129,18 @@ export function WorkF({ content, covers = "made" }: { content?: typeof homeConte
       <div className="fl-rail pad">
         {c.items.map((p, i) => (
           <Link className={`fl-proj${i === 0 ? " big" : ""}`} key={i} href={(p as { href?: string }).href || "/projects"}>
-            {p.photo && covers === "photo" ? <Img src={p.photo} note={p.note} /> : <Cover {...coverFacts(p, i)} />}
-            <span className="tag">{p.tags}</span>
-            <span className="cap"><b>{p.name}</b><i aria-hidden><ArrowUpRight /></i></span>
+            {(p as { cover?: string }).cover ? (
+              <>
+                <Img src={(p as { cover?: string }).cover} note={p.note} className="cover-img" />
+                <span className="tag">{p.tags}</span>
+                <span className="cap"><b>{p.name}</b><i aria-hidden><ArrowUpRight /></i></span>
+              </>
+            ) : (
+              <>
+                <Cover {...coverFacts(p, i)} />
+                <span className="fl-go" aria-hidden><ArrowUpRight /></span>
+              </>
+            )}
           </Link>
         ))}
       </div>

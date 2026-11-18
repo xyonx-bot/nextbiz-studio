@@ -57,20 +57,27 @@ export function Register({ content }: { content?: typeof projects.register }) {
 }
 
 /** 2 · Project index — featured card + grid; each live card opens its case study */
-export function Entries({ content, note, covers = "made" }: { content?: ProjectEntry[]; note?: string; covers?: "made" | "photo" }) {
+export function Entries({ content, note }: { content?: ProjectEntry[]; note?: string }) {
   const all = list<ProjectEntry>(content ?? projects.entries);
   const featured = all.find(isLive);
   const rest = all.filter((e) => e !== featured);
-  const made = (e: ProjectEntry) => covers === "made" || !str(e.photo);
-  const cover = (e: ProjectEntry, soon = false) => (
-    <div className="cover-box"><Cover name={str(e.h2) || "Next entry"} kind={str(e.type)} no={str(e.no)} year={str(e.year)} photo={str(e.photo)} soon={soon} /></div>
-  );
+  // an uploaded cover image wins; otherwise the site draws the index-card cover (screenshots stay on the case study)
+  const cover = (e: ProjectEntry, soon = false) => {
+    const img = str((e as { cover?: unknown }).cover);
+    return (
+      <div className="cover-box">
+        {img && !soon
+          ? <img src={img} alt={str(e.h2)} loading="lazy" /> /* eslint-disable-line @next/next/no-img-element */
+          : <Cover name={str(e.h2) || "Next entry"} kind={str(e.type).split(" · ").slice(0, 2).join(" · ")} no={str(e.no)} year={str(e.year)} soon={soon} />}
+      </div>
+    );
+  };
   return (
     <section className="entry pad" id="work">
       {featured && (
         <Link className="feat" href={projectHref(featured)} id={featured.id}>
           <div className="entry-photo">
-            {made(featured) ? cover(featured) : <Shot src={str(featured.photo)} alt={str(featured.photoNote) || str(featured.h2)} note={str(featured.photoNote)} eager />}
+            {cover(featured)}
           </div>
           <div className="feat-body">
             <div className="feat-top">
@@ -95,7 +102,7 @@ export function Entries({ content, note, covers = "made" }: { content?: ProjectE
             isLive(e) ? (
               <Link className="card" href={projectHref(e)} id={e.id} key={e.id || i}>
                 <div className="entry-photo">
-                  {made(e) ? cover(e) : <Shot src={str(e.photo)} alt={str(e.photoNote) || str(e.h2)} note={str(e.photoNote)} />}
+                  {cover(e)}
                 </div>
                 <div className="card-row">
                   <span className="no">{e.no}</span>
@@ -108,12 +115,7 @@ export function Entries({ content, note, covers = "made" }: { content?: ProjectE
               </Link>
             ) : (
               <div className="card soon" id={e.id} key={e.id || i}>
-                {covers === "made" ? cover(e, true) : (
-                  <div className="soon-slot">
-                    <span className="no">{e.no}</span>
-                    <span className="badge">{e.badge || "In the making"}</span>
-                  </div>
-                )}
+                {cover(e, true)}
                 <div className="card-row">
                   <div>
                     <h3>{e.h2 || "Next entry"}</h3>

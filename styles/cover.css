@@ -1,74 +1,56 @@
 /* ============================================================
-   PROJECT COVER — made by the site (components/sections/cover.tsx)
-   Fills whatever box it sits in; sizes scale with the box (container units), so the same cover works
-   in a 220px homepage card, the projects grid and the Soft rail.
+   PROJECT COVER — "Index card" (components/sections/cover.tsx)
+   Fills its box; sizes follow the box width (container units) so one cover works in a 220px homepage
+   card, the /projects grid and the Soft rail. Editorial and Soft each get their own drawing.
    ============================================================ */
-.cover { --cv-fg: #F4F1EC; --cv-bg: var(--slab); --cv-line: rgba(255, 255, 255, .07); --cv-mute: rgba(244, 241, 236, .6);
-  position: relative; display: block; width: 100%; height: 100%; min-height: 180px; overflow: hidden; isolation: isolate;
-  container-type: inline-size; background: var(--cv-bg); color: var(--cv-fg); border-radius: inherit; }
-.cover[data-tone="sand"] { --cv-fg: var(--ink); --cv-bg: var(--soft); --cv-line: rgba(9, 11, 15, .07); --cv-mute: var(--muted); }
-.cover[data-tone="acc"] { --cv-fg: var(--acc-on); --cv-bg: var(--acc); --cv-line: color-mix(in srgb, var(--acc-on) 12%, transparent); --cv-mute: color-mix(in srgb, var(--acc-on) 65%, transparent); }
-.cover[data-tone="soon"] { --cv-fg: var(--ink); --cv-bg: var(--paper); --cv-line: rgba(9, 11, 15, .06); --cv-mute: var(--muted);
-  background: repeating-linear-gradient(135deg, transparent 0 14px, rgba(9, 11, 15, .03) 14px 15px), var(--paper); box-shadow: inset 0 0 0 1px var(--line); }
+.cover { position: relative; display: block; width: 100%; height: 100%; min-height: 160px; overflow: hidden; isolation: isolate;
+  container-type: inline-size; border-radius: inherit; background: var(--card); color: var(--ink); }
+.cv-grain { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: .4; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .2 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.cv-meta { position: absolute; left: max(14px, 6cqw); right: max(14px, 6cqw); top: max(12px, 5.5cqw); display: flex; justify-content: space-between; gap: 10px;
+  font-size: max(9px, 2.5cqw); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.cv-rule { position: absolute; left: max(14px, 6cqw); top: calc(max(12px, 5.5cqw) + max(9px, 2.5cqw) + max(10px, 4cqw)); width: max(28px, 11cqw); height: max(2px, .8cqw); background: var(--acc); }
+.cv-kind { position: absolute; left: max(14px, 6cqw); right: max(14px, 6cqw); top: calc(max(12px, 5.5cqw) + max(9px, 2.5cqw) + max(10px, 4cqw) + max(10px, 3.4cqw));
+  font-size: max(10.5px, 2.9cqw); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cv-name { position: absolute; left: max(14px, 6cqw); right: max(14px, 6cqw); bottom: max(14px, 6cqw); font-size: clamp(22px, 10.5cqw, 92px); font-weight: 500;
+  letter-spacing: -.05em; line-height: .94; text-wrap: balance; }
 
-/* hairline grid, like a layout sheet */
-.cv-grid { position: absolute; inset: 0; z-index: -1; background:
-  linear-gradient(var(--cv-line) 1px, transparent 1px) 0 0 / 100% 25%,
-  linear-gradient(90deg, var(--cv-line) 1px, transparent 1px) 0 0 / 16.666% 100%; }
-/* soft accent light from the corner */
-.cv-orb { position: absolute; z-index: -1; width: 80cqw; height: 80cqw; right: -30cqw; top: -40cqw; border-radius: 50%;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--acc) 22%, transparent), transparent); }
-.cover[data-tone="acc"] .cv-orb { background: radial-gradient(closest-side, rgba(255, 255, 255, .45), transparent); }
-.cover[data-tone="sand"] .cv-orb { background: radial-gradient(closest-side, color-mix(in srgb, var(--acc) 55%, transparent), transparent); }
-.cover[data-tone="soon"] .cv-orb { display: none; }
-/* film grain over everything */
-.cv-grain { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: .5; mix-blend-mode: soft-light;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-.cover[data-tone="ink"] .cv-grain { opacity: .35; mix-blend-mode: overlay; }
+/* ── Editorial: the off-white index card with a hairline frame ── */
+html:not([data-style="soft"]) .cover { box-shadow: inset 0 0 0 1px var(--line); }
+html:not([data-style="soft"]) .cover.soon { background: var(--paper); box-shadow: none; outline: 1px dashed #C9C5BE; outline-offset: -1px; }
+.cover.soon .cv-name { color: #B4B0A9; }
+.cover.soon .cv-rule { background: var(--line); }
+html:not([data-style="soft"]) a:hover > .cover .cv-rule, html:not([data-style="soft"]) a:hover .cover .cv-rule { width: max(44px, 18cqw); }
+.cv-rule { transition: width .35s cubic-bezier(.2, .7, .2, 1); }
 
-/* giant outlined initials / entry number behind the type */
-.cv-mono { position: absolute; z-index: -1; right: -2cqw; bottom: -9cqw; font-size: 46cqw; line-height: 1; font-weight: 500; letter-spacing: -.06em;
-  color: transparent; -webkit-text-stroke: max(1px, .18cqw) color-mix(in srgb, var(--cv-fg) 16%, transparent); user-select: none; }
-.cover[data-tone="soon"] .cv-mono { -webkit-text-stroke-color: color-mix(in srgb, var(--ink) 22%, transparent); right: 4cqw; bottom: -6cqw; }
+/* ── Soft: a rounded card with a kind pill, a round number badge and a warm accent light ── */
+html[data-style="soft"] .cover { background: radial-gradient(70% 80% at 100% 0%, color-mix(in srgb, var(--acc) 26%, transparent), transparent 62%), var(--card); }
+html[data-style="soft"] .cover .cv-rule { display: none; }
+html[data-style="soft"] .cover .cv-no { width: max(38px, 11cqw); height: max(38px, 11cqw); border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: var(--acc);
+  font-size: max(10px, 2.6cqw); letter-spacing: .02em; order: 2; }
+html[data-style="soft"] .cover .cv-no { font-size: 0; } /* show just the digits in the badge */
+html[data-style="soft"] .cover .cv-no::after { content: attr(data-n); font-size: max(11px, 2.8cqw); letter-spacing: .02em; }
+html[data-style="soft"] .cover .cv-meta { align-items: flex-start; }
+html[data-style="soft"] .cover .cv-yr { order: 1; padding-top: max(6px, 2cqw); }
+html[data-style="soft"] .cover .cv-kind { right: auto; max-width: calc(100% - 12cqw); top: calc(max(12px, 5.5cqw) + max(38px, 11cqw) + max(8px, 3cqw)); padding: max(5px, 1.4cqw) max(11px, 3.2cqw);
+  border-radius: 999px; background: var(--soft); color: var(--ink); font-weight: 700; font-size: max(10.5px, 2.7cqw); }
+html[data-style="soft"] .cover.soon { background: var(--soft); }
+html[data-style="soft"] .cover.soon::before { content: ""; position: absolute; inset: max(8px, 2.4cqw); border-radius: calc(var(--fl-R, 24px) - 8px); border: 1.5px dashed color-mix(in srgb, var(--ink) 18%, transparent); }
+html[data-style="soft"] .cover.soon .cv-no { background: transparent; color: var(--muted); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--ink) 20%, transparent); }
 
-.cv-top { position: absolute; left: max(14px, 5cqw); right: max(14px, 5cqw); top: max(12px, 4.4cqw); display: flex; justify-content: space-between; gap: 10px;
-  font-size: max(9px, 1.55cqw); font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--cv-mute); }
-.cv-top .k { flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cv-name { position: absolute; left: max(14px, 5cqw); bottom: max(14px, 5cqw); max-width: 78%; font-size: clamp(22px, 9.5cqw, 96px); font-weight: 500;
-  letter-spacing: -.045em; line-height: .95; text-wrap: balance; }
-.cover[data-tone="soon"] .cv-name { color: var(--muted); font-weight: 400; font-size: clamp(18px, 5.6cqw, 52px); }
-
-/* with a screenshot: the name moves up, the shot sits in a small browser window at its real scale */
-.cover:has(.cv-win) .cv-name { bottom: auto; top: calc(max(12px, 4.4cqw) + max(9px, 1.55cqw) + max(10px, 3.4cqw)); max-width: 46%; font-size: clamp(20px, 7.4cqw, 76px); }
-.cover:has(.cv-win) .cv-mono { display: none; }
-.cv-win { position: absolute; z-index: 1; right: max(14px, 5cqw); width: 54%; top: 30%; bottom: -1px; display: flex; flex-direction: column;
-  border-radius: max(6px, 1.2cqw) max(6px, 1.2cqw) 0 0; overflow: hidden; background: #fff;
-  box-shadow: 0 0 0 1px rgba(9, 11, 15, .12), 0 30px 60px -24px rgba(0, 0, 0, .55); transition: transform .5s cubic-bezier(.2, .7, .2, 1); }
-.cv-win .bar { flex: none; display: flex; gap: max(3px, .6cqw); align-items: center; height: max(12px, 2.6cqw); padding: 0 max(6px, 1.3cqw); background: #F2EEE4; border-bottom: 1px solid #DDDAD5; }
-.cv-win .bar i { width: max(4px, .8cqw); height: max(4px, .8cqw); border-radius: 50%; background: #CFCAC2; }
-.cv-win img { display: block; width: 100%; height: auto; flex: none; }
-:is(a:hover, a:focus-visible) > .cover .cv-win, :is(a:hover, a:focus-visible) .cover .cv-win { transform: translateY(-4%); }
-/* narrow boxes: put the window under the name across the full width */
-@container (max-width: 380px) {
-  .cover:has(.cv-win) .cv-name { max-width: 90%; }
-  .cv-win { left: max(14px, 5cqw); width: auto; top: 46%; }
-}
-
-/* Soft style: rounder window, a slight tilt */
-html[data-style="soft"] .cv-win { border-radius: max(10px, 2cqw) max(10px, 2cqw) 0 0; transform: rotate(-2deg) translateY(2%); transform-origin: bottom right; }
-html[data-style="soft"] :is(a:hover, a:focus-visible) .cover .cv-win { transform: rotate(-1deg) translateY(-3%); }
-@media (prefers-reduced-motion: reduce) { .cv-win { transition: none; } }
-
-/* where covers sit */
-.proj .ph.cover-box { height: 220px; border-radius: 9px; overflow: hidden; }
-.entry-photo .cover-box { aspect-ratio: 16 / 10; border-radius: 16px 16px 16px 60px; overflow: hidden; }
+/* ── where covers (and uploaded cover images) sit ── */
+.cover-box { overflow: hidden; }
+.cover-box > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.proj .ph.cover-box { height: 220px; border-radius: 9px; }
+.entry-photo .cover-box { aspect-ratio: 16 / 10; border-radius: 16px 16px 16px 60px; }
 .cards .entry-photo .cover-box { border-radius: 12px; }
-.card.soon .cover-box { aspect-ratio: 16 / 7; border-radius: 12px; overflow: hidden; }
-.fl-proj > .cover { position: absolute; inset: 0; }
-@media (max-width: 900px) { .entry-photo .cover-box { border-radius: 12px 12px 12px 36px; } .card.soon .cover-box { aspect-ratio: 16 / 9; } }
+.card.soon .cover-box { aspect-ratio: 16 / 7; border-radius: 12px; }
+html[data-style="soft"] :is(.entry-photo, .card.soon) .cover-box { border-radius: var(--fl-R, 24px); }
+.fl-proj > .cover, .fl-proj > .cover-img { position: absolute; inset: 0; }
 html[data-corners="soft"] .entry-photo .cover-box { border-radius: 18px; }
 html[data-corners="sharp"] .cover-box { border-radius: 0 !important; }
-/* Soft rail: the card already floats its own tag and name, so the cover keeps only the artwork */
-.fl-proj .cover :is(.cv-top, .cv-name) { display: none; }
-.fl-proj .cover .cv-win { left: 9%; right: 9%; width: auto; top: 20%; }
-.fl-proj .cover[data-tone="soon"] .cv-mono { right: 50%; bottom: 26%; transform: translateX(50%); font-size: 70cqw; }
+@media (max-width: 900px) { .entry-photo .cover-box { border-radius: 12px 12px 12px 36px; } .card.soon .cover-box { aspect-ratio: 16 / 9; } }
+@media (prefers-reduced-motion: reduce) { .cv-rule { transition: none; } }
+html[data-style="soft"] .cover .cv-no { line-height: 1; }
+html[data-style="soft"] .cover .cv-no::after { display: block; line-height: 1; }
+html[data-style="soft"] .cover.soon :is(.cv-meta, .cv-name) { margin: 0 max(4px, 1.6cqw); }

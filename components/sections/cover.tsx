@@ -1,50 +1,31 @@
 /* ============================================================
-   PROJECT COVER — made by the site
-   A designed cover built from the project's own facts (number, name, kind, year), with grain, hairlines
-   and the accent colour. When there's a screenshot it sits inside a small browser window at its real
-   scale (only the bottom is cut), so it's never zoomed into a crop. Used until real cover art exists;
-   Admin → Design → "Project covers" switches between this and the real photo.
+   PROJECT COVER — "Index card", drawn by the site
+   Used wherever a project has no uploaded cover image (Admin → Pages → the project's `cover` field).
+   Type only, built from the project's own facts: number, year, kind and name. Screenshots are never
+   used here — they stay on the case-study page. Each style draws it its own way (styles/cover.css):
+   Editorial = off-white card, hairline frame, lime rule; Soft = rounded card, kind pill, number badge.
    ============================================================ */
-
 import projects from "@/lib/seed/projects.json";
 
-type Props = {
-  name: string; kind?: string; no?: string; year?: string; photo?: string;
-  soon?: boolean; className?: string;
-};
+type Props = { name: string; kind?: string; no?: string; year?: string; soon?: boolean; className?: string };
 
-const TONES = ["ink", "sand", "acc"] as const;
-const initials = (s: string) => s.split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
-
-export function Cover({ name, kind, no = "01", year, photo, soon, className = "" }: Props) {
-  const tone = soon ? "soon" : TONES[(Math.max(1, parseInt(no, 10) || 1) - 1) % TONES.length];
+export function Cover({ name, kind, no = "01", year, soon, className = "" }: Props) {
+  const label = soon ? "Next entry" : name;
   return (
-    <div className={`cover ${className}`} data-tone={tone} role="img" aria-label={soon ? `${name}, in the making` : `${name} — ${kind ?? "project"}`}>
-      <span className="cv-grid" aria-hidden />
-      <span className="cv-orb" aria-hidden />
-      <span className="cv-mono" aria-hidden>{soon ? no : initials(name)}</span>
-      <span className="cv-top" aria-hidden>
-        <span>No. {no}</span>
-        {kind ? <span className="k">{kind}</span> : null}
-        <span>{soon ? "On the bench" : year || ""}</span>
-      </span>
-      <span className="cv-name" aria-hidden>{soon ? "In the making." : name}</span>
-      {photo && !soon ? (
-        <span className="cv-win" aria-hidden>
-          <span className="bar"><i /><i /><i /></span>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={photo} alt="" loading="lazy" />
-        </span>
-      ) : null}
+    <div className={`cover${soon ? " soon" : ""} ${className}`} role="img" aria-label={soon ? `Entry ${no}, in the making` : `${name}${kind ? ` — ${kind}` : ""}`}>
+      <span className="cv-meta" aria-hidden><span className="cv-no" data-n={no}>No. {no}</span><span className="cv-yr">{soon ? "On the bench" : year || ""}</span></span>
+      <span className="cv-rule" aria-hidden />
+      {kind && !soon ? <span className="cv-kind" aria-hidden>{kind}</span> : null}
+      <span className="cv-name" aria-hidden>{label}</span>
       <span className="cv-grain" aria-hidden />
     </div>
   );
 }
 
 /** Cover facts for a homepage work card: number from its position, year from the matching project entry. */
-export function coverFacts(p: { name: string; tags?: string; photo?: string; href?: string }, i: number): Props {
+export function coverFacts(p: { name: string; tags?: string; href?: string }, i: number): Props {
   const slug = (p.href ?? "").split("/projects/")[1];
   const entry = slug ? (projects.entries as { slug?: string; year?: string; no?: string }[]).find((e) => e.slug === slug) : undefined;
-  const soon = !p.photo && (/in the making/i.test(p.tags ?? "") || /^next entry$/i.test(p.name));
-  return { name: p.name, kind: soon ? undefined : p.tags, no: entry?.no ?? String(i + 1).padStart(2, "0"), year: entry?.year, photo: p.photo, soon };
+  const soon = !entry && (/in the making/i.test(p.tags ?? "") || /^next entry$/i.test(p.name));
+  return { name: p.name, kind: soon ? undefined : (p.tags ?? "").split(" · ").slice(0, 2).join(" · "), no: entry?.no ?? String(i + 1).padStart(2, "0"), year: entry?.year, soon };
 }

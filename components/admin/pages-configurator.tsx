@@ -30,7 +30,7 @@ export type Row = {
 
 type Content = Record<string, unknown>;
 
-const IMAGE_KEYS = new Set(["src", "img", "image", "photo", "portrait", "logo", "avatar", "still"]);
+const IMAGE_KEYS = new Set(["src", "img", "image", "photo", "portrait", "logo", "avatar", "still", "cover"]);
 const IMG_EXT = /\.(png|jpe?g|webp|avif|gif|svg)(\?|#|$)/i;
 
 function isImageField(key: string, value: unknown): boolean {
@@ -743,11 +743,14 @@ function Node({
   }
 
   const obj = value as Content;
+  // project items (homepage work + /projects entries) always offer a cover upload, even if saved before it existed
+  const entries = Object.entries(obj);
+  if ("photo" in obj && !("cover" in obj) && ("slug" in obj || "tags" in obj)) entries.unshift(["cover", ""]);
   return (
     <div className="frow">
       <label>{label}</label>
       <div className="fgroup">
-        {Object.entries(obj).map(([k, v]) => (
+        {entries.map(([k, v]) => (
           <Node key={k} label={k} value={v} path={[...path, k]} mutate={mutate} />
         ))}
       </div>

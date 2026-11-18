@@ -32,7 +32,7 @@ export default async function HomePage() {
           case "partners": return soft ? <PartnersF key={s.key} content={by("partners") as typeof homeSeed.partners} /> : <Partners key={s.key} content={by("partners") as typeof homeSeed.partners} />;
           case "about": return soft ? <AboutF key={s.key} content={by("about") as typeof homeSeed.about} /> : <About key={s.key} content={by("about") as typeof homeSeed.about} />;
           case "services": return soft ? <ServicesF key={s.key} content={by("services") as typeof homeSeed.services} /> : <ServicesSplit key={s.key} content={by("services") as typeof homeSeed.services} />;
-          case "work": return soft ? <WorkF key={s.key} content={by("work") as typeof homeSeed.work} covers={design.covers} /> : <Work key={s.key} content={by("work") as typeof homeSeed.work} covers={design.covers} />;
+          case "work": return soft ? <WorkF key={s.key} content={by("work") as typeof homeSeed.work} /> : <Work key={s.key} content={by("work") as typeof homeSeed.work} />;
           case "library": return <HomeLibrary key={s.key} content={by("library") as typeof homeSeed.library} entries={resources} />;
           case "waitlist": return <Waitlist key={s.key} content={by("waitlist") as typeof homeSeed.waitlist} />;
           case "planner": return sentence ? <PlanSentence key={s.key} content={by("planner") as typeof homeSeed.planner} /> : <PlanStart key={s.key} content={by("planner") as typeof homeSeed.planner} />;

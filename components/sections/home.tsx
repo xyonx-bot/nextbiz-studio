@@ -161,7 +161,7 @@ export function ServicesSplit({ content }: { content?: typeof homeContent.servic
 }
 
 /* ═══ 5 · SELECTED WORK ═══ */
-export function Work({ content, covers = "made" }: { content?: typeof homeContent.work; covers?: "made" | "photo" }) {
+export function Work({ content }: { content?: typeof homeContent.work }) {
   const c = content ?? homeContent.work;
   return (
     <section className="work pad" id="projects">
@@ -176,8 +176,8 @@ export function Work({ content, covers = "made" }: { content?: typeof homeConten
       <div className="proj-grid">
       {c.items.map((p, i) => (
         <Link className="proj" key={i} href={(p as { href?: string }).href || "/projects"} style={{ display: "block" }}>
-          {p.photo && covers === "photo" ? (
-            <div className="imgph realimg-box ph"><img src={p.photo} alt={String(p.note ?? "")} /></div>
+          {(p as { cover?: string }).cover ? (
+            <div className="ph cover-box"><img src={(p as { cover?: string }).cover} alt={String(p.note ?? p.name)} /></div>
           ) : (
             <div className="ph cover-box"><Cover {...coverFacts(p, i)} /></div>
           )}
