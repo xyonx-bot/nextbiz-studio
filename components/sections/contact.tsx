@@ -137,3 +137,53 @@ export function QClose({ content }: { content?: typeof contact.qclose }) {
     </section>
   );
 }
+
+/** 1 (Editorial, Nov 18) · The ruled sheet — headline + reply facts, the brief as a grid of hairline
+ *  cells, then every way to reach us in a ruled band at the bottom. Replaces the Desk opener. */
+export function ContactSheet({ content, form }: { content?: typeof contact.desk; form?: typeof contact.deskForm | null }) {
+  const c = content ?? contact.desk;
+  const action = (ch: string, val: string) => {
+    const k = ch.toLowerCase();
+    if (k.includes("call") || k.includes("phone")) return { href: `tel:${CONTACT.phoneTel}`, label: "Call now" };
+    if (k.includes("mail")) return { href: `mailto:${val}`, label: "Write an email" };
+    if (k.includes("insta")) return { href: `https://instagram.com/${val.replace(/^@/, "")}`, label: "Open Instagram", ext: true };
+    if (k.includes("studio") || k.includes("address")) return { href: `https://www.google.com/maps/search/${encodeURIComponent(val)}`, label: "Open map", ext: true };
+    return null;
+  };
+  return (
+    <section className="csheet">
+      <div className="cs-head pad">
+        <div>
+          <span className="micro">{c.micro}</span>
+          <h1>{c.h1[0]}<br />{c.h1[1]}</h1>
+          <p className="lede">{c.lede.replace(/\s*on the right/i, " below")}</p>
+        </div>
+        <dl className="cs-facts">
+          <div><dt>Reply</dt><dd>within 1 business day</dd></div>
+          <div><dt>From</dt><dd>the person doing the work</dd></div>
+          <div><dt>Takes</dt><dd>about 2 minutes</dd></div>
+        </dl>
+      </div>
+      {form !== null && <div className="cs-body pad"><DeskForm content={form ?? undefined} variant="sheet" /></div>}
+      <div className="cs-ways pad">
+        <div className="cs-way">
+          <span className="micro">WhatsApp</span>
+          <b className="live">{CONTACT.phoneDisplay}</b>
+          <span>Fastest, usually within an hour</span>
+          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">Open chat</a>
+        </div>
+        {c.channels.map((ch) => {
+          const a = action(ch.ch, ch.val);
+          return (
+            <div className="cs-way" key={ch.ch}>
+              <span className="micro">{ch.ch}</span>
+              <b>{ch.val}</b>
+              <span>{ch.sub}</span>
+              {a ? <a href={a.href} {...(a.ext ? { target: "_blank", rel: "noreferrer" } : {})}>{a.label}</a> : null}
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}

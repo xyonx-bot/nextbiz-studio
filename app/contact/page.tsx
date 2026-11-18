@@ -1,6 +1,6 @@
 import { Topbar } from "@/components/chrome/Topbar";
 import { Footer } from "@/components/chrome/Footer";
-import { Desk, ResponseLedger, Faq, QClose } from "@/components/sections/contact";
+import { ContactSheet, ResponseLedger, Faq, QClose } from "@/components/sections/contact";
 import { getSections } from "@/lib/config";
 import { getActiveDesign } from "@/lib/design";
 import { ContactHeroF, ResponseF, FaqF, CloseF } from "@/components/sections/pages-floating";
@@ -28,7 +28,7 @@ export default async function ContactPage() {
           case "desk":
             if (soft) return <ContactHeroF key={s.key} content={by("desk") as typeof contactSeed.desk} form={formSection ? (by("deskForm") as typeof contactSeed.deskForm) : null} />;
             return (
-              <Desk
+              <ContactSheet
                 key={s.key}
                 content={by("desk") as typeof contactSeed.desk}
                 form={formSection ? (by("deskForm") as typeof contactSeed.deskForm) : null}

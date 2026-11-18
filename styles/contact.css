@@ -215,3 +215,57 @@ html[data-style="soft"] .cf-ctl { border-radius: 14px; min-height: 52px; backgro
 html[data-style="soft"] .cf-submit { border-radius: 999px; }
 html[data-style="soft"] .cf-alert { border-radius: 14px; }
 .f-done-acts .cf-submit { text-decoration: none; }
+
+/* ═══ Editorial contact — the ruled sheet (option 1, Nov 18) ═══ */
+.csheet { border-bottom: 1px solid var(--line); }
+.cs-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 340px); gap: 30px; align-items: end; padding-top: clamp(44px, 6vw, 88px); padding-bottom: 34px; }
+.cs-head h1 { margin: 16px 0 0; font-size: clamp(42px, 6vw, 84px); font-weight: 400; letter-spacing: -.055em; line-height: .96; }
+.cs-head .lede { margin: 18px 0 0; max-width: 50ch; }
+.cs-facts { margin: 0; border-top: 1px solid var(--ink); }
+.cs-facts div { display: flex; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+.cs-facts dt { color: var(--muted); } .cs-facts dd { margin: 0; font-weight: 800; text-align: right; }
+.cs-body { padding-bottom: 6px; }
+.cs-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-top: 1px solid var(--ink); }
+.cs-cell { grid-column: span 2; position: relative; display: grid; gap: 4px; align-content: start; padding: 16px 20px 4px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); transition: background .15s ease; min-width: 0; }
+.cs-cell:first-child { padding-left: 0; }
+.cs-cell.end { border-right: 0; }
+.cs-cell.w6 { grid-column: 1 / -1; border-right: 0; padding-left: 0; padding-right: 0; }
+.cs-cell > label, .cs-l { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); transition: color .15s; }
+.cs-note { font-weight: 600; letter-spacing: 0; text-transform: none; }
+.cs-cell :is(input, textarea) { width: 100%; border: 0; background: transparent; font: inherit; font-size: clamp(17px, 1.5vw, 20px); font-weight: 500; letter-spacing: -.015em; color: var(--ink); padding: 8px 0 14px; border-radius: 0; }
+.cs-cell textarea { min-height: 120px; resize: vertical; line-height: 1.45; font-size: clamp(16px, 1.35vw, 18px); }
+.cs-cell :is(input, textarea)::placeholder { color: #B4AFA7; font-weight: 400; }
+.cs-cell :is(input, textarea):focus { outline: none; }
+.cs-cell::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 3px; background: var(--acc); transform: scaleX(0); transform-origin: left; transition: transform .3s cubic-bezier(.2, .7, .2, 1); }
+.cs-cell:focus-within::before { transform: scaleX(1); }
+.cs-cell:focus-within > label { color: var(--ink); }
+.cs-cell.err::before { transform: scaleX(1); background: #B3261E; }
+.cs-msg { margin: -6px 0 12px; font-size: 12.5px; font-weight: 600; color: #B3261E; }
+.cs-opts { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); margin: 10px 0 16px; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+.cs-opts button { appearance: none; font: inherit; text-align: left; font-size: 15px; font-weight: 600; color: var(--ink); min-height: 56px; padding: 12px 16px; border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px; transition: background .15s ease; }
+.cs-opts button::after { content: ""; width: 16px; height: 16px; border: 1.5px solid #BDB8AF; border-radius: 50%; flex: none; }
+.cs-opts button:hover { background: var(--card); }
+.cs-opts button:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+.cs-opts button.on { background: var(--acc); color: var(--acc-on); }
+.cs-opts button.on::after { border-color: var(--ink); background: radial-gradient(circle, var(--ink) 0 4px, transparent 4.5px); }
+.cs-alert { margin-top: 16px; }
+.cs-send { display: grid; gap: 18px; padding-top: 20px; padding-bottom: clamp(40px, 5vw, 64px); }
+.cs-go { display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; }
+.cs-submit { min-height: 54px; }
+.cs-ways { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); border-top: 1px solid var(--ink); padding-top: 0; padding-bottom: 10px; }
+.cs-way { display: grid; gap: 4px; align-content: start; padding: 22px 20px 26px; border-right: 1px solid var(--line); min-width: 0; }
+.cs-way:first-child { padding-left: 0; } .cs-way:last-child { border-right: 0; }
+.cs-way b { font-size: 16px; overflow-wrap: anywhere; } .cs-way > span:not(.micro) { font-size: 12.5px; color: var(--muted); }
+.cs-way a { margin-top: 10px; width: max-content; font-size: 12.5px; font-weight: 800; color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--acc); padding-bottom: 2px; }
+.cs-way .live { display: inline-flex; align-items: center; gap: 8px; }
+.cs-way .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--acc); box-shadow: 0 0 0 4px color-mix(in srgb, var(--acc) 35%, transparent); }
+.csheet .f-done { margin: 0 0 40px; }
+@media (max-width: 900px) {
+  .cs-head { grid-template-columns: minmax(0, 1fr); }
+  .cs-grid { grid-template-columns: minmax(0, 1fr); }
+  .cs-cell, .cs-cell.end { grid-column: auto; border-right: 0; padding-left: 0; padding-right: 0; }
+  .cs-go { flex-direction: column-reverse; align-items: stretch; } .cs-submit { justify-content: space-between; }
+  .cs-ways { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .cs-way { border-right: 0; border-bottom: 1px solid var(--line); padding-left: 0; }
+}
+@media (max-width: 480px) { .cs-opts { grid-template-columns: minmax(0, 1fr); } .cs-ways { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 900px) { .cs-submit { width: 100%; } }

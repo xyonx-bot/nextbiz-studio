@@ -11,7 +11,7 @@ import contact from "@/lib/seed/contact.json";
  * Visible inline validation, success panel, friendly error; honeypot field
  * hidden via CSS. Never renders a raw error page.
  */
-export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
+export function DeskForm({ content, variant = "classic" }: { content?: typeof contact.deskForm; variant?: "classic" | "sheet" }) {
   const c = content ?? contact.deskForm;
   const f = c.fields;
 
@@ -19,6 +19,7 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
   const [formError, setFormError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState<null | { name: string; via: "whatsapp" | "email" }>(null);
+  const [pick, setPick] = useState<{ service: string; budget: string }>({ service: "", budget: "" });
   const done = useRef<HTMLDivElement>(null);
   const errBox = useRef<HTMLDivElement>(null);
   // bring the confirmation (or the error) into view and announce it, wherever the visitor had scrolled to
@@ -62,7 +63,7 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
       if (data?.errors) {
         setErrors(data.errors);
         // take the visitor to the first field that needs fixing
-        requestAnimationFrame(() => document.querySelector<HTMLElement>(".cf-fld.err :is(input, select, textarea)")?.focus());
+        requestAnimationFrame(() => document.querySelector<HTMLElement>(":is(.cf-fld, .cs-cell).err :is(input, select, textarea)")?.focus());
       }
       if (!data?.errors) setFormError(data?.error ?? "Something went wrong — please try again, or just call us.");
     } catch {
@@ -91,6 +92,46 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
           <button type="button" className="f-done-again" onClick={() => setSent(null)}>Send another brief</button>
         </div>
       </div>
+    );
+  }
+
+  if (variant === "sheet") {
+    // Editorial "ruled sheet": every field is a hairline cell; options are joined cells that fill lime
+    const cell = (key: string, label: string, control: React.ReactNode, opts: { cls?: string; err?: string; note?: string } = {}) => (
+      <div className={`cs-cell${opts.cls ? ` ${opts.cls}` : ""}${opts.err ? " err" : ""}`}>
+        <label htmlFor={`cs-${key}`}>{label}{opts.note ? <span className="cs-note"> {opts.note}</span> : null}</label>
+        {control}
+        {opts.err ? <p className="cs-msg">{opts.err}</p> : null}
+      </div>
+    );
+    const options = (key: "service" | "budget", list: string[]) => (
+      <div className="cs-opts" role="radiogroup" aria-labelledby={`cs-${key}-l`}>
+        {list.map((o) => (
+          <button key={o} type="button" role="radio" aria-checked={pick[key] === o} className={pick[key] === o ? "on" : ""}
+            onClick={() => setPick((v) => ({ ...v, [key]: v[key] === o ? "" : o }))}>{o}</button>
+        ))}
+        <input type="hidden" name={key} value={pick[key]} />
+      </div>
+    );
+    return (
+      <form className="csheet-form" onSubmit={onSubmit} noValidate>
+        <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }} />
+        <div className="cs-grid">
+          {cell("name", f.name.label, <input id="cs-name" name="name" type="text" autoComplete="name" placeholder={f.name.placeholder} aria-invalid={!!errors.name} />, { err: errors.name })}
+          {cell("phone", f.phone.label, <input id="cs-phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder={f.phone.placeholder} aria-invalid={!!errors.phone} />, { err: errors.phone })}
+          {cell("email", f.email.label, <input id="cs-email" name="email" type="email" autoComplete="email" placeholder={f.email.placeholder} aria-invalid={!!errors.email} />, { cls: "end", note: "(or phone)", err: errors.email })}
+          <div className="cs-cell w6"><span className="cs-l" id="cs-service-l">{f.service.label}</span>{options("service", f.service.options)}</div>
+          <div className="cs-cell w6"><span className="cs-l" id="cs-budget-l">{f.budget.label} <span className="cs-note">(optional)</span></span>{options("budget", f.budget.options)}</div>
+          {cell("brief", f.brief.label, <textarea id="cs-brief" name="brief" placeholder={f.brief.placeholder} aria-invalid={!!errors.message} />, { cls: "w6", err: errors.message })}
+        </div>
+        {formError && <div className="cf-alert cs-alert" ref={errBox} role="alert"><b>Couldn&apos;t send.</b> {formError}</div>}
+        <div className="cs-send">
+          <label className="cf-check" htmlFor="cs-updates"><input type="checkbox" id="cs-updates" name="updates" /><span>{c.checkText}</span></label>
+          <div className="cs-go"><span className="cf-note">Private. Used only to reply to you. No lists, no spam.</span>
+            <button className="action dark cs-submit" type="submit" disabled={sending}>{sending ? "Sending…" : c.submit.replace(/\s*→\s*$/, "")} <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M5 12h14M13 5l7 7-7 7" /></svg></button>
+          </div>
+        </div>
+      </form>
     );
   }
 
