@@ -30,9 +30,9 @@ describe("leadSchema (S3 — zod validation per technical-plan §5)", () => {
     const r = leadSchema.safeParse({ ...validLead, message: "hi" });
     expect(r.success).toBe(false);
   });
-  it("rejects service outside the enum (wireframe option set)", () => {
-    const r = leadSchema.safeParse({ ...validLead, service: "Something else" });
-    expect(r.success).toBe(false);
+  it("accepts a service option added in admin, but not an absurdly long one", () => {
+    expect(leadSchema.safeParse({ ...validLead, service: "Something else" }).success).toBe(true);
+    expect(leadSchema.safeParse({ ...validLead, service: "x".repeat(200) }).success).toBe(false);
   });
   it("accepts every wireframe service option", () => {
     for (const s of SERVICE_OPTIONS) {

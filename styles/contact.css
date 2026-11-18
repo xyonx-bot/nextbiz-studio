@@ -151,7 +151,25 @@
    border / inset underline), a normal-sized chevron, and the same height for inputs and selects. */
 .f-row input, .f-row select, .f-row textarea { border-radius: 6px; min-height: 42px; line-height: 1.4; transition: border-color .15s ease, box-shadow .15s ease; box-shadow: none; }
 .f-row input:hover, .f-row select:hover, .f-row textarea:hover { border-color: #BDB8AF; }
-.f-row input:focus, .f-row select:focus, .f-row textarea:focus { border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 45%, transparent); }
+.f-row input:focus, .f-row select:focus, .f-row textarea:focus { border-color: var(--ink); box-shadow: none; background: #fff; } /* one signal only: a dark border */
 .f-row select { background-size: 14px 14px; background-position: right 12px center; padding-right: 36px; cursor: pointer; }
 .f-row.err input, .f-row.err select, .f-row.err textarea { box-shadow: 0 0 0 3px rgba(179, 38, 30, .12); }
 html[data-corners="sharp"] :is(.f-row input, .f-row select, .f-row textarea) { border-radius: 0; }
+
+/* sent: a clear confirmation card, scrolled into view */
+.f-done { outline: none; display: flex; flex-direction: column; gap: 14px; padding: clamp(22px, 3vw, 34px); border: 1px solid var(--line); border-top: 3px solid var(--acc); background: var(--card); animation: f-done-in .45s cubic-bezier(.2, .7, .2, 1) both; }
+.f-done-ic { width: 46px; height: 46px; border-radius: 50%; background: var(--acc); color: var(--acc-on); display: grid; place-items: center; }
+.f-done-ic svg { width: 22px; height: 22px; }
+.f-done h3 { margin: 0; font-size: clamp(24px, 2.6vw, 32px); font-weight: 500; letter-spacing: -.035em; line-height: 1.1; }
+.f-done > p { margin: 0; color: var(--muted); font-size: 14.5px; line-height: 1.6; max-width: 52ch; }
+.f-done-steps { list-style: none; margin: 4px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+.f-done-steps li { padding: 12px 12px 0 0; display: grid; gap: 3px; font-size: 13px; min-width: 0; }
+.f-done-steps b { font-size: 10.5px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--acc-text); }
+.f-done-steps span { color: var(--ink); }
+.f-done-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 4px; }
+.f-done-link { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+.f-done-again { align-self: flex-start; appearance: none; border: 0; background: none; padding: 0; font: inherit; font-size: 12.5px; font-weight: 700; color: var(--muted); text-decoration: underline; cursor: pointer; }
+html[data-style="soft"] .f-done { border-radius: var(--fl-R, 24px); border-top-width: 1px; }
+@keyframes f-done-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@media (max-width: 560px) { .f-done-steps { grid-template-columns: minmax(0, 1fr); } }
+@media (prefers-reduced-motion: reduce) { .f-done { animation: none; } }

@@ -89,7 +89,7 @@
 .pl-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; gap: 10px; align-items: end; }
 .pl-form label { display: flex; flex-direction: column; gap: 5px; font-size: 11.5px; font-weight: 800; min-width: 0; }
 .pl-form input { font: inherit; font-size: 14px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); outline: none; width: 100%; }
-.pl-form input:focus { border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 35%, transparent); }
+.pl-form input:focus { border-color: var(--ink); box-shadow: none; background: #fff; }
 .pl-form .action { min-height: 46px; }
 .pl-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
 .pl-err { margin: 0; font-size: 13px; font-weight: 700; color: #B42318; }
@@ -371,3 +371,18 @@ html:not([data-style="soft"]) .pl-side { position: sticky; }
 html[data-corners="sharp"] .pl-type .ic { border-radius: 0; }
 html:not([data-style="soft"]) .pl-opt .top { flex-wrap: nowrap; min-height: 22px; }
 html:not([data-style="soft"]) .pl-opt .pick { white-space: nowrap; font-size: 9px; padding: 3px 7px; }
+
+/* "Get this plan": copy + other ways on the left, a roomy form on the right */
+.pl-send { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 18px 32px; align-items: start; }
+.pl-send-l { display: flex; flex-direction: column; gap: 16px; }
+.pl-send-h span { display: block; margin-top: 6px; line-height: 1.55; }
+.pl-alt { flex-direction: column; gap: 10px; align-items: flex-start; }
+.pl-form { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.pl-form label:first-of-type { grid-column: 1 / -1; }
+.pl-form .action { grid-column: 1 / -1; justify-content: space-between; min-height: 52px; }
+.pl-form input { min-height: 46px; }
+.pl-send .pl-err, .pl-send .pl-done { grid-column: 1 / -1; }
+.pl-done { outline: none; }
+.pl-again { padding-top: 14px; border-top: 1px solid var(--line); }
+@media (max-width: 760px) { .pl-send { grid-template-columns: minmax(0, 1fr); } .pl-form { grid-template-columns: minmax(0, 1fr); } }
+.pl-form .action { width: 100%; }

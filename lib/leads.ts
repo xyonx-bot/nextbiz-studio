@@ -31,8 +31,10 @@ export const leadSchema = z.object({
   name: z.string().trim().min(2, "Please tell us your name.").max(120),
   phone: z.string().trim().max(24).optional().or(z.literal("")),
   email: z.string().trim().email("That email doesn't look right.").max(160).optional().or(z.literal("")),
-  service: z.preprocess(emptyToUndef, z.enum(SERVICE_OPTIONS).optional()),
-  budget: z.preprocess(emptyToUndef, z.enum(BUDGET_OPTIONS).optional()),
+  // the dropdown options are edited in Admin → Pages → Contact, so any short label is accepted
+  // (SERVICE_OPTIONS / BUDGET_OPTIONS above are the defaults the seed ships with)
+  service: z.preprocess(emptyToUndef, z.string().trim().max(80).optional()),
+  budget: z.preprocess(emptyToUndef, z.string().trim().max(80).optional()),
   message: z.string().trim().min(10, "A few honest lines beat a polished document — tell us a little more.").max(4000),
   // honeypot: schema IGNORES it entirely (zod v4 strict off) — the route
   // silently fake-oks any request that fills it, so bots learn nothing.

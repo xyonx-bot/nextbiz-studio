@@ -14,7 +14,7 @@ describe("project planner budget", () => {
     expect(p.tight).toBe(false);
   });
   it("is honest when even the smallest version is over budget, and suggests something that fits", () => {
-    const p = plan({ type: "store", budget: "u25" });
+    const p = plan({ type: "custom", budget: "u25" });
     expect(p.tight).toBe(true);
     expect(p.alt).not.toBeNull();
     expect(p.alt!.price).toBeLessThanOrEqual(25000);

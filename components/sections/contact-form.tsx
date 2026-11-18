@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { WHATSAPP_URL, CONTACT } from "@/lib/content";
 import contact from "@/lib/seed/contact.json";
 
 /**
@@ -17,7 +18,12 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState(false);
+  const [sent, setSent] = useState<null | { name: string; via: "whatsapp" | "email" }>(null);
+  const done = useRef<HTMLDivElement>(null);
+  const errBox = useRef<HTMLDivElement>(null);
+  // bring the confirmation (or the error) into view and announce it, wherever the visitor had scrolled to
+  useEffect(() => { if (sent) { done.current?.scrollIntoView({ behavior: "smooth", block: "center" }); done.current?.focus({ preventScroll: true }); } }, [sent]);
+  useEffect(() => { if (formError) errBox.current?.scrollIntoView({ behavior: "smooth", block: "center" }); }, [formError]);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -45,7 +51,7 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
       const data = await res.json().catch(() => null);
 
       if (res.ok && data?.ok) {
-        setSent(true);
+        setSent({ name: payload.name.trim().split(/\s+/)[0] || "", via: payload.phone.trim().length >= 7 ? "whatsapp" : "email" });
         return;
       }
       if (data?.errors) setErrors(data.errors);
@@ -59,13 +65,21 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
 
   if (sent) {
     return (
-      <div className="form-sheet" id="brief-sheet">
-        <span className="micro">{c.micro}</span>
-        <div className="sheet-rows">
-          <div className="callout sent-callout">
-            <b>Sent — a real reply is next</b>
-            Brief received. Thank you. Expect a reply from the person who'd actually do the work — usually under one business day.
+      <div className="form-sheet f-done-wrap" id="brief-sheet">
+        <div className="f-done" ref={done} tabIndex={-1} role="status" aria-live="polite">
+          <span className="f-done-ic" aria-hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
+          <h3>{sent.name ? `Thanks, ${sent.name}. Your brief is in.` : "Thanks. Your brief is in."}</h3>
+          <p>We&apos;ll read it today and reply on {sent.via === "whatsapp" ? "WhatsApp" : "email"} within one business day, from the person who&apos;d actually do the work.</p>
+          <ol className="f-done-steps">
+            <li><b>Today</b><span>We read your brief</span></li>
+            <li><b>Within a day</b><span>A real reply, with first thoughts</span></li>
+            <li><b>Next</b><span>A 15-minute call, if it helps</span></li>
+          </ol>
+          <div className="f-done-acts">
+            <a className="action dark" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Talk sooner on WhatsApp</a>
+            <a className="f-done-link" href={`tel:${CONTACT.phoneTel}`}>or call {CONTACT.phoneDisplay}</a>
           </div>
+          <button type="button" className="f-done-again" onClick={() => setSent(null)}>Send another brief</button>
         </div>
       </div>
     );
@@ -125,7 +139,7 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
           </div>
         </div>
 
-        {formError && <div className="callout f-form-error"><b>Couldn't send</b>{formError}</div>}
+        {formError && <div className="callout f-form-error" ref={errBox} role="alert"><b>Couldn&apos;t send</b>{formError}</div>}
 
         <label className="f-check"><span className="box" /><span>{c.checkText}</span></label>
         <div className="f-foot">

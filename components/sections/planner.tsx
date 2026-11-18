@@ -141,6 +141,8 @@ const Arrow = () => <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 
 function Result({ pricing, a, plan, wa, done, setDone, edit, restart, switchTo }: { pricing: Pricing; a: Answers; plan: ReturnType<typeof buildPlan>; wa: string; done: boolean; setDone: (v: boolean) => void; edit: () => void; restart: () => void; switchTo: (id: ProjectType["id"]) => void }) {
   const [busy, setBusy] = useState(false);
+  const doneRef = useRef<HTMLDivElement>(null);
+  useEffect(() => { if (done) { doneRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); doneRef.current?.focus({ preventScroll: true }); } }, [done]);
   const [err, setErr] = useState("");
   const per = plan.type.monthly ? "/month" : "";
   const text = planText(plan, a, pricing.showPrices);
@@ -187,9 +189,12 @@ function Result({ pricing, a, plan, wa, done, setDone, edit, restart, switchTo }
 
       <div className="pl-send">
         {done ? (
-          <div className="pl-done"><b>Got it — your plan is with us.</b><span>We'll reply within a few hours. Want to talk now?</span><a className="action dark" href={waUrl} target="_blank" rel="noreferrer">Chat on WhatsApp <Arrow /></a></div>
+          <div className="pl-done" ref={doneRef} tabIndex={-1} role="status"><b>Got it — your plan is with us.</b><span>We'll reply within a few hours. Want to talk now?</span><a className="action dark" href={waUrl} target="_blank" rel="noreferrer">Chat on WhatsApp <Arrow /></a></div>
         ) : (<>
-          <div className="pl-send-h"><b>Get this plan and a quick call</b><span>We'll look at it and reply with real numbers. No spam, ever.</span></div>
+          <div className="pl-send-l">
+            <div className="pl-send-h"><b>Get this plan and a quick call</b><span>We&apos;ll look at it and reply with real numbers, usually within a day. No spam, ever.</span></div>
+            <div className="pl-alt"><a href={waUrl} target="_blank" rel="noreferrer">Or send it on WhatsApp →</a><a href="/contact">Book a call →</a></div>
+          </div>
           <form onSubmit={submit} className="pl-form">
             <input type="text" name="website" tabIndex={-1} autoComplete="off" className="pl-hp" aria-hidden />
             <label><span>Your name</span><input name="name" required minLength={2} maxLength={120} autoComplete="name" /></label>
@@ -198,7 +203,6 @@ function Result({ pricing, a, plan, wa, done, setDone, edit, restart, switchTo }
             <button className="action dark" type="submit" disabled={busy}>{busy ? "Sending…" : "Send me this plan"} <Arrow /></button>
           </form>
           {err && <p className="pl-err" role="alert">{err}</p>}
-          <div className="pl-alt"><a href={waUrl} target="_blank" rel="noreferrer">Or send it on WhatsApp →</a><a href="/contact">Book a call →</a></div>
         </>)}
       </div>
       <div className="pl-again"><button type="button" onClick={edit}>← Change scope & must-haves</button><button type="button" onClick={restart}>Start over</button></div>
