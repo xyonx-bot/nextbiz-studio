@@ -6,6 +6,8 @@ import { CaseStudy, Compass, isLive } from "@/components/sections/projects";
 import type { ProjectEntry } from "@/components/sections/types";
 import { getProjectEntries, getSections } from "@/lib/config";
 import projectsSeed from "@/lib/seed/projects.json";
+import { getActiveDesign } from "@/lib/design";
+import { CloseF } from "@/components/sections/pages-floating";
 
 /**
  * /projects/[slug] — one project's case study. Reads the SAME
@@ -41,11 +43,14 @@ export default async function ProjectPage({ params }: Props) {
   const sections = await getSections("projects");
   const compass = sections.find((s) => s.key === "compass")?.content as typeof projectsSeed.compass | undefined;
 
+  const soft = (await getActiveDesign()).design.style === "soft";
   return (
     <main className="shell" id="top">
       <Topbar current="/projects" />
       <CaseStudy entry={found.entry} next={found.next} />
-      <Compass content={compass ?? projectsSeed.compass} />
+      {soft
+        ? (() => { const c = compass ?? projectsSeed.compass; return <CloseF micro={c.micro} ask={<>{c.ask[0]} {c.ask[1]}</>} aside={c.aside} cta={c.cta} href="/contact" />; })()
+        : <Compass content={compass ?? projectsSeed.compass} />}
       <Footer />
     </main>
   );

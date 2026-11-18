@@ -4,6 +4,8 @@ import {
   AboutMasthead, ReadingGrid, Story, Defs, Method, People, AboutClose,
 } from "@/components/sections/about";
 import { getSections } from "@/lib/config";
+import { getActiveDesign } from "@/lib/design";
+import { AboutHeroF, StoryF, DefsF, MethodF, PeopleF, CloseF } from "@/components/sections/pages-floating";
 import aboutSeed from "@/lib/seed/about.json";
 
 // S5: seed ⊕ admin config; DB down/empty → seed fallback.
@@ -16,6 +18,23 @@ export default async function AboutPage() {
   const sections = await getSections("about");
   const on = (k: string) => sections.some((s) => s.key === k);
   const by = (k: string) => sections.find((s) => s.key === k)?.content;
+
+  const soft = (await getActiveDesign()).design.style === "soft";
+  if (soft) {
+    const close = by("close") as typeof aboutSeed.close | undefined ?? aboutSeed.close;
+    return (
+      <main className="shell" id="top">
+        <Topbar current="/about" />
+        {on("masthead") && <AboutHeroF content={by("masthead") as typeof aboutSeed.masthead} />}
+        {on("story") && <StoryF content={by("story") as typeof aboutSeed.story} />}
+        {on("defs") && <DefsF content={by("defs") as typeof aboutSeed.defs} />}
+        {on("method") && <MethodF content={by("method") as typeof aboutSeed.method} />}
+        {on("people") && <PeopleF content={by("people") as typeof aboutSeed.people} />}
+        {on("close") && <CloseF micro={close.micro} ask={close.ask} aside={close.aside} cta={close.cta} href="/services" />}
+        <Footer />
+      </main>
+    );
+  }
 
   return (
     <main className="shell" id="top">
