@@ -33,7 +33,10 @@ export type Design = {
     headerCta: boolean;                           // header right side: call text (off) or call + main button (on)
     footer: "light" | "dark";
     planner: "sentence" | "route";                // homepage planner section
+    industries: "list" | "moving";                // homepage industries section
   };
+  /** Project cards: the site's own designed cover, or the real photo (falls back to the made cover when there's none). */
+  covers: "made" | "photo";
   /** Background tone, both styles. */
   tone: "warm" | "white" | "cool";
   header: { cta: string; phone: boolean };
@@ -51,7 +54,8 @@ export const DESIGN_DEFAULTS: Design = {
   motion: "full",
   style: "editorial",
   soft: { blur: true, lift: true, round: "soft" },
-  editorial: { numbers: false, inkRule: false, corners: "signature", labels: "pill", cards: "separate", button: "sharp", headerCta: false, footer: "light", planner: "sentence" },
+  editorial: { numbers: false, inkRule: false, corners: "signature", labels: "pill", cards: "separate", button: "sharp", headerCta: false, footer: "light", planner: "sentence", industries: "list" },
+  covers: "made",
   tone: "warm",
   header: { cta: "Plan a project", phone: true },
   footer: { line1: "Got an idea?", line2: "Let's make it work." },
@@ -92,7 +96,9 @@ export function normalizeDesign(raw: unknown): Design {
       headerCta: bool(r.editorial?.headerCta, d.editorial.headerCta),
       footer: pick(r.editorial?.footer, ["light", "dark"] as const, d.editorial.footer),
       planner: pick(r.editorial?.planner, ["sentence", "route"] as const, d.editorial.planner),
+      industries: pick(r.editorial?.industries, ["list", "moving"] as const, d.editorial.industries),
     },
+    covers: pick(r.covers, ["made", "photo"] as const, d.covers),
     tone: pick(r.tone, ["warm", "white", "cool"] as const, d.tone),
     header: { cta: str(r.header?.cta, d.header.cta, 28), phone: bool(r.header?.phone, d.header.phone) },
     footer: { line1: str(r.footer?.line1, d.footer.line1, 40), line2: str(r.footer?.line2, d.footer.line2, 40) },

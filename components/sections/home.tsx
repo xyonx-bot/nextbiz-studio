@@ -7,6 +7,7 @@ import { ArrowRight, ArrowUpRight, PhoneIcon } from "@/components/icons";
 import { CONTACT } from "@/lib/content";
 import homeContent from "@/lib/seed/home.json";
 import { Highlight } from "@/components/chrome/Design";
+import { Cover, coverFacts } from "@/components/sections/cover";
 
 /* ── shared bits ─────────────────────────────────────────── */
 const Eyebrow = ({ label }: { label: string }) => (
@@ -161,7 +162,7 @@ export function ServicesSplit({ content }: { content?: typeof homeContent.servic
 }
 
 /* ═══ 5 · SELECTED WORK ═══ */
-export function Work({ content }: { content?: typeof homeContent.work }) {
+export function Work({ content, covers = "made" }: { content?: typeof homeContent.work; covers?: "made" | "photo" }) {
   const c = content ?? homeContent.work;
   return (
     <section className="work pad" id="projects">
@@ -176,10 +177,10 @@ export function Work({ content }: { content?: typeof homeContent.work }) {
       <div className="proj-grid">
       {c.items.map((p, i) => (
         <Link className="proj" key={i} href={(p as { href?: string }).href || "/projects"} style={{ display: "block" }}>
-          {p.photo ? (
+          {p.photo && covers === "photo" ? (
             <div className="imgph realimg-box ph"><img src={p.photo} alt={String(p.note ?? "")} /></div>
           ) : (
-            <Placeholder className="ph" note={p.note} />
+            <div className="ph cover-box"><Cover {...coverFacts(p, i)} /></div>
           )}
             <h3>{p.name} <ArrowUpRight /></h3>
             <p>{p.tags}</p>
@@ -207,6 +208,45 @@ export function Industries({ content }: { content?: typeof homeContent.industrie
       </div>
       <div className="ind-mask"><div className="ind-lane">{solid(false)}{solid(true)}</div></div>
       <div className="ind-mask"><div className="ind-lane rev out">{outline(false)}{outline(true)}</div></div>
+    </section>
+  );
+}
+
+/* ═══ 6b · INDUSTRIES — Editorial list: ruled rows, one per field, with what we do for them ═══ */
+const IND_BLURB: Record<string, string> = {
+  "Technology": "Product sites, dashboards and the internal tools behind them.",
+  "Health & Wellness": "Bookings, reminders and WhatsApp follow-ups that fill the calendar.",
+  "Real Estate": "Listings, lead capture and replies that reach buyers first.",
+  "Consumer Brands": "Online stores, catalogues and ads that start conversations.",
+  "Education": "Course sites, enquiry funnels and admissions on autopilot.",
+};
+export function IndustriesList({ content }: { content?: typeof homeContent.industries }) {
+  const c = content ?? homeContent.industries;
+  const items = c.items as { label: string; icon: string; blurb?: string }[];
+  const named = items.filter((it) => !/^and more$/i.test(it.label));
+  return (
+    <section className="indlist pad" aria-label={c.eyebrow}>
+      <div className="indlist-head">
+        <Eyebrow label={c.eyebrow} />
+        <h2>{c.h2a}<br />{c.h2b}</h2>
+        <p className="lede">{c.lede}</p>
+      </div>
+      <ol className="indlist-rows">
+        {named.map((it, i) => (
+          <li key={it.label}>
+            <span className="no">{String(i + 1).padStart(2, "0")}</span>
+            <span className="ic" aria-hidden dangerouslySetInnerHTML={{ __html: it.icon }} />
+            <b>{it.label}</b>
+            <p>{it.blurb || IND_BLURB[it.label] || ""}</p>
+          </li>
+        ))}
+        <li className="more">
+          <span className="no">{String(named.length + 1).padStart(2, "0")}</span>
+          <span className="ic" aria-hidden>+</span>
+          <b>Something else?</b>
+          <Link href="/plan">If it runs on enquiries, we can help. Plan it <ArrowRight /></Link>
+        </li>
+      </ol>
     </section>
   );
 }

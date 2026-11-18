@@ -92,7 +92,7 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
 
   // the two styles (and the planner section choice) render different section components,
   // so switching saves the draft and reloads the preview
-  const layoutKey = `${d.style}:${d.editorial.planner}`;
+  const layoutKey = `${d.style}:${d.editorial.planner}:${d.editorial.industries}:${d.covers}`;
   const lastStyle = useRef(layoutKey);
   useEffect(() => {
     if (lastStyle.current === layoutKey) return;
@@ -161,11 +161,19 @@ export function DesignStudio({ draft, published, history: initialHistory }: { dr
                 <Seg label="Footer" value={d.editorial.footer} onChange={(v) => setIn("editorial", { footer: v })} options={[["light", "Light"], ["dark", "Dark"]]} /></div>
               <div className="dz-toggle as-row"><span><b>Planner section</b><small>Sentence: one big line and a button. Route: five numbered steps</small></span>
                 <Seg label="Planner section" value={d.editorial.planner} onChange={(v) => setIn("editorial", { planner: v })} options={[["sentence", "Sentence"], ["route", "Route"]]} /></div>
+              <div className="dz-toggle as-row"><span><b>Industries section</b><small>List: ruled rows, one per field. Moving: giant scrolling words</small></span>
+                <Seg label="Industries section" value={d.editorial.industries} onChange={(v) => setIn("editorial", { industries: v })} options={[["list", "List"], ["moving", "Moving"]]} /></div>
               <Toggle id="ed-cta" on={d.editorial.headerCta} label="Button in the header" sub="Off (live look): “Call Any Time” + number. On: call button + your header button" onChange={(v) => setIn("editorial", { headerCta: v })} />
               <Toggle id="ed-num" on={d.editorial.numbers} label="Numbered stat cards" sub="01, 02, 03 in the corner of the About step cards" onChange={(v) => setIn("editorial", { numbers: v })} />
               <Toggle id="ed-rule" on={d.editorial.inkRule} label="Ink rules" sub="Section dividers in black instead of grey" onChange={(v) => setIn("editorial", { inkRule: v })} />
             </div>
           )}
+        </section>
+
+        <section className="dz-card">
+          <h2>Project covers</h2>
+          <p className="dz-sub">Made by the site: a designed cover from each project&apos;s name, kind and year, with the screenshot in a small browser window. Real photo: your uploaded image (projects without one still get the made cover).</p>
+          <Seg label="Project covers" value={d.covers} onChange={(v) => set({ covers: v })} options={[["made", "Made by the site"], ["photo", "Real photo"]]} />
         </section>
 
         <section className="dz-card">

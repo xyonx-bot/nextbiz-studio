@@ -8,6 +8,7 @@ import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "@/components/icons";
 import projects from "@/lib/seed/projects.json";
 import type { ProjectEntry, ProjectShot } from "./types";
+import { Cover } from "./cover";
 
 /** Admin content is free-form JSON — never trust the shape at render. */
 const str = (v: unknown): string => (typeof v === "string" ? v : "");
@@ -56,16 +57,20 @@ export function Register({ content }: { content?: typeof projects.register }) {
 }
 
 /** 2 · Project index — featured card + grid; each live card opens its case study */
-export function Entries({ content, note }: { content?: ProjectEntry[]; note?: string }) {
+export function Entries({ content, note, covers = "made" }: { content?: ProjectEntry[]; note?: string; covers?: "made" | "photo" }) {
   const all = list<ProjectEntry>(content ?? projects.entries);
   const featured = all.find(isLive);
   const rest = all.filter((e) => e !== featured);
+  const made = (e: ProjectEntry) => covers === "made" || !str(e.photo);
+  const cover = (e: ProjectEntry, soon = false) => (
+    <div className="cover-box"><Cover name={str(e.h2) || "Next entry"} kind={str(e.type)} no={str(e.no)} year={str(e.year)} photo={str(e.photo)} soon={soon} /></div>
+  );
   return (
     <section className="entry pad" id="work">
       {featured && (
         <Link className="feat" href={projectHref(featured)} id={featured.id}>
           <div className="entry-photo">
-            <Shot src={str(featured.photo)} alt={str(featured.photoNote) || str(featured.h2)} note={str(featured.photoNote)} eager />
+            {made(featured) ? cover(featured) : <Shot src={str(featured.photo)} alt={str(featured.photoNote) || str(featured.h2)} note={str(featured.photoNote)} eager />}
           </div>
           <div className="feat-body">
             <div className="feat-top">
@@ -90,7 +95,7 @@ export function Entries({ content, note }: { content?: ProjectEntry[]; note?: st
             isLive(e) ? (
               <Link className="card" href={projectHref(e)} id={e.id} key={e.id || i}>
                 <div className="entry-photo">
-                  <Shot src={str(e.photo)} alt={str(e.photoNote) || str(e.h2)} note={str(e.photoNote)} />
+                  {made(e) ? cover(e) : <Shot src={str(e.photo)} alt={str(e.photoNote) || str(e.h2)} note={str(e.photoNote)} />}
                 </div>
                 <div className="card-row">
                   <span className="no">{e.no}</span>
@@ -103,10 +108,12 @@ export function Entries({ content, note }: { content?: ProjectEntry[]; note?: st
               </Link>
             ) : (
               <div className="card soon" id={e.id} key={e.id || i}>
-                <div className="soon-slot">
-                  <span className="no">{e.no}</span>
-                  <span className="badge">{e.badge || "In the making"}</span>
-                </div>
+                {covers === "made" ? cover(e, true) : (
+                  <div className="soon-slot">
+                    <span className="no">{e.no}</span>
+                    <span className="badge">{e.badge || "In the making"}</span>
+                  </div>
+                )}
                 <div className="card-row">
                   <div>
                     <h3>{e.h2 || "Next entry"}</h3>
