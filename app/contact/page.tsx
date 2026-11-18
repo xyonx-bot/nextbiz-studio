@@ -36,7 +36,7 @@ export default async function ContactPage() {
             );
           case "response": return soft ? <ResponseF key={s.key} content={by("response") as typeof contactSeed.response} /> : <ResponseLedger key={s.key} content={by("response") as typeof contactSeed.response} />;
           case "faq": return soft ? <FaqF key={s.key} content={by("faq") as typeof contactSeed.faq} /> : <Faq key={s.key} content={by("faq") as typeof contactSeed.faq} />;
-          case "qclose": if (soft) { const q = (by("qclose") as typeof contactSeed.qclose | undefined) ?? contactSeed.qclose; return <CloseF key={s.key} micro={q.micro} ask={<>{q.ask[0]} {q.ask[1]}</>} aside={q.aside} cta={q.cta} href={`tel:${CONTACT.phoneTel}`} />; } return <QClose key={s.key} content={by("qclose") as typeof contactSeed.qclose} />;
+          case "qclose": if (soft) { const q = (by("qclose") as typeof contactSeed.qclose | undefined) ?? contactSeed.qclose; return <CloseF key={s.key} micro={q.micro} ask={<>{q.ask[0]} {q.ask[1]}</>} aside={q.aside} cta={q.cta} href={`tel:${CONTACT.phoneTel}`} />; } return <QClose key={s.key} content={by("qclose") as typeof contactSeed.qclose} channels={((by("desk") as typeof contactSeed.desk | undefined) ?? contactSeed.desk).channels} />;
           default: return null;
         }
       })}
