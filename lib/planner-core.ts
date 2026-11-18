@@ -25,7 +25,9 @@ export type ProjectType = {
   scope: Scope[];
   features: Feature[];
 };
-export type Pricing = { types: ProjectType[]; rushPct: number; showPrices: boolean; placeholder: boolean };
+/** A budget choice. max = the top of the range in ₹; 0 = no upper limit (premium); null = "not sure yet". */
+export type Budget = { id: string; label: string; max: number | null };
+export type Pricing = { types: ProjectType[]; rushPct: number; showPrices: boolean; placeholder: boolean; budgets: Budget[] };
 
 const f = (id: string, label: string, hint: string, price: number, weeks = 0): Feature => ({ id, label, hint, price, weeks });
 const q = (id: string, question: string, ...opts: [string, string, number, number?][]): Scope => ({ id, q: question, opts: opts.map(([oid, label, price, weeks = 0]) => ({ id: oid, label, price, weeks })) });
@@ -33,7 +35,14 @@ const q = (id: string, question: string, ...opts: [string, string, number, numbe
 export const PRICING_DEFAULTS: Pricing = {
   rushPct: 20,
   showPrices: true,
-  placeholder: false, // the defaults are real starting prices now (set Nov 18); the admin can still change them
+  placeholder: false,
+  budgets: [
+    { id: "u10", label: "Up to ₹10k", max: 10000 },
+    { id: "10-25", label: "₹10k – ₹25k", max: 25000 },
+    { id: "25-50", label: "₹25k – ₹50k", max: 50000 },
+    { id: "50+", label: "₹50k+ · Premium", max: 0 },
+    { id: "unsure", label: "Not sure yet", max: null },
+  ], // the defaults are real starting prices now (set Nov 18); the admin can still change them
   types: [
     {
       id: "website", label: "Website", blurb: "A site that brings enquiries",
@@ -145,13 +154,8 @@ export const PRICING_DEFAULTS: Pricing = {
   ],
 };
 
-export const BUDGETS = [
-  { id: "u25", label: "Under ₹25k", max: 25000 },
-  { id: "25-75", label: "₹25k – ₹75k", max: 75000 },
-  { id: "75-2l", label: "₹75k – ₹2L", max: 200000 },
-  { id: "2l+", label: "₹2L+", max: Infinity },
-  { id: "unsure", label: "Not sure yet", max: null as number | null },
-] as const;
+/** The default budget choices (the live list comes from the admin-edited pricing: Pricing.budgets). */
+export const BUDGETS = PRICING_DEFAULTS.budgets;
 export const SIZES = [{ id: "solo", label: "Just me" }, { id: "small", label: "Small team" }, { id: "growing", label: "Growing company" }] as const;
 export const WHEN = [{ id: "relaxed", label: "No rush" }, { id: "normal", label: "In a month or two" }, { id: "asap", label: "ASAP" }] as const;
 
@@ -164,7 +168,7 @@ export function scopeOf(type: ProjectType, picked: Record<string, string> = {}) 
 }
 export type Option = { tier: TierId; name: string; tag: string; price: number; weeks: number; features: Feature[]; extras: Feature[]; later: Feature[] };
 /** tight: even the smallest version is over the stated budget — `alt` is a cheaper way in that fits. */
-export type Plan = { options: Option[]; recommended: TierId; phased: boolean; tight: boolean; alt: { id: ProjectType["id"]; label: string; price: number } | null; core: number; type: ProjectType };
+export type Plan = { options: Option[]; recommended: TierId; phased: boolean; tight: boolean; alt: { id: ProjectType["id"]; label: string; price: number } | null; core: number; type: ProjectType; budgetLabel: string | null };
 
 export const roundPrice = (n: number) => (n >= 100000 ? Math.round(n / 5000) * 5000 : Math.round(n / 1000) * 1000);
 export const inr = (n: number) => n >= 100000 ? `₹${(n / 100000).toFixed(n % 100000 === 0 ? 0 : 1)}L` : `₹${Math.round(n / 1000)}k`;
@@ -184,11 +188,11 @@ export function buildPlan(p: Pricing, a: Answers): Plan {
       weeks: weeksOf(t.weeks + sc.weeks + extras.reduce((s, x) => s + x.weeks, 0)), features: incl, extras, later: [] };
   });
   const core = roundPrice((type.tiers.lean.price + sc.price) * rush);
-  const b = BUDGETS.find((x) => x.id === a.budget);
+  const b = p.budgets.find((x) => x.id === a.budget);
   let recommended: TierId = "rec", phased = false, tight = false;
   let alt: Plan["alt"] = null;
   if (b && b.max !== null) {
-    const max = b.max;
+    const max = b.max === 0 ? Infinity : b.max;
     const lean = options[0];
     // over budget with the extras? keep the smallest version to its core and move the extras to phase 2
     if (lean.price > max && lean.extras.length) {
@@ -207,7 +211,7 @@ export function buildPlan(p: Pricing, a: Answers): Plan {
     }
   } else if (a.size === "solo") recommended = "lean";
   else if (a.size === "growing") recommended = "premium";
-  return { options, recommended, phased, tight, alt, core, type };
+  return { options, recommended, phased, tight, alt, core, type, budgetLabel: b?.label ?? null };
 }
 
 /** A plain-text summary (WhatsApp message, the lead's message in admin). */
@@ -215,7 +219,7 @@ export function planText(p: Plan, a: Answers, showPrices: boolean) {
   const rec = p.options.find((o) => o.tier === p.recommended)!;
   const lines = [
     `Project plan — ${p.type.label}${a.industry ? ` for ${a.industry}` : ""}`,
-    `Size: ${SIZES.find((s) => s.id === a.size)?.label ?? "—"} · Timing: ${WHEN.find((w) => w.id === a.when)?.label ?? "—"} · Budget: ${BUDGETS.find((x) => x.id === a.budget)?.label ?? "—"}`,
+    `Size: ${SIZES.find((s) => s.id === a.size)?.label ?? "—"} · Timing: ${WHEN.find((w) => w.id === a.when)?.label ?? "—"} · Budget: ${p.budgetLabel ?? "—"}`,
     ...(p.type.scope.length ? [`Scope: ${scopeOf(p.type, a.scope).chosen.map((c) => `${c.group.q.replace(/\?$/, "")}: ${c.opt.label}`).join(" · ")}`] : []),
     `Must-haves: ${p.type.features.filter((x) => a.features.includes(x.id)).map((x) => x.label).join(", ") || "none picked"}`,
     `Recommended: ${rec.name} — ${rec.weeks} week${rec.weeks > 1 ? "s" : ""}${showPrices ? `, from ${inr(rec.price)}${p.type.monthly ? "/month" : ""}` : ""}`,
@@ -233,6 +237,12 @@ export function normalizePricing(raw: unknown): Pricing {
     rushPct: num(r.rushPct, PRICING_DEFAULTS.rushPct, 200),
     showPrices: typeof r.showPrices === "boolean" ? r.showPrices : PRICING_DEFAULTS.showPrices,
     placeholder: typeof r.placeholder === "boolean" ? r.placeholder : PRICING_DEFAULTS.placeholder,
+    budgets: PRICING_DEFAULTS.budgets.map((def) => {
+      const sb = Array.isArray(r.budgets) ? r.budgets.find((x) => x?.id === def.id) : undefined;
+      const label = typeof sb?.label === "string" && sb.label.trim() ? sb.label.trim().slice(0, 40) : def.label;
+      // "not sure" stays null; the others keep a number (0 = no upper limit)
+      return { id: def.id, label, max: def.max === null ? null : num(sb?.max, def.max) };
+    }),
     types: PRICING_DEFAULTS.types.map((def) => {
       const s = Array.isArray(r.types) ? r.types.find((t) => t?.id === def.id) : undefined;
       return {

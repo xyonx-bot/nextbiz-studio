@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BUDGETS, SIZES, TIERS, WHEN, buildPlan, inr, planText, scopeOf, type Answers, type Pricing, type ProjectType } from "@/lib/planner-core";
+import { SIZES, TIERS, WHEN, buildPlan, inr, planText, scopeOf, type Answers, type Pricing, type ProjectType } from "@/lib/planner-core";
 
 /**
  * /plan — the project planner. Five quick steps, a preview that builds itself as features are picked,
@@ -117,7 +117,7 @@ export function Planner({ pricing, industries, start, preset = {}, wa }: Props) 
               <p className="pl-sub">This only shapes our suggestion. You'll still see every option.</p>
               {pricing.showPrices && <p className="pl-hint">For what you picked, the smallest version starts from <b>{inr(plan.core)}{type.monthly ? "/mo" : ""}</b>{plan.options[0].price > plan.core ? <> — or <b>{inr(plan.options[0].price)}</b> with all your must-haves</> : null}.</p>}
               <div className="pl-chips big">
-                {BUDGETS.map((b) => <button key={b.id} type="button" className={a.budget === b.id ? "on" : ""} onClick={() => setA((v) => ({ ...v, budget: b.id }))}>{b.label}{type.monthly && b.id !== "unsure" ? " /mo" : ""}</button>)}
+                {pricing.budgets.map((b) => <button key={b.id} type="button" className={a.budget === b.id ? "on" : ""} onClick={() => setA((v) => ({ ...v, budget: b.id }))}>{b.label}{type.monthly && b.id !== "unsure" ? " /mo" : ""}</button>)}
               </div>
             </>)}
 
@@ -179,7 +179,7 @@ function Result({ pricing, a, plan, wa, done, setDone, edit, restart, switchTo }
       </div>
       {plan.tight ? (
         <div className="pl-phase tight">
-          <b>Honest note:</b> {BUDGETS.find((x) => x.id === a.budget)?.label} is tight for {plan.type.label.toLowerCase()} — the smallest version starts from {inr(plan.core)}.
+          <b>Honest note:</b> {plan.budgetLabel} is tight for {plan.type.label.toLowerCase()} — the smallest version starts from {inr(plan.core)}.
           {plan.alt && <> A good way in: <b>{plan.alt.label}</b> from {inr(plan.alt.price)}, then grow from there. <button type="button" onClick={() => switchTo(plan.alt!.id)}>Plan {plan.alt.label.toLowerCase()} instead →</button></>}
         </div>
       ) : plan.phased ? (

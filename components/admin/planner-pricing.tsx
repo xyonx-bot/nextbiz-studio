@@ -13,6 +13,7 @@ export function PlannerPricing({ initial }: { initial: Pricing }) {
   const setTier = (ti: number, tier: string, k: "price" | "weeks", v: string) => setP((x) => ({ ...x, types: x.types.map((t, i) => i !== ti ? t : { ...t, tiers: { ...t.tiers, [tier]: { ...t.tiers[tier as keyof typeof t.tiers], [k]: n(v) } } }) }));
   const setFeat = (ti: number, fi: number, k: "price" | "weeks", v: string) => setP((x) => ({ ...x, types: x.types.map((t, i) => i !== ti ? t : { ...t, features: t.features.map((f, j) => j !== fi ? f : { ...f, [k]: n(v) }) }) }));
   const setScope = (ti: number, gi: number, oi: number, k: "price" | "weeks", v: string) => setP((x) => ({ ...x, types: x.types.map((t, i) => i !== ti ? t : { ...t, scope: t.scope.map((g, j) => j !== gi ? g : { ...g, opts: g.opts.map((o, m) => m !== oi ? o : { ...o, [k]: n(v) }) }) }) }));
+  const setBudget = (i: number, k: "label" | "max", v: string) => setP((x) => ({ ...x, budgets: x.budgets.map((b, j) => j !== i ? b : k === "label" ? { ...b, label: v } : { ...b, max: n(v) }) }));
   const save = () => start(async () => { const r = await savePlannerAction(p); setP((x) => ({ ...x, placeholder: false })); setMsg(r.message); });
   return (
     <div className="pp">
@@ -22,6 +23,22 @@ export function PlannerPricing({ initial }: { initial: Pricing }) {
         <label className="dz-toggle" htmlFor="pp-show"><span><b>Show “from ₹” prices to visitors</b><small>Off: visitors see the three options and timelines only, and you send prices after the call.</small></span>
           <input id="pp-show" type="checkbox" checked={p.showPrices} onChange={(e) => setP({ ...p, showPrices: e.target.checked })} /><i aria-hidden /></label>
         <label className="dz-field" htmlFor="pp-rush" style={{ maxWidth: 220 }}><span>Rush fee for “ASAP” (%)</span><input id="pp-rush" type="number" min={0} max={200} value={p.rushPct} onChange={(e) => setP({ ...p, rushPct: n(e.target.value) })} /></label>
+      </section>
+      <section className="dz-card">
+        <h2>Budget choices</h2>
+        <p className="dz-sub">The ranges visitors pick from in the planner. “Up to” is the top of each range in ₹ (0 means no upper limit). The planner recommends the biggest option that fits it. The contact form&apos;s budget list is edited in Pages → Contact.</p>
+        <div className="pp-grid">
+          <span className="h">Label</span><span className="h">Up to ₹</span><span className="h"></span>
+          {p.budgets.map((b, i) => (
+            <div key={b.id} style={{ display: "contents" }}>
+              <input type="text" maxLength={40} value={b.label} onChange={(e) => setBudget(i, "label", e.target.value)} aria-label={`Budget ${i + 1} label`} />
+              {b.max === null
+                ? <span><small>No range (“not sure”)</small></span>
+                : <input type="number" min={0} step={1000} value={b.max} onChange={(e) => setBudget(i, "max", e.target.value)} aria-label={`${b.label} up to`} />}
+              <span><small>{b.max === null ? "" : b.max === 0 ? "no upper limit" : `shows up to ${inr(b.max)}`}</small></span>
+            </div>
+          ))}
+        </div>
       </section>
       {p.types.map((t, ti) => (
         <section className="dz-card" key={t.id}>

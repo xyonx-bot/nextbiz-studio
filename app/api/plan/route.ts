@@ -5,7 +5,7 @@ import { insertLead, countRecentLeadsByIp, addSystemNote } from "@/lib/db";
 import { notifySlack } from "@/lib/slack";
 import { sendLeadEmails } from "@/lib/mail";
 import { getPricing } from "@/lib/planner";
-import { BUDGETS, SIZES, WHEN, buildPlan, planText } from "@/lib/planner-core";
+import { SIZES, WHEN, buildPlan, planText } from "@/lib/planner-core";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +20,7 @@ const Body = z.object({
     size: z.enum(SIZES.map((s) => s.id) as [string, ...string[]]).or(z.literal("")).default(""),
     features: z.array(z.string().max(20)).max(40).default([]),
     when: z.enum(WHEN.map((w) => w.id) as [string, ...string[]]).default("normal"),
-    budget: z.enum(BUDGETS.map((b) => b.id) as [string, ...string[]]).or(z.literal("")).default(""),
+    budget: z.string().max(20).default(""),
     scope: z.record(z.string().max(20), z.string().max(20)).optional(),
   }),
 });
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     const plan = buildPlan(pricing, a);
     const lead = await insertLead({
       name: b.name, phone: phone || null, email: email || null, service: SERVICE[a.type],
-      budget: BUDGETS.find((x) => x.id === a.budget)?.label ?? null,
+      budget: plan.budgetLabel,
       message: planText(plan, a, true), ipHash, source: "planner",
       plan: { answers: a, recommended: plan.recommended, phased: plan.phased, options: plan.options.map((o) => ({ tier: o.tier, price: o.price, weeks: o.weeks })), pricesShown: pricing.showPrices, placeholderPrices: pricing.placeholder },
     });

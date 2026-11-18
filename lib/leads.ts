@@ -16,9 +16,10 @@ export const SERVICE_OPTIONS = [
 ] as const;
 
 export const BUDGET_OPTIONS = [
-  "Under ₹25k",
-  "₹25k – ₹75k",
-  "₹75k – ₹2L",
+  "Up to ₹10k",
+  "₹10k – ₹25k",
+  "₹25k – ₹50k",
+  "₹50k+ · Premium",
   "Not sure yet",
 ] as const;
 

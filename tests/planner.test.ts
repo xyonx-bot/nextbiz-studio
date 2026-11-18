@@ -6,7 +6,7 @@ const plan = (a: Partial<Answers>) => buildPlan(PRICING_DEFAULTS, { type: "websi
 
 describe("project planner budget", () => {
   it("never recommends an option over a small budget when the core fits — extras move to phase 2", () => {
-    const p = plan({ type: "website", features: all("website"), budget: "u25", when: "asap" });
+    const p = plan({ type: "website", features: all("website"), budget: "10-25", when: "asap" });
     const best = p.options.find((o) => o.tier === p.recommended)!;
     expect(best.price).toBeLessThanOrEqual(25000);
     expect(p.phased).toBe(true);
@@ -14,13 +14,13 @@ describe("project planner budget", () => {
     expect(p.tight).toBe(false);
   });
   it("is honest when even the smallest version is over budget, and suggests something that fits", () => {
-    const p = plan({ type: "custom", budget: "u25" });
+    const p = plan({ type: "custom", budget: "10-25" });
     expect(p.tight).toBe(true);
     expect(p.alt).not.toBeNull();
     expect(p.alt!.price).toBeLessThanOrEqual(25000);
   });
   it("recommends the biggest option that fits a larger budget", () => {
-    const p = plan({ type: "store", budget: "2l+" });
+    const p = plan({ type: "store", budget: "50+" });
     expect(p.recommended).toBe("premium");
   });
   it("adds the rush fee for ASAP", () => {
