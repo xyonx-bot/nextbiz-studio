@@ -155,7 +155,6 @@ export function ServicesSplit({ content }: { content?: typeof homeContent.servic
           <Placeholder className="ph" note={c.imageNote} />
         )}
         <div className="photo-card">{c.card.map((l: string, i: number) => <span key={i}>{l}<br /></span>)}<sup>™</sup></div>
-        <div className="sticky scribble">{c.sticky.map((l: string, i: number) => <span key={i}>{l}<br /></span>)}</div>
       </div>
     </section>
   );

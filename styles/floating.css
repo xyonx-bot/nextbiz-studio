@@ -163,3 +163,14 @@ html[data-motion="off"] .fl-partners-track { -webkit-mask: none; mask: none; }
 .fl-tile.intro .txt { display: flex; flex-direction: column; gap: 14px; }
 .fl-rail { scroll-padding-inline: var(--pad-x); }
 @media (max-width: 760px) { .fl-rail { scroll-padding-inline: 22px; } }
+
+/* About intro tile: facts across the top and a soft accent light, so the sand card isn't an empty block */
+.fl-tile.intro { position: relative; overflow: hidden; isolation: isolate; }
+.fl-tile.intro::before { content: ""; position: absolute; z-index: -1; width: 70%; aspect-ratio: 1; right: -22%; top: -30%; border-radius: 50%;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--acc) 38%, transparent), transparent); }
+.fl-intro-top { display: flex; flex-direction: column; align-items: flex-start; gap: 22px; }
+.fl-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0; width: 100%; }
+.fl-facts div { background: color-mix(in srgb, var(--card) 80%, transparent); border-radius: 18px; padding: 14px 16px; min-width: 0; }
+.fl-facts dt { font-size: clamp(26px, 2.6vw, 36px); font-weight: 500; letter-spacing: -.04em; line-height: 1; }
+.fl-facts dd { margin: 6px 0 0; font-size: 12.5px; color: var(--muted); line-height: 1.35; }
+@media (max-width: 480px) { .fl-facts { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .fl-facts div:last-child { grid-column: 1 / -1; } }

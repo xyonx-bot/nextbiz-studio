@@ -187,3 +187,12 @@
   /* wireframe's 1fr auto leaves the inline-call on an implicit 3rd track;
      minmax(0,1fr) lets the h2 track shrink instead of spilling @375 */
 }
+
+/* Contact band: the handwritten note sits on the empty left of the desk photo, not over the objects */
+.cimg .scribble { right: auto; left: 28px; top: 34px; }
+/* Phones: stack the closing band — headline, button, then the call link */
+@media (max-width: 560px) {
+  .contact { grid-template-columns: minmax(0, 1fr); gap: 18px; justify-items: start; }
+  .contact h2 { font-size: 36px; line-height: 1.05; }
+  .contact .action { width: 100%; justify-content: space-between; }
+}

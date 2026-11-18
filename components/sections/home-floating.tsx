@@ -59,7 +59,15 @@ export function AboutF({ content }: { content?: typeof homeContent.about }) {
     <section className="fl-about pad" id="about">
       <div className="fl-bento">
         <div className="fl-tile intro">
-          <Pill label={c.eyebrow} />
+          <div className="fl-intro-top">
+            <Pill label={c.eyebrow} />
+            {/* the same facts as the About page ledger */}
+            <dl className="fl-facts">
+              <div><dt>03</dt><dd>core people</dd></div>
+              <div><dt>+</dt><dd>specialists per project</dd></div>
+              <div><dt>KOL</dt><dd>Kolkata, working everywhere</dd></div>
+            </dl>
+          </div>
           <div className="txt"><h2>{c.h2}</h2><p>{c.lede}</p></div>
         </div>
         <div className="fl-tile photo"><Img src={c.photo} note={c.imageNote} /></div>
