@@ -20,6 +20,13 @@ export function DeskForm({ content, variant = "classic" }: { content?: typeof co
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState<null | { name: string; via: "whatsapp" | "email" }>(null);
   const [pick, setPick] = useState<{ service: string; budget: string }>({ service: "", budget: "" });
+  // live "your brief so far" summary (Editorial sheet) — read from the form as the visitor types
+  const [draft, setDraft] = useState({ name: "", contact: "", words: 0 });
+  const readDraft = (form: HTMLFormElement) => {
+    const fd = new FormData(form);
+    const v = (k: string) => String(fd.get(k) ?? "").trim();
+    setDraft({ name: v("name"), contact: v("phone") || v("email"), words: v("brief").split(/\s+/).filter(Boolean).length });
+  };
   const done = useRef<HTMLDivElement>(null);
   const errBox = useRef<HTMLDivElement>(null);
   // bring the confirmation (or the error) into view and announce it, wherever the visitor had scrolled to
@@ -105,7 +112,7 @@ export function DeskForm({ content, variant = "classic" }: { content?: typeof co
       </div>
     );
     const options = (key: "service" | "budget", list: string[]) => (
-      <div className="cs-opts" role="radiogroup" aria-labelledby={`cs-${key}-l`}>
+      <div className={`cs-opts n${list.length}`} role="radiogroup" aria-labelledby={`cs-${key}-l`}>
         {list.map((o) => (
           <button key={o} type="button" role="radio" aria-checked={pick[key] === o} className={pick[key] === o ? "on" : ""}
             onClick={() => setPick((v) => ({ ...v, [key]: v[key] === o ? "" : o }))}>{o}</button>
@@ -114,12 +121,13 @@ export function DeskForm({ content, variant = "classic" }: { content?: typeof co
       </div>
     );
     return (
-      <form className="csheet-form" onSubmit={onSubmit} noValidate>
+      <div className="cs-layout">
+      <form className="csheet-form" onSubmit={onSubmit} onInput={(e) => readDraft(e.currentTarget)} noValidate>
         <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }} />
         <div className="cs-grid">
-          {cell("name", f.name.label, <input id="cs-name" name="name" type="text" autoComplete="name" placeholder={f.name.placeholder} aria-invalid={!!errors.name} />, { err: errors.name })}
-          {cell("phone", f.phone.label, <input id="cs-phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder={f.phone.placeholder} aria-invalid={!!errors.phone} />, { err: errors.phone })}
-          {cell("email", f.email.label, <input id="cs-email" name="email" type="email" autoComplete="email" placeholder={f.email.placeholder} aria-invalid={!!errors.email} />, { cls: "end", note: "(or phone)", err: errors.email })}
+          {cell("name", f.name.label, <input id="cs-name" name="name" type="text" autoComplete="name" placeholder={f.name.placeholder} aria-invalid={!!errors.name} />, { cls: "w6", err: errors.name })}
+          {cell("phone", f.phone.label, <input id="cs-phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder={f.phone.placeholder} aria-invalid={!!errors.phone} />, { cls: "w3", err: errors.phone })}
+          {cell("email", f.email.label, <input id="cs-email" name="email" type="email" autoComplete="email" placeholder={f.email.placeholder} aria-invalid={!!errors.email} />, { cls: "w3 end", note: "(or phone)", err: errors.email })}
           <div className="cs-cell w6"><span className="cs-l" id="cs-service-l">{f.service.label}</span>{options("service", f.service.options)}</div>
           <div className="cs-cell w6"><span className="cs-l" id="cs-budget-l">{f.budget.label} <span className="cs-note">(optional)</span></span>{options("budget", f.budget.options)}</div>
           {cell("brief", f.brief.label, <textarea id="cs-brief" name="brief" placeholder={f.brief.placeholder} aria-invalid={!!errors.message} />, { cls: "w6", err: errors.message })}
@@ -132,6 +140,35 @@ export function DeskForm({ content, variant = "classic" }: { content?: typeof co
           </div>
         </div>
       </form>
+      <aside className="cs-aside" aria-label="Your brief so far">
+        <div className="cs-sum">
+          <span className="micro">Your brief so far</span>
+          <ul>
+            {([
+              ["Name", draft.name],
+              ["Contact", draft.contact],
+              ["Need", pick.service],
+              ["Budget", pick.budget || ""],
+              ["Brief", draft.words ? `${draft.words} word${draft.words > 1 ? "s" : ""}` : ""],
+            ] as [string, string][]).map(([k, v]) => (
+              <li key={k} className={v ? "ok" : ""}><span>{k}</span><b>{v || "—"}</b></li>
+            ))}
+          </ul>
+          <p className="cs-ready">{draft.name && draft.contact && draft.words >= 3 ? "Ready to send." : "Name, a way to reach you and a few words is all we need."}</p>
+        </div>
+        <div className="cs-alt">
+          <span className="micro">Rather not type?</span>
+          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><b>WhatsApp us</b><span>Usually within an hour</span></a>
+          <a href={`tel:${CONTACT.phoneTel}`}><b>Call {CONTACT.phoneDisplay}</b><span>Mon–Sat, 10:00–19:00</span></a>
+          <a href="/plan"><b>Use the project planner</b><span>Three options with prices, in a minute</span></a>
+        </div>
+        <ul className="cs-promise">
+          <li>Reply within 1 business day</li>
+          <li>From the person doing the work</li>
+          <li>No sales script, no spam</li>
+        </ul>
+      </aside>
+      </div>
     );
   }
 

@@ -343,3 +343,46 @@ html[data-style="soft"] .cf-alert { border-radius: 14px; }
 }
 @media (max-width: 480px) { .cs-acc summary { grid-template-columns: 34px minmax(0, 1fr) 32px; } .cs-acc details p { padding-left: 46px; } }
 @media (prefers-reduced-motion: reduce) { .cs-acc details::before, .cs-pm::before, .cs-pm::after { transition: none; } }
+
+/* Nov 18 — form in a focused column; a sticky side panel uses the rest of the width */
+.cs-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); gap: clamp(30px, 5vw, 80px); align-items: start; }
+.csheet-form { max-width: 860px; min-width: 0; }
+.cs-cell.w3 { grid-column: span 3; }
+.cs-cell.w3:not(.end) { padding-left: 0; }
+.cs-cell.w3.end { padding-right: 0; }
+.cs-opts.n4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.cs-opts.n5, .cs-opts.n6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.cs-opts.n5 button:last-of-type { grid-column: span 2; }
+.cs-aside { position: sticky; top: 100px; display: grid; gap: 22px; }
+.cs-sum { border: 1px solid var(--ink); background: var(--card); padding: 18px 18px 14px; display: grid; gap: 10px; }
+.cs-sum ul { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.cs-sum li { display: grid; grid-template-columns: 76px minmax(0, 1fr) 16px; gap: 10px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 13px; }
+.cs-sum li span { color: var(--muted); }
+.cs-sum li b { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #B4AFA7; }
+.cs-sum li::after { content: ""; width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid #CFCAC2; }
+.cs-sum li.ok b { color: var(--ink); }
+.cs-sum li.ok::after { border-color: var(--ink); background: var(--acc) url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23090B0F' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center / 10px no-repeat; }
+.cs-ready { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+.cs-alt { display: grid; border-top: 1px solid var(--ink); }
+.cs-alt .micro { padding: 12px 0 4px; }
+.cs-alt a { display: grid; gap: 2px; padding: 12px 28px 12px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); position: relative; transition: padding .25s ease; }
+.cs-alt a::after { content: "→"; position: absolute; right: 2px; top: 50%; translate: 0 -50%; font-weight: 700; transition: transform .2s; }
+.cs-alt a:hover { padding-left: 8px; } .cs-alt a:hover::after { transform: translateX(3px); }
+.cs-alt a b { font-size: 14.5px; } .cs-alt a span { font-size: 12.5px; color: var(--muted); }
+.cs-promise { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.cs-promise li { display: flex; gap: 10px; align-items: center; font-size: 13px; color: var(--muted); }
+.cs-promise li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--acc); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 35%, transparent); flex: none; }
+@media (max-width: 1100px) {
+  .cs-layout { grid-template-columns: minmax(0, 1fr); }
+  .csheet-form { max-width: none; }
+  .cs-aside { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+  .cs-sum { display: none; } /* on smaller screens the summary would sit below the form — skip it */
+  .cs-promise { align-self: center; }
+}
+@media (max-width: 900px) {
+  .cs-cell.w3 { grid-column: auto; padding-right: 0; }
+  .cs-opts.n5, .cs-opts.n4, .cs-opts.n6 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .cs-opts.n5 button:last-of-type { grid-column: 1 / -1; }
+  .cs-aside { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) { .cs-opts.n5, .cs-opts.n4, .cs-opts.n6 { grid-template-columns: minmax(0, 1fr); } }

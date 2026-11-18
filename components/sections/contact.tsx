@@ -144,11 +144,6 @@ export function ContactSheet({ content, form }: { content?: typeof contact.desk;
           <h1>{c.h1[0]} {c.h1[1]}</h1>
           <p className="lede">{c.lede.replace(/\s*on the right/i, " below")}</p>
         </div>
-        <dl className="cs-facts">
-          <div><dt>Reply</dt><dd>within 1 business day</dd></div>
-          <div><dt>From</dt><dd>the person doing the work</dd></div>
-          <div><dt>Takes</dt><dd>about 2 minutes</dd></div>
-        </dl>
       </div>
       {form !== null && <div className="cs-body pad"><DeskForm content={form ?? undefined} variant="sheet" /></div>}
     </section>
