@@ -24,7 +24,7 @@ const Body = z.object({
     scope: z.record(z.string().max(20), z.string().max(20)).optional(),
   }),
 });
-const SERVICE: Record<string, string> = { website: "A new website", store: "A new website", whatsapp: "WhatsApp / Meta solutions", instagram: "Marketing & social media", custom: "Not sure yet — help me shape it" };
+const SERVICE: Record<string, string> = { website: "A new website", store: "Online store", whatsapp: "WhatsApp automation / Meta solutions", instagram: "Marketing & social media", custom: "Custom software / web app" };
 
 /** POST /api/plan — a plan from /plan becomes a lead. The plan is rebuilt here from the admin's pricing. */
 export async function POST(req: Request) {

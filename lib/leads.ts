@@ -9,9 +9,11 @@ import { z } from "zod";
  */
 export const SERVICE_OPTIONS = [
   "A new website",
+  "Online store",
   "Marketing & social media",
-  "WhatsApp / Meta solutions",
-  "Meta Proxy (the product)",
+  "WhatsApp automation / Meta solutions",
+  "AI app or chatbot",
+  "Custom software / web app",
   "Not sure yet — help me shape it",
 ] as const;
 
