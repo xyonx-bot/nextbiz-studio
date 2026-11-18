@@ -146,3 +146,12 @@
   .faq-item { grid-template-columns: 40px 1fr; }
   .qclose { padding-top: 50px; padding-bottom: 55px; }
 }
+
+/* Nov 18 — cleaner boxes: one 1px border, the same radius everywhere, a single focus ring (no double
+   border / inset underline), a normal-sized chevron, and the same height for inputs and selects. */
+.f-row input, .f-row select, .f-row textarea { border-radius: 6px; min-height: 42px; line-height: 1.4; transition: border-color .15s ease, box-shadow .15s ease; box-shadow: none; }
+.f-row input:hover, .f-row select:hover, .f-row textarea:hover { border-color: #BDB8AF; }
+.f-row input:focus, .f-row select:focus, .f-row textarea:focus { border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 45%, transparent); }
+.f-row select { background-size: 14px 14px; background-position: right 12px center; padding-right: 36px; cursor: pointer; }
+.f-row.err input, .f-row.err select, .f-row.err textarea { box-shadow: 0 0 0 3px rgba(179, 38, 30, .12); }
+html[data-corners="sharp"] :is(.f-row input, .f-row select, .f-row textarea) { border-radius: 0; }

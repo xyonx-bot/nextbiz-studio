@@ -39,7 +39,7 @@ html[data-acc-nav] .mobilenav nav a.on .no { color: var(--acc-text); }
 html[data-acc-details] .orbit:not(.adminui *)::after { background: var(--acc); }
 html[data-acc-details] .text-link:not(.adminui *) { border-bottom: 2px solid var(--acc); }
 html[data-acc-details] .callcell svg, html[data-acc-details] .mobilenav .mn-call svg { color: var(--acc-text); stroke: var(--acc-text); }
-html[data-acc-details] :is(.f-row input, .f-row select, .f-row textarea):not(.adminui *):focus { border-color: var(--acc-text); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 35%, transparent); }
+html[data-acc-details] :is(.f-row input, .f-row select, .f-row textarea):not(.adminui *):focus { border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 45%, transparent); }
 
 /* ── dark sections (NextBiz One waitlist, industries panel) ── */
 html[data-acc-dark] .waitlist { background: radial-gradient(55% 75% at 100% 0%, color-mix(in srgb, var(--acc) 16%, transparent), transparent 70%), radial-gradient(40% 60% at 0% 100%, color-mix(in srgb, var(--acc) 8%, transparent), transparent 70%), var(--slab); }

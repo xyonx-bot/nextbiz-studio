@@ -300,3 +300,74 @@ html[data-btn="pill"] .psent-btn { border-radius: 999px; }
   .indlist-rows li:hover { padding-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .indlist-rows li, .indlist-rows li::before, .indlist-rows .ic { transition: none; } }
+
+/* ── sizing questions (both styles) ── */
+.pl-scope { display: grid; gap: 4px; margin-bottom: 8px; }
+.pl-sq .pl-q { margin: 16px 0 8px; }
+.pl-seg { display: flex; flex-wrap: wrap; gap: 8px; }
+.pl-seg button { appearance: none; font: inherit; font-size: 13px; font-weight: 700; color: var(--ink); background: var(--card); border: 1px solid var(--line); border-radius: 99px; padding: 9px 15px; cursor: pointer; display: inline-flex; align-items: baseline; gap: 8px; transition: border-color .15s, background .15s; }
+.pl-seg button small { font-size: 11px; font-weight: 700; color: var(--muted); }
+.pl-seg button:hover { border-color: var(--ink); }
+.pl-seg button.on { background: var(--acc); border-color: var(--acc); color: var(--acc-on); }
+.pl-seg button.on small { color: color-mix(in srgb, var(--acc-on) 70%, transparent); }
+.pl-scope-sum { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.pl-scope-sum span { font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 99px; background: var(--soft); }
+
+/* ============================================================
+   EDITORIAL /plan — the same ruled-sheet language as the rest of Editorial: numbered hairline steps,
+   joined cells instead of floating cards, ink rules, square checkboxes, ruled option columns.
+   (Soft keeps the rounded planner above.)
+   ============================================================ */
+html:not([data-style="soft"]) .pl-prog { gap: 0; counter-reset: st; border-top: 1px solid var(--line); }
+html:not([data-style="soft"]) .pl-prog button { counter-increment: st; padding-top: 12px; position: relative; flex-direction: row; gap: 8px; align-items: baseline; }
+html:not([data-style="soft"]) .pl-prog button::before { content: counter(st, decimal-leading-zero); font-variant-numeric: tabular-nums; color: var(--muted); }
+html:not([data-style="soft"]) .pl-prog button i { position: absolute; left: 0; right: 0; top: -1px; height: 2px; border-radius: 0; background: transparent; }
+html:not([data-style="soft"]) .pl-prog button.done i { background: var(--ink); }
+html:not([data-style="soft"]) .pl-prog button.on i { background: var(--acc); height: 3px; }
+html:not([data-style="soft"]) .pl-prog button.on::before { color: var(--acc-text); }
+html:not([data-style="soft"]) .pl-card h2, html:not([data-style="soft"]) .pl-result h2 { margin-top: 30px; }
+
+html:not([data-style="soft"]) .pl-types { gap: 0; border-top: 1px solid var(--ink); border-left: 1px solid var(--line); }
+html:not([data-style="soft"]) .pl-type { border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; padding: 22px 20px; position: relative; }
+html:not([data-style="soft"]) .pl-type::before { content: ""; position: absolute; left: 0; right: 0; top: -1px; height: 3px; background: var(--acc); transform: scaleX(0); transform-origin: left; transition: transform .35s cubic-bezier(.2, .7, .2, 1); }
+html:not([data-style="soft"]) .pl-type:hover, html:not([data-style="soft"]) .pl-type:focus-visible { transform: none; box-shadow: none; background: var(--card); }
+html:not([data-style="soft"]) .pl-type:hover::before, html:not([data-style="soft"]) .pl-type.on::before { transform: scaleX(1); }
+html:not([data-style="soft"]) .pl-type.on { background: var(--card); }
+html:not([data-style="soft"]) .pl-type .ic { border-radius: 50%; background: transparent; border: 1px solid var(--line); }
+html:not([data-style="soft"]) .pl-type:hover .ic, html:not([data-style="soft"]) .pl-type.on .ic { background: var(--acc); border-color: var(--acc); }
+
+html:not([data-style="soft"]) :is(.pl-chips, .pl-seg) button { border-radius: 3px; }
+html:not([data-style="soft"]) :is(.pl-chips, .pl-seg) button.on { background: var(--ink); border-color: var(--ink); color: var(--paper); box-shadow: inset 0 -3px 0 var(--acc); }
+html:not([data-style="soft"]) .pl-seg button.on small { color: color-mix(in srgb, var(--paper) 65%, transparent); }
+html:not([data-style="soft"]) .pl-q { font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+
+html:not([data-style="soft"]) .pl-feats { gap: 0 24px; border-top: 1px solid var(--ink); }
+html:not([data-style="soft"]) .pl-feat { border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; padding: 13px 4px; }
+html:not([data-style="soft"]) .pl-feat:hover { background: var(--card); }
+html:not([data-style="soft"]) .pl-feat .box { border-radius: 2px; }
+html:not([data-style="soft"]) .pl-feat.on { border-color: var(--line); }
+
+html:not([data-style="soft"]) .pl-when { gap: 0; border-top: 1px solid var(--ink); border-left: 1px solid var(--line); }
+html:not([data-style="soft"]) .pl-when button { border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; padding: 20px; }
+html:not([data-style="soft"]) .pl-when button.on { background: var(--card); box-shadow: inset 0 3px 0 var(--acc); }
+
+html:not([data-style="soft"]) .pl-nav { border-top: 1px solid var(--ink); }
+
+html:not([data-style="soft"]) .pl-opts { gap: 0; border-top: 1px solid var(--ink); border-left: 1px solid var(--line); }
+html:not([data-style="soft"]) .pl-opt { border: 0; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; padding: 22px 20px; }
+html:not([data-style="soft"]) .pl-opt.rec { border-color: var(--line); box-shadow: inset 0 3px 0 var(--acc); background: var(--card); }
+html:not([data-style="soft"]) .pl-opt .pick { border-radius: 3px; }
+html:not([data-style="soft"]) .pl-opt .later em { border-radius: 3px; }
+html:not([data-style="soft"]) :is(.pl-phase, .pl-hint) { border-radius: 0; background: transparent; border: 0; border-left: 3px solid var(--acc); padding: 6px 0 6px 14px; }
+html:not([data-style="soft"]) .pl-phase button { border-radius: 3px; }
+html:not([data-style="soft"]) .pl-send { border: 0; border-top: 2px solid var(--ink); border-radius: 0; background: transparent; padding: 20px 0 0; }
+html:not([data-style="soft"]) .pl-form input { border-radius: 6px; background: var(--card); }
+html:not([data-style="soft"]) .pl-scope-sum span { border-radius: 3px; border: 1px solid var(--line); background: transparent; }
+
+/* the live preview: a hairline frame on sand, labelled like a figure */
+html:not([data-style="soft"]) .pl-side { border-radius: 0; background: var(--soft); border: 1px solid var(--line); padding: 44px 24px 28px; }
+html:not([data-style="soft"]) .pl-side::before { content: "Fig. — Live preview"; position: absolute; left: 16px; top: 14px; font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+html:not([data-style="soft"]) .pl-side { position: sticky; }
+html[data-corners="sharp"] .pl-type .ic { border-radius: 0; }
+html:not([data-style="soft"]) .pl-opt .top { flex-wrap: nowrap; min-height: 22px; }
+html:not([data-style="soft"]) .pl-opt .pick { white-space: nowrap; font-size: 9px; padding: 3px 7px; }

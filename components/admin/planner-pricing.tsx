@@ -12,6 +12,7 @@ export function PlannerPricing({ initial }: { initial: Pricing }) {
   const n = (v: string) => Math.max(0, Math.round(Number(v) || 0));
   const setTier = (ti: number, tier: string, k: "price" | "weeks", v: string) => setP((x) => ({ ...x, types: x.types.map((t, i) => i !== ti ? t : { ...t, tiers: { ...t.tiers, [tier]: { ...t.tiers[tier as keyof typeof t.tiers], [k]: n(v) } } }) }));
   const setFeat = (ti: number, fi: number, k: "price" | "weeks", v: string) => setP((x) => ({ ...x, types: x.types.map((t, i) => i !== ti ? t : { ...t, features: t.features.map((f, j) => j !== fi ? f : { ...f, [k]: n(v) }) }) }));
+  const setScope = (ti: number, gi: number, oi: number, k: "price" | "weeks", v: string) => setP((x) => ({ ...x, types: x.types.map((t, i) => i !== ti ? t : { ...t, scope: t.scope.map((g, j) => j !== gi ? g : { ...g, opts: g.opts.map((o, m) => m !== oi ? o : { ...o, [k]: n(v) }) }) }) }));
   const save = () => start(async () => { const r = await savePlannerAction(p); setP((x) => ({ ...x, placeholder: false })); setMsg(r.message); });
   return (
     <div className="pp">
@@ -34,6 +35,18 @@ export function PlannerPricing({ initial }: { initial: Pricing }) {
               </div>
             ))}
           </div>
+          <details className="pp-feats"><summary>Sizing answers ({t.scope.length} questions) — the visitor picks one answer per question; it&apos;s added to all three options</summary>
+            <div className="pp-grid">
+              <span className="h">Question · answer</span><span className="h">+ ₹</span><span className="h">+ weeks</span>
+              {t.scope.map((g, gi) => g.opts.map((o, oi) => (
+                <div key={`${g.id}-${o.id}`} style={{ display: "contents" }}>
+                  <span>{o.label}<small>{g.q}{oi === 0 ? " · default answer" : ""}</small></span>
+                  <input type="number" min={0} step={1000} value={o.price} onChange={(e) => setScope(ti, gi, oi, "price", e.target.value)} aria-label={`${g.q} ${o.label} price`} />
+                  <input type="number" min={0} max={52} value={o.weeks} onChange={(e) => setScope(ti, gi, oi, "weeks", e.target.value)} aria-label={`${g.q} ${o.label} weeks`} />
+                </div>
+              )))}
+            </div>
+          </details>
           <details className="pp-feats"><summary>Add-on prices ({t.features.length} features) — charged when a visitor picks one that an option doesn&apos;t include</summary>
             <div className="pp-grid">
               <span className="h">Feature</span><span className="h">+ ₹</span><span className="h">+ weeks</span>

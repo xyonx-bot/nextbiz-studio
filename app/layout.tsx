@@ -1,20 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope, Nothing_You_Could_Do } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { getActiveDesign } from "@/lib/design";
 import { designAttrs, designVars } from "@/lib/design-core";
 import { AnnouncementBar, DesignProvider } from "@/components/chrome/Design";
 import { Motion } from "@/components/chrome/Motion";
 
-const manrope = Manrope({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+// Fonts ship with the site (app/fonts, latin subset from Google Fonts) so builds never depend on
+// downloading them — the Google Fonts fetch failed several beta builds.
+const manrope = localFont({
+  src: "./fonts/manrope-latin-var.woff2",
+  weight: "200 800",
   variable: "--font-manrope",
   display: "swap",
 });
 
-const scribbleFont = Nothing_You_Could_Do({
-  subsets: ["latin"],
+const scribbleFont = localFont({
+  src: "./fonts/nothing-you-could-do-latin.woff2",
   weight: "400",
   variable: "--font-scribble-family",
   display: "swap",

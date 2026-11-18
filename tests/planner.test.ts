@@ -26,4 +26,13 @@ describe("project planner budget", () => {
   it("adds the rush fee for ASAP", () => {
     expect(plan({ when: "asap" }).options[1].price).toBeGreaterThan(plan({ when: "normal" }).options[1].price);
   });
+  it("sizing answers add to every option and to the core price", () => {
+    const small = plan({ type: "store" }), big = plan({ type: "store", scope: { products: "n4", upload: "u3" } });
+    big.options.forEach((o, i) => expect(o.price).toBeGreaterThan(small.options[i].price));
+    expect(big.core).toBeGreaterThan(small.core);
+    expect(big.options[0].weeks).toBeGreaterThan(small.options[0].weeks);
+  });
+  it("ignores unknown sizing answers", () => {
+    expect(plan({ scope: { pages: "nope" } }).options[1].price).toBe(plan({}).options[1].price);
+  });
 });

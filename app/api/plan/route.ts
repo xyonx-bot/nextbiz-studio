@@ -18,9 +18,10 @@ const Body = z.object({
     type: z.enum(["website", "store", "whatsapp", "instagram", "custom"]),
     industry: z.string().max(60).default(""),
     size: z.enum(SIZES.map((s) => s.id) as [string, ...string[]]).or(z.literal("")).default(""),
-    features: z.array(z.string().max(20)).max(20).default([]),
+    features: z.array(z.string().max(20)).max(40).default([]),
     when: z.enum(WHEN.map((w) => w.id) as [string, ...string[]]).default("normal"),
     budget: z.enum(BUDGETS.map((b) => b.id) as [string, ...string[]]).or(z.literal("")).default(""),
+    scope: z.record(z.string().max(20), z.string().max(20)).optional(),
   }),
 });
 const SERVICE: Record<string, string> = { website: "A new website", store: "A new website", whatsapp: "WhatsApp / Meta solutions", instagram: "Marketing & social media", custom: "Not sure yet — help me shape it" };

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BUDGETS, SIZES, TIERS, WHEN, buildPlan, inr, planText, type Answers, type Pricing, type ProjectType } from "@/lib/planner-core";
+import { BUDGETS, SIZES, TIERS, WHEN, buildPlan, inr, planText, scopeOf, type Answers, type Pricing, type ProjectType } from "@/lib/planner-core";
 
 /**
  * /plan — the project planner. Five quick steps, a preview that builds itself as features are picked,
@@ -10,7 +10,7 @@ import { BUDGETS, SIZES, TIERS, WHEN, buildPlan, inr, planText, type Answers, ty
  */
 type Preset = { size?: string; industry?: string; when?: string };
 type Props = { pricing: Pricing; industries: string[]; start?: string; preset?: Preset; wa: string };
-const STEPS = ["What", "About you", "Must-haves", "When", "Budget"] as const;
+const STEPS = ["What", "About you", "Scope", "When", "Budget"] as const;
 const ICON: Record<ProjectType["id"], string> = {
   website: "M3 5h18v14H3zM3 9h18M7 7h.01M10 7h.01",
   store: "M4 7h16l-1.5 11a2 2 0 0 1-2 1.7H7.5a2 2 0 0 1-2-1.7zM9 7a3 3 0 0 1 6 0",
@@ -34,7 +34,7 @@ export function Planner({ pricing, industries, start, preset = {}, wa }: Props) 
   const plan = useMemo(() => buildPlan(pricing, a), [pricing, a]);
   const top = useRef<HTMLDivElement>(null);
   const go = (n: number) => { setStep(n); top.current?.scrollIntoView({ behavior: "smooth", block: "start" }); };
-  const pickType = (id: ProjectType["id"]) => { const t = types.find((x) => x.id === id)!; setA((v) => ({ ...v, type: id, features: [...t.tiers.lean.includes] })); go(1); };
+  const pickType = (id: ProjectType["id"]) => { const t = types.find((x) => x.id === id)!; setA((v) => ({ ...v, type: id, features: [...t.tiers.lean.includes], scope: {} })); go(1); };
   const toggle = (id: string) => setA((v) => ({ ...v, features: v.features.includes(id) ? v.features.filter((x) => x !== id) : [...v.features, id] }));
   const canNext = [true, !!a.size, true, !!a.when, !!a.budget][step];
   const showResult = step >= STEPS.length;
@@ -72,8 +72,24 @@ export function Planner({ pricing, industries, start, preset = {}, wa }: Props) 
             </>)}
 
             {step === 2 && (<>
-              <h2>Pick your must-haves</h2>
-              <p className="pl-sub">Tick what you need. Watch your {type.id === "whatsapp" ? "chat" : type.id === "instagram" ? "profile" : "site"} build itself.</p>
+              <h2>Size it, then pick your must-haves</h2>
+              <p className="pl-sub">A few quick choices, then tick what you need. Watch your {type.id === "whatsapp" ? "chat" : type.id === "instagram" ? "profile" : "site"} build itself.</p>
+              <div className="pl-scope">
+                {scopeOf(type, a.scope).chosen.map(({ group: g, opt: cur }) => (
+                  <div className="pl-sq" key={g.id} role="radiogroup" aria-label={g.q}>
+                    <p className="pl-q">{g.q}</p>
+                    <div className="pl-seg">
+                      {g.opts.map((o) => (
+                        <button key={o.id} type="button" role="radio" aria-checked={cur.id === o.id} className={cur.id === o.id ? "on" : ""}
+                          onClick={() => setA((v) => ({ ...v, scope: { ...(v.scope ?? {}), [g.id]: o.id } }))}>
+                          {o.label}{pricing.showPrices && o.price > 0 ? <small>+{inr(o.price)}{type.monthly ? "/mo" : ""}</small> : null}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="pl-q">Must-haves</p>
               <div className="pl-feats">
                 {type.features.map((x) => (
                   <label key={x.id} className={`pl-feat${a.features.includes(x.id) ? " on" : ""}`}>
@@ -113,7 +129,7 @@ export function Planner({ pricing, industries, start, preset = {}, wa }: Props) 
           </div>
         ) : (
           <Result pricing={pricing} a={a} plan={plan} wa={wa} done={done} setDone={setDone} edit={() => go(2)} restart={() => { setDone(false); go(0); }}
-            switchTo={(id) => { const t = types.find((x) => x.id === id)!; setA((v) => ({ ...v, type: id, features: [...t.tiers.lean.includes] })); go(2); }} />
+            switchTo={(id) => { const t = types.find((x) => x.id === id)!; setA((v) => ({ ...v, type: id, features: [...t.tiers.lean.includes], scope: {} })); go(2); }} />
         )}
       </div>
       <aside className="pl-side" aria-label="Live preview"><Preview type={type} features={a.features} industry={a.industry} /></aside>
@@ -141,6 +157,7 @@ function Result({ pricing, a, plan, wa, done, setDone, edit, restart, switchTo }
     <div className="pl-result">
       <div className="pl-rhead">
         <span className="pl-eb">Your plan · {plan.type.label}{a.industry ? ` for ${a.industry}` : ""}</span>
+        {plan.type.scope.length > 0 && <div className="pl-scope-sum">{scopeOf(plan.type, a.scope).chosen.map((c) => <span key={c.group.id}>{c.opt.label}</span>)}</div>}
         <h2>Three ways to do it</h2>
         <p className="pl-sub">{pricing.showPrices ? "Starting prices — your exact quote comes after a 15-minute call." : "Your exact quote comes after a 15-minute call."}</p>
       </div>
@@ -184,7 +201,7 @@ function Result({ pricing, a, plan, wa, done, setDone, edit, restart, switchTo }
           <div className="pl-alt"><a href={waUrl} target="_blank" rel="noreferrer">Or send it on WhatsApp →</a><a href="/contact">Book a call →</a></div>
         </>)}
       </div>
-      <div className="pl-again"><button type="button" onClick={edit}>← Change must-haves</button><button type="button" onClick={restart}>Start over</button></div>
+      <div className="pl-again"><button type="button" onClick={edit}>← Change scope & must-haves</button><button type="button" onClick={restart}>Start over</button></div>
     </div>
   );
 }

@@ -13,16 +13,21 @@ export const TIERS: { id: TierId; name: string; tag: string }[] = [
 ];
 
 export type Feature = { id: string; label: string; hint: string; price: number; weeks: number };
+/** A sizing question with one answer (pages, products, users…). The chosen answer's price/weeks apply to all three options. */
+export type ScopeOpt = { id: string; label: string; price: number; weeks: number };
+export type Scope = { id: string; q: string; opts: ScopeOpt[] };
 export type Tier = { price: number; weeks: number; includes: string[] };
 export type ProjectType = {
   id: "website" | "store" | "whatsapp" | "instagram" | "custom";
   label: string; blurb: string; monthly?: boolean;
   tiers: Record<TierId, Tier>;
+  scope: Scope[];
   features: Feature[];
 };
 export type Pricing = { types: ProjectType[]; rushPct: number; showPrices: boolean; placeholder: boolean };
 
 const f = (id: string, label: string, hint: string, price: number, weeks = 0): Feature => ({ id, label, hint, price, weeks });
+const q = (id: string, question: string, ...opts: [string, string, number, number?][]): Scope => ({ id, q: question, opts: opts.map(([oid, label, price, weeks = 0]) => ({ id: oid, label, price, weeks })) });
 
 export const PRICING_DEFAULTS: Pricing = {
   rushPct: 20,
@@ -36,12 +41,21 @@ export const PRICING_DEFAULTS: Pricing = {
         rec: { price: 45000, weeks: 3, includes: ["wa", "form", "seo"] },
         premium: { price: 120000, weeks: 6, includes: ["wa", "form", "seo", "anim", "cms", "blog"] },
       },
+      scope: [
+        q("pages", "How many pages?", ["p1", "1–3 (one-page / landing)", 0], ["p2", "4–8 pages", 12000, 1], ["p3", "9–15 pages", 30000, 2], ["p4", "15+ pages", 60000, 3]),
+        q("design", "What kind of design?", ["d1", "Clean, from a proven layout", 0], ["d2", "Custom design for your brand", 15000, 1], ["d3", "Premium custom with illustrations", 40000, 2]),
+        q("content", "Who writes the words and photos?", ["c1", "I have them ready", 0], ["c2", "Help me write the words", 8000], ["c3", "Words plus a photo shoot", 25000, 1]),
+      ],
       features: [
         f("wa", "WhatsApp button", "Chat with you in one tap", 0), f("form", "Enquiry form", "Leads straight to your inbox", 5000),
         f("booking", "Bookings", "Customers pick a slot", 12000, 1), f("pay", "Online payments", "UPI, cards via Razorpay", 10000, 1),
         f("blog", "Blog", "Post updates and guides", 8000), f("seo", "Google-ready SEO", "Show up in local search", 10000),
         f("lang", "Two languages", "e.g. English + Hindi", 12000, 1), f("anim", "Animations", "Motion that feels premium", 15000, 1),
         f("cms", "Edit it yourself", "Change text and photos anytime", 12000, 1),
+        f("gallery", "Gallery / portfolio", "Show your work beautifully", 6000), f("reviewsw", "Testimonials & Google reviews", "Proof right on the page", 5000),
+        f("aichat", "AI chat assistant", "Answers visitors 24/7", 20000, 1), f("maps", "Maps & Google Business profile", "Be found nearby", 4000),
+        f("news", "Newsletter signup", "Grow your email list", 4000), f("analytics", "Visitor analytics", "See what people do", 4000),
+        f("domain", "Domain, hosting & email", "We set it all up", 5000),
       ],
     },
     {
@@ -51,11 +65,20 @@ export const PRICING_DEFAULTS: Pricing = {
         rec: { price: 90000, weeks: 4, includes: ["pay", "wa", "inv", "coupons", "track"] },
         premium: { price: 250000, weeks: 8, includes: ["pay", "wa", "inv", "coupons", "track", "reviews", "anim", "app"] },
       },
+      scope: [
+        q("products", "How many products?", ["n1", "Up to 50", 0], ["n2", "50–300", 15000], ["n3", "300–1,000", 35000, 1], ["n4", "1,000+", 70000, 2]),
+        q("payments", "How will customers pay?", ["y1", "UPI + cards (Razorpay)", 0], ["y2", "Add cash on delivery", 3000], ["y3", "Add international cards & currencies", 15000, 1]),
+        q("shipping", "How will you ship?", ["s1", "I'll handle shipping", 0], ["s2", "Connect Shiprocket / Delhivery", 12000, 1], ["s3", "Local delivery slots + courier", 18000, 1]),
+        q("upload", "Who adds the products?", ["u1", "I'll add them", 0], ["u2", "You add them for me", 10000], ["u3", "You add them, with product photos", 30000, 1]),
+      ],
       features: [
         f("pay", "Payments", "UPI, cards, COD", 0), f("wa", "WhatsApp orders", "Order updates on WhatsApp", 6000),
         f("inv", "Stock tracking", "Never sell what you don't have", 12000, 1), f("coupons", "Coupons", "Discounts and offers", 6000),
         f("track", "Order tracking", "Customers see where it is", 10000, 1), f("reviews", "Reviews", "Ratings on every product", 8000),
         f("anim", "Animations", "A store that feels premium", 15000, 1), f("app", "Owner app view", "Manage orders from your phone", 30000, 2),
+        f("variants", "Sizes & colours", "Variants with their own stock", 6000), f("accounts", "Wishlist & accounts", "Customers save and reorder", 8000),
+        f("gst", "GST invoices", "Proper bills, automatically", 6000), f("cart", "Abandoned-cart reminders", "WhatsApp/email nudges", 8000),
+        f("feed", "Google & Instagram shopping", "Products in their shops", 8000), f("bulk", "Wholesale pricing", "Bulk rates for B2B buyers", 12000, 1),
       ],
     },
     {
@@ -65,10 +88,17 @@ export const PRICING_DEFAULTS: Pricing = {
         rec: { price: 30000, weeks: 2, includes: ["auto", "bcast", "catalog"] },
         premium: { price: 75000, weeks: 4, includes: ["auto", "bcast", "catalog", "ai", "crm"] },
       },
+      scope: [
+        q("volume", "Chats a month?", ["v1", "Up to 1,000", 0], ["v2", "1,000–10,000", 8000], ["v3", "10,000+", 20000, 1]),
+        q("team", "Who answers chats?", ["t1", "Just me", 0], ["t2", "2–5 people, shared inbox", 10000], ["t3", "A bigger team with roles", 25000, 1]),
+        q("langs", "Reply languages", ["l1", "One language", 0], ["l2", "Two languages", 6000], ["l3", "Three or more", 12000]),
+      ],
       features: [
         f("auto", "Auto-replies", "Welcome, away, keyword answers", 0), f("bcast", "Broadcasts", "Offers to opted-in customers", 8000),
         f("catalog", "Product catalogue", "Browse and order in chat", 10000, 1), f("ai", "AI replies", "Answers trained on your business", 20000, 1),
         f("crm", "Lead sheet / CRM", "Every chat logged automatically", 12000, 1), f("ads", "Click-to-WhatsApp ads", "Ads that open a chat", 10000),
+        f("bookwa", "Bookings in chat", "Customers pick a slot on WhatsApp", 12000, 1), f("paylink", "Payment links", "Get paid inside the chat", 6000),
+        f("status", "Order & delivery updates", "Automatic status messages", 8000), f("menu", "Menu flows", "Tap-through options, no typing", 6000),
       ],
     },
     {
@@ -78,10 +108,17 @@ export const PRICING_DEFAULTS: Pricing = {
         rec: { price: 30000, weeks: 1, includes: ["posts", "reels", "dm"] },
         premium: { price: 60000, weeks: 2, includes: ["posts", "reels", "dm", "ads", "shoot"] },
       },
+      scope: [
+        q("accounts", "How many accounts?", ["a1", "One brand account", 0], ["a2", "Two accounts", 10000], ["a3", "Three or more", 20000]),
+        q("platforms", "Where else should posts go?", ["f1", "Instagram only", 0], ["f2", "Add Facebook", 4000], ["f3", "Add Facebook + LinkedIn", 9000]),
+        q("cadence", "How often?", ["c1", "12 posts a month", 0], ["c2", "20 posts a month", 8000], ["c3", "30 posts a month", 16000]),
+      ],
       features: [
-        f("posts", "12 posts a month", "Designed and captioned", 0), f("reels", "Reels", "4–8 short videos a month", 10000),
+        f("posts", "Posts, designed & captioned", "Designed and captioned", 0), f("reels", "Reels", "4–8 short videos a month", 10000),
         f("dm", "Comment → DM automation", "“Comment PRICE” answers itself", 6000), f("ads", "Ads management", "Budget spent wisely", 10000),
         f("shoot", "Monthly shoot", "Fresh photos and video", 15000),
+        f("profile", "Profile & highlights design", "A grid that looks like a brand", 5000), f("report", "Monthly report", "What worked, in plain words", 3000),
+        f("collab", "Creator collaborations", "Find and brief local creators", 12000), f("community", "Comment & DM replies", "We answer your audience", 8000),
       ],
     },
     {
@@ -91,10 +128,17 @@ export const PRICING_DEFAULTS: Pricing = {
         rec: { price: 150000, weeks: 6, includes: ["login", "admin", "notify"] },
         premium: { price: 400000, weeks: 10, includes: ["login", "admin", "notify", "pay", "app", "ai"] },
       },
+      scope: [
+        q("users", "Who uses it?", ["w1", "Just our team", 0], ["w2", "Our customers", 30000, 1], ["w3", "Both", 50000, 2]),
+        q("scale", "How many users?", ["x1", "Up to 50", 0], ["x2", "50–1,000", 20000, 1], ["x3", "1,000+", 60000, 2]),
+        q("integr", "Connect to other tools?", ["i1", "No", 0], ["i2", "1–2 (Sheets, Tally, a CRM)", 25000, 1], ["i3", "3 or more", 60000, 2]),
+      ],
       features: [
         f("login", "Logins", "Accounts for your users", 0), f("admin", "Admin panel", "Run it without us", 25000, 1),
         f("notify", "Email / WhatsApp alerts", "Automatic updates", 12000, 1), f("pay", "Payments", "Subscriptions or one-off", 20000, 1),
         f("app", "Mobile app", "Android + iPhone", 120000, 4), f("ai", "AI features", "Smart search, summaries, chat", 40000, 2),
+        f("reports", "Reports & dashboards", "Numbers at a glance", 20000, 1), f("roles", "Roles & permissions", "Who can see and do what", 15000, 1),
+        f("files", "Files & documents", "Upload, share, sign off", 15000, 1), f("multi", "Multiple languages", "For every user", 15000, 1),
       ],
     },
   ],
@@ -110,7 +154,13 @@ export const BUDGETS = [
 export const SIZES = [{ id: "solo", label: "Just me" }, { id: "small", label: "Small team" }, { id: "growing", label: "Growing company" }] as const;
 export const WHEN = [{ id: "relaxed", label: "No rush" }, { id: "normal", label: "In a month or two" }, { id: "asap", label: "ASAP" }] as const;
 
-export type Answers = { type: ProjectType["id"]; industry: string; size: string; features: string[]; when: string; budget: string };
+export type Answers = { type: ProjectType["id"]; industry: string; size: string; features: string[]; when: string; budget: string; scope?: Record<string, string> };
+
+/** The visitor's sizing answers for a type (first answer when unset), and what they add. */
+export function scopeOf(type: ProjectType, picked: Record<string, string> = {}) {
+  const chosen = type.scope.map((g) => ({ group: g, opt: g.opts.find((o) => o.id === picked[g.id]) ?? g.opts[0] }));
+  return { chosen, price: chosen.reduce((s, c) => s + c.opt.price, 0), weeks: chosen.reduce((s, c) => s + c.opt.weeks, 0) };
+}
 export type Option = { tier: TierId; name: string; tag: string; price: number; weeks: number; features: Feature[]; extras: Feature[]; later: Feature[] };
 /** tight: even the smallest version is over the stated budget — `alt` is a cheaper way in that fits. */
 export type Plan = { options: Option[]; recommended: TierId; phased: boolean; tight: boolean; alt: { id: ProjectType["id"]; label: string; price: number } | null; core: number; type: ProjectType };
@@ -123,15 +173,16 @@ export function buildPlan(p: Pricing, a: Answers): Plan {
   const type = p.types.find((t) => t.id === a.type) ?? p.types[0];
   const rush = a.when === "asap" ? 1 + p.rushPct / 100 : 1;
   const weeksOf = (raw: number) => Math.max(1, Math.round(a.when === "asap" ? raw * 0.75 : raw));
+  const sc = scopeOf(type, a.scope);
   const options: Option[] = TIERS.map(({ id, name, tag }) => {
     const t = type.tiers[id];
     const incl = type.features.filter((x) => t.includes.includes(x.id));
     // anything the visitor asked for that this option doesn't include is added on top
     const extras = type.features.filter((x) => a.features.includes(x.id) && !t.includes.includes(x.id));
-    return { tier: id, name, tag, price: roundPrice((t.price + extras.reduce((s, x) => s + x.price, 0)) * rush),
-      weeks: weeksOf(t.weeks + extras.reduce((s, x) => s + x.weeks, 0)), features: incl, extras, later: [] };
+    return { tier: id, name, tag, price: roundPrice((t.price + sc.price + extras.reduce((s, x) => s + x.price, 0)) * rush),
+      weeks: weeksOf(t.weeks + sc.weeks + extras.reduce((s, x) => s + x.weeks, 0)), features: incl, extras, later: [] };
   });
-  const core = roundPrice(type.tiers.lean.price * rush);
+  const core = roundPrice((type.tiers.lean.price + sc.price) * rush);
   const b = BUDGETS.find((x) => x.id === a.budget);
   let recommended: TierId = "rec", phased = false, tight = false;
   let alt: Plan["alt"] = null;
@@ -141,7 +192,7 @@ export function buildPlan(p: Pricing, a: Answers): Plan {
     // over budget with the extras? keep the smallest version to its core and move the extras to phase 2
     if (lean.price > max && lean.extras.length) {
       lean.later = lean.extras; lean.extras = [];
-      lean.price = core; lean.weeks = weeksOf(type.tiers.lean.weeks);
+      lean.price = core; lean.weeks = weeksOf(type.tiers.lean.weeks + sc.weeks);
       phased = true;
     }
     const fits = options.filter((o) => o.price <= max);
@@ -164,6 +215,7 @@ export function planText(p: Plan, a: Answers, showPrices: boolean) {
   const lines = [
     `Project plan — ${p.type.label}${a.industry ? ` for ${a.industry}` : ""}`,
     `Size: ${SIZES.find((s) => s.id === a.size)?.label ?? "—"} · Timing: ${WHEN.find((w) => w.id === a.when)?.label ?? "—"} · Budget: ${BUDGETS.find((x) => x.id === a.budget)?.label ?? "—"}`,
+    ...(p.type.scope.length ? [`Scope: ${scopeOf(p.type, a.scope).chosen.map((c) => `${c.group.q.replace(/\?$/, "")}: ${c.opt.label}`).join(" · ")}`] : []),
     `Must-haves: ${p.type.features.filter((x) => a.features.includes(x.id)).map((x) => x.label).join(", ") || "none picked"}`,
     `Recommended: ${rec.name} — ${rec.weeks} week${rec.weeks > 1 ? "s" : ""}${showPrices ? `, from ${inr(rec.price)}${p.type.monthly ? "/month" : ""}` : ""}`,
     ...(p.phased ? [`Phase 2 (later): ${p.options[0].later.map((x) => x.label).join(", ")}`] : []),
@@ -186,6 +238,7 @@ export function normalizePricing(raw: unknown): Pricing {
         ...def,
         tiers: Object.fromEntries(TIERS.map(({ id }) => [id, { ...def.tiers[id], price: num(s?.tiers?.[id]?.price, def.tiers[id].price), weeks: num(s?.tiers?.[id]?.weeks, def.tiers[id].weeks, 104) || 1 }])) as Record<TierId, Tier>,
         features: def.features.map((ft) => { const sf = s?.features?.find((x) => x?.id === ft.id); return { ...ft, price: num(sf?.price, ft.price), weeks: num(sf?.weeks, ft.weeks, 52) }; }),
+        scope: def.scope.map((g) => { const sg = s?.scope?.find((x) => x?.id === g.id); return { ...g, opts: g.opts.map((o) => { const so = sg?.opts?.find((x) => x?.id === o.id); return { ...o, price: num(so?.price, o.price), weeks: num(so?.weeks, o.weeks, 52) }; }) }; }),
       };
     }),
   };
