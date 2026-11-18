@@ -162,7 +162,7 @@ a.pt-aside { color: var(--ink); text-decoration: none; border-bottom: 2px solid 
 .pt-way:first-child:hover { background: transparent; }
 .pt-way b { font-size: 17px; font-weight: 600; letter-spacing: -.02em; border-bottom: 2px solid transparent; width: max-content; max-width: 100%; }
 .pt-way:hover b { border-bottom-color: var(--acc); }
-.pt-way > span:last-child { font-size: 13px; color: var(--muted); }
+.pt-way > span:not(.pt-micro) { font-size: 13px; line-height: 1.55; color: var(--muted); }
 
 /* ── files ── */
 .pt-file { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; max-width: 100%; min-width: 0; padding: 8px 12px 8px 8px; border: 1px solid var(--line); background: var(--card); width: max-content; }
@@ -384,3 +384,38 @@ a.pt-aside { color: var(--ink); text-decoration: none; border-bottom: 2px solid 
 }
 .pt-mmeta { display: none; font-size: 12px; color: var(--muted); font-weight: 600; }
 @media (max-width: 720px) { .pt-mmeta { display: inline; } }
+
+/* ── empty states: one shape everywhere ── */
+.pt-blank { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 16px; align-items: start; margin-top: 18px; padding: 22px 22px 24px; background: var(--card); border: 1px solid var(--line); }
+.pt-blankmark { width: 44px; height: 44px; border-radius: 50%; border: 1px dashed #BDB8AF; display: grid; place-items: center; font-size: 17px; color: var(--muted); }
+.pt-blank b { display: block; font-size: 16px; font-weight: 700; letter-spacing: -.01em; }
+.pt-blank p { margin: 4px 0 0; font-size: 13.5px; line-height: 1.55; color: var(--muted); max-width: 52ch; }
+.pt-blankwrap { padding-bottom: 8px; }
+.pt-blankwrap .pt-blank { margin-top: 0; }
+/* the two columns line up even when both are empty */
+.pt-split > .pt-sec { display: flex; flex-direction: column; }
+.pt-split > .pt-sec > .pt-blank { flex: 1; }
+
+/* ── "Waiting on you" when there's nothing: one tidy row ── */
+.pt-clearrow { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; gap: 8px 14px; align-items: baseline; padding: 18px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--line); }
+.pt-clearrow b { font-size: clamp(20px, 1.9vw, 26px); font-weight: 500; letter-spacing: -.03em; line-height: 1.15; }
+.pt-clearrow p { margin: 0; padding-left: 10px; font-size: 13.5px; color: var(--muted); }
+.pt-cleartag { align-self: center; font-size: 10.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: 6px 11px; background: var(--acc); color: var(--acc-on); border: 1px solid var(--ink); white-space: nowrap; }
+
+/* ── talk-to-us: three even cards with an arrow ── */
+.pt-ways { gap: 0; border: 1px solid var(--line); border-top: 1px solid var(--ink); background: var(--card); }
+.pt-way, .pt-way:first-child { position: relative; padding: 22px 52px 24px 22px; border-right: 1px solid var(--line); }
+.pt-way:last-child { border-right: 0; }
+.pt-way:hover, .pt-way:first-child:hover { background: var(--paper); }
+.pt-way i { position: absolute; top: 20px; right: 20px; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; font-style: normal; font-size: 14px; transition: background .15s ease, border-color .15s ease; }
+.pt-way:hover i { background: var(--acc); border-color: var(--ink); }
+@media (max-width: 860px) {
+  .pt-clearrow { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .pt-clearrow p { grid-column: 2 / -1; grid-row: 2; padding-left: 0; }
+}
+@media (max-width: 720px) {
+  .pt-way, .pt-way:first-child { padding: 18px 52px 20px 18px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .pt-way:last-child { border-bottom: 0; }
+  .pt-blank { padding: 18px; grid-template-columns: 38px minmax(0, 1fr); gap: 12px; }
+  .pt-blankmark { width: 38px; height: 38px; }
+}

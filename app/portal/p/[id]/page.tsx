@@ -44,6 +44,11 @@ function FileLink({ f, plain }: { f: FileRow; plain?: boolean }) {
   );
 }
 
+/** Empty state: a quiet placeholder box, same shape everywhere. */
+function Blank({ mark, title, children }: { mark: string; title: string; children: React.ReactNode }) {
+  return <div className="pt-blank"><span className="pt-blankmark" aria-hidden>{mark}</span><div><b>{title}</b><p>{children}</p></div></div>;
+}
+
 function Journal({ updates, limit }: { updates: { id: string; body: string; created_at: string; file: FileRow | null }[]; limit?: boolean }) {
   return (
     <ol className={`pt-journal${limit ? " short" : ""}`}>
@@ -126,12 +131,18 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
           </ol>
         </section>
 
-        <section className={`pt-sec pt-ask${waiting.length ? " on" : ""}`} aria-labelledby="h-ask">
-          <div className="pt-sechead"><span className="pt-no">02</span><h2 id="h-ask">Waiting on you</h2>
-            <span className="pt-aside">{waiting.length ? `${waiting.length} to send` : "All clear"}</span></div>
-          {waiting.length === 0 ? (
-            <p className="pt-quiet">Nothing needed from you right now. When we need photos, text or a decision, it shows up here and we email you.</p>
-          ) : (
+        {waiting.length === 0 ? (
+          <section className="pt-sec" aria-label="Waiting on you">
+            <div className="pt-clearrow">
+              <span className="pt-no">02</span>
+              <b>Waiting on you</b>
+              <p>Nothing needed from you right now. We&apos;ll email you when we need photos, text or a decision.</p>
+              <span className="pt-cleartag">✓ All clear</span>
+            </div>
+          </section>
+        ) : (
+          <section className="pt-sec pt-ask on" aria-labelledby="h-ask">
+            <div className="pt-sechead"><span className="pt-no">02</span><h2 id="h-ask">Waiting on you</h2><span className="pt-aside">{waiting.length} to send</span></div>
             <ul className="pt-asklist">
               {waiting.map((r, i) => (
                 <li key={r.id}>
@@ -142,20 +153,20 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                 </li>
               ))}
             </ul>
-          )}
-        </section>
+          </section>
+        )}
 
         <div className="pt-split">
           <section className="pt-sec" aria-labelledby="h-upd">
             <div className="pt-sechead"><span className="pt-no">03</span><h2 id="h-upd">Latest from the studio</h2>
               {updates.length > 0 && <a className="pt-aside pt-arrow" href={`/portal/p/${p.id}?tab=updates`}>All updates →</a>}</div>
-            {updates.length === 0 ? <p className="pt-quiet">We post a short note here whenever something moves. The first one is on its way.</p> : <Journal updates={updates} limit />}
+            {updates.length === 0 ? <Blank mark="✎" title="No updates yet">We post a short note here whenever something moves. The first one is on its way.</Blank> : <Journal updates={updates} limit />}
           </section>
 
           <section className="pt-sec" aria-labelledby="h-mile">
             <div className="pt-sechead"><span className="pt-no">04</span><h2 id="h-mile">Milestones</h2>
               {milestones.length > 0 && <span className="pt-aside">{doneCount} of {milestones.length} done</span>}</div>
-            {milestones.length === 0 ? <p className="pt-quiet">Dates for each step appear here once the plan is set.</p> : (<>
+            {milestones.length === 0 ? <Blank mark="◷" title="Dates coming soon">Each step gets a date once the plan is set.</Blank> : (<>
               <div className="pt-segs" role="progressbar" aria-valuenow={doneCount} aria-valuemin={0} aria-valuemax={milestones.length} aria-label="Milestones done">
                 {milestones.map((m) => <i key={m.id} className={m.done ? "done" : m.id === next?.id ? "next" : ""} />)}
               </div>
@@ -173,15 +184,15 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
         </div>
 
         <section className="pt-ways" aria-label="Talk to the studio">
-          <a className="pt-way" href={`/portal/p/${p.id}?tab=messages`}><span className="pt-micro">Fastest</span><b>Message us here{unread ? ` · ${unread} new` : ""}</b><span>Read by the person doing the work, usually the same day.</span></a>
-          <a className="pt-way" href={`https://wa.me/${CONTACT.phoneTel.replace(/\D/g, "")}`} target="_blank" rel="noreferrer"><span className="pt-micro">Quick question</span><b>WhatsApp {CONTACT.phoneDisplay}</b><span>For anything urgent.</span></a>
-          <a className="pt-way" href={filesTab}><span className="pt-micro">Files</span><b>Send files or links</b><span>Photos, logos, documents. Up to 7 MB each, or a link.</span></a>
+          <a className="pt-way" href={`/portal/p/${p.id}?tab=messages`}><span className="pt-micro">Fastest</span><b>Message us here{unread ? ` · ${unread} new` : ""}</b><span>Read by the person doing the work, usually the same day.</span><i aria-hidden>→</i></a>
+          <a className="pt-way" href={`https://wa.me/${CONTACT.phoneTel.replace(/\D/g, "")}`} target="_blank" rel="noreferrer"><span className="pt-micro">Quick question</span><b>WhatsApp {CONTACT.phoneDisplay}</b><span>For anything urgent.</span><i aria-hidden>↗</i></a>
+          <a className="pt-way" href={filesTab}><span className="pt-micro">Files</span><b>Send files or links</b><span>Photos, logos, documents. Up to 7 MB each, or a link.</span><i aria-hidden>→</i></a>
         </section>
       </>)}
 
       {tab === "updates" && (<>
         <PortalHead compact micro={`${p.title} · updates`} title="Project journal" sub="Every note the studio has posted, newest first." />
-        {updates.length === 0 ? <p className="pt-quiet pt-pad">No updates yet. We post a short note here whenever something moves.</p> : <div className="pt-narrowcol"><Journal updates={updates} /></div>}
+        {updates.length === 0 ? <div className="pt-narrowcol pt-blankwrap"><Blank mark="✎" title="No updates yet">We post a short note here whenever something moves. You&apos;ll get an email too.</Blank></div> : <div className="pt-narrowcol"><Journal updates={updates} /></div>}
       </>)}
 
       {tab === "messages" && (<>
@@ -222,7 +233,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
         <PortalHead compact micro={`${p.title} · files`} title="Shared folder"
           facts={files.length ? [{ k: "Items", v: String(files.length) }, { k: "From you", v: String(mine) }, { k: "Stored", v: fmtSize(totalBytes) || "0 KB" }] : undefined} />
         {files.length === 0 ? (
-          <p className="pt-quiet pt-pad">The folder is empty. Anything the studio shares, and anything you add below, is kept here.</p>
+          <div className="pt-blankwrap"><Blank mark="▢" title="The folder is empty">Anything the studio shares, and anything you add below, is kept here.</Blank></div>
         ) : (
           <div className="pt-tablewrap">
             <table className="pt-table">
