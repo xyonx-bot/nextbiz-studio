@@ -352,7 +352,7 @@ const PLAN_STOPS: { t: string; q: string; ans: { l: string; href?: string }[] }[
   { t: "You", q: "Your business and team", ans: [{ l: "Just me" }, { l: "Small team" }, { l: "Growing" }] },
   { t: "Must-haves", q: "Tick what you need", ans: [{ l: "Bookings" }, { l: "Payments" }, { l: "AI replies" }, { l: "CRM" }] },
   { t: "When", q: "How soon?", ans: [{ l: "No rush" }, { l: "Next month" }, { l: "ASAP" }] },
-  { t: "Budget", q: "What feels comfortable", ans: [{ l: "Under ₹25k" }, { l: "₹25–75k" }, { l: "₹75k+" }] },
+  { t: "Budget", q: "What feels comfortable", ans: [{ l: "From ₹10k" }, { l: "₹10–25k" }, { l: "₹25–50k" }, { l: "₹50k+" }] },
 ];
 export function PlanStart({ content }: { content?: typeof homeContent.planner }) {
   const c = content ?? homeContent.planner;

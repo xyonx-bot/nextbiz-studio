@@ -71,7 +71,7 @@ test.describe("contact form (P1.3)", () => {
     await f.name.fill("E2E Mocked");
     await f.email.fill("e2e-mocked@test.nextbizstudio.com");
     await f.service.selectOption("A new website");
-    await f.budget.selectOption("₹25k – ₹75k");
+    await f.budget.selectOption("₹10k – ₹25k");
     await f.brief.fill("Mocked submit — UI path only, no API hit.");
     await f.submit.click();
     await expect(page.getByText("Brief received.")).toBeVisible({ timeout: 15000 });
