@@ -269,3 +269,15 @@ html[data-style="soft"] .cf-alert { border-radius: 14px; }
 }
 @media (max-width: 480px) { .cs-opts { grid-template-columns: minmax(0, 1fr); } .cs-ways { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 900px) { .cs-submit { width: 100%; } }
+
+/* Nov 18 — the form gets the focus: a compact head strip (one-line title, short text, facts in one line)
+   so the first field sits high on the screen */
+.cs-head { grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 18px 40px; padding-top: clamp(28px, 3.4vw, 48px); padding-bottom: 22px; }
+.cs-head h1 { margin: 10px 0 0; font-size: clamp(30px, 3.4vw, 46px); line-height: 1.04; letter-spacing: -.045em; }
+.cs-head .lede { margin: 10px 0 0; font-size: 14.5px; max-width: 62ch; }
+.cs-facts { display: flex; flex-wrap: wrap; gap: 6px 22px; border-top: 0; }
+.cs-facts div { display: inline-flex; gap: 6px; padding: 0; border: 0; font-size: 12.5px; white-space: nowrap; }
+.cs-facts div::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--acc); align-self: center; box-shadow: 0 0 0 3px color-mix(in srgb, var(--acc) 35%, transparent); }
+.cs-facts dd { text-align: left; }
+.cs-cell :is(input, textarea) { font-size: 18px; }
+@media (max-width: 900px) { .cs-head { grid-template-columns: minmax(0, 1fr); padding-top: 24px; padding-bottom: 18px; } .cs-head .lede { display: none; } .cs-facts { gap: 6px 16px; } }

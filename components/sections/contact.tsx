@@ -155,7 +155,7 @@ export function ContactSheet({ content, form }: { content?: typeof contact.desk;
       <div className="cs-head pad">
         <div>
           <span className="micro">{c.micro}</span>
-          <h1>{c.h1[0]}<br />{c.h1[1]}</h1>
+          <h1>{c.h1[0]} {c.h1[1]}</h1>
           <p className="lede">{c.lede.replace(/\s*on the right/i, " below")}</p>
         </div>
         <dl className="cs-facts">
