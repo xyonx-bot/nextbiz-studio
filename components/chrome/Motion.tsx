@@ -33,7 +33,7 @@ export function Motion() {
   useEffect(() => {
     const html = document.documentElement;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (d.motion === "off" || reduced || path.startsWith("/admin") || !("IntersectionObserver" in window)) { html.classList.remove("mo-ready"); return; }
+    if (d.motion === "off" || reduced || path.startsWith("/admin") || path.startsWith("/portal") || !("IntersectionObserver" in window)) { html.classList.remove("mo-ready"); return; }
     const els = [...document.querySelectorAll<HTMLElement>(TARGETS)];
     // anything already on screen shows at once — the first frame is never empty
     const vh = window.innerHeight;

@@ -52,7 +52,7 @@ export function AnnouncementBar() {
   const key = `nbs-bar-${[...d.bar.text].reduce((h, c) => (h * 31 + c.charCodeAt(0)) | 0, 0)}`;
   const [closed, setClosed] = useState(false);
   useEffect(() => { try { setClosed(localStorage.getItem(key) === "1"); } catch { /* private mode */ } }, [key]);
-  if (!d.bar.on || !d.bar.text.trim() || closed || path.startsWith("/admin")) return null;
+  if (!d.bar.on || !d.bar.text.trim() || closed || path.startsWith("/admin") || path.startsWith("/portal")) return null;
   return (
     <div className={`nbs-bar ${d.bar.tone}`} role="region" aria-label="Announcement" data-testid="announcement">
       <span className="dot" aria-hidden />

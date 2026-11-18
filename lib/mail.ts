@@ -10,10 +10,10 @@ import { getPool } from "./db";
 import { renderEmail, type ThemeId } from "./email-templates";
 import { getEmailSettings } from "./settings";
 
-export type MailKind = "lead_ack" | "lead_alert" | "compose" | "test";
+export type MailKind = "lead_ack" | "lead_alert" | "compose" | "test" | "portal_code" | "portal_invite" | "portal_notify" | "portal_alert";
 export interface Mail {
   to: string; subject: string; html: string; text: string; kind: MailKind;
-  leadId?: string | null; theme?: ThemeId | null;
+  leadId?: string | null; clientId?: string | null; theme?: ThemeId | null;
   attachments?: { filename: string; content: string /* base64 */ }[];
 }
 export type MailResult = { ok: true; id: string } | { ok: false; skipped?: boolean; error: string };
@@ -53,10 +53,10 @@ export async function sendMail(m: Mail): Promise<MailResult> {
       : await viaResend(m);
   const status = res.ok ? "sent" : "skipped" in res && res.skipped ? "skipped" : "failed";
   await getPool().query(
-    `INSERT INTO email_log (lead_id, to_email, kind, theme, subject, body, status, provider_id, error)
-     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+    `INSERT INTO email_log (lead_id, to_email, kind, theme, subject, body, status, provider_id, error, client_id)
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
     [m.leadId ?? null, m.to, m.kind, m.theme ?? null, m.subject, m.text.slice(0, 8000) + (m.attachments?.length ? `\n\n[attached: ${m.attachments.map((a) => a.filename).join(", ")}]` : ""), status,
-     res.ok ? res.id : null, res.ok ? null : res.error.slice(0, 500)],
+     res.ok ? res.id : null, res.ok ? null : res.error.slice(0, 500), m.clientId ?? null],
   ).catch((e) => console.error("[mail] log failed:", (e as Error).message));
   if (status === "failed") console.error(`[mail] ${m.kind} to ${m.to.replace(/^(.).*@/, "$1•••@")} failed: ${(res as { error: string }).error}`);
   return res;

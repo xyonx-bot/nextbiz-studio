@@ -18,6 +18,7 @@ export function AdminShell({
   leadCount,
   pageCount,
   current = "leads",
+  clientUnread,
   crumb,
   title,
   acts,
@@ -25,7 +26,8 @@ export function AdminShell({
 }: {
   leadCount: number;
   pageCount?: number;
-  current?: "leads" | "pages" | "subscribers" | "email" | "design" | "planner";
+  current?: "leads" | "clients" | "pages" | "subscribers" | "email" | "design" | "planner";
+  clientUnread?: number;
   crumb: string;
   title: React.ReactNode;
   acts?: React.ReactNode;
@@ -43,6 +45,9 @@ export function AdminShell({
           <nav>
             <Link href="/admin" className={current === "leads" ? "on" : ""} onClick={() => setOpen(false)}>
               <Inbox /> Leads <span className="cnt" data-testid="lead-count">{leadCount}</span>
+            </Link>
+            <Link href="/admin/clients" className={current === "clients" ? "on" : ""} onClick={() => setOpen(false)} data-testid="nav-clients">
+              <Mail /> Clients {clientUnread ? <span className="cnt new" title="Unread client messages">{clientUnread}</span> : null}
             </Link>
             <Link href="/admin/pages" className={current === "pages" ? "on" : ""} onClick={() => setOpen(false)}>
               <LayoutGrid /> Pages {pageCount !== undefined && <span className="cnt">{pageCount}</span>}

@@ -10,6 +10,7 @@ import { ArrowLeft, ArrowRight, Check } from "@/components/admin/icons";
 import { EmailComposer } from "@/components/admin/email-composer";
 import { listEmailsForLead, mailOn } from "@/lib/mail";
 import { getEmailSettings } from "@/lib/settings";
+import { getClientByLead } from "@/lib/portal";
 
 /**
  * S4 (P1.7) — lead detail, ported from Mira's admin/lead/wireframe.html:
@@ -51,7 +52,7 @@ export default async function LeadDetailPage({
 }) {
   if (!(await isAuthenticated())) redirect("/admin/login");
   const { id } = await params;
-  const [lead, total, emails, mailCfg] = await Promise.all([getLead(id), countLeads(), listEmailsForLead(id).catch(() => []), getEmailSettings()]);
+  const [lead, total, emails, mailCfg, client] = await Promise.all([getLead(id), countLeads(), listEmailsForLead(id).catch(() => []), getEmailSettings(), getClientByLead(id).catch(() => null)]);
   if (!lead) notFound();
 
   // stage dates from status ledger entries ("old → new" @ time)
@@ -148,6 +149,13 @@ export default async function LeadDetailPage({
 
         {/* ══ RIGHT: pipeline rail ══ */}
         <div className="dcol-r">
+          <div className="ca-makeclient">
+            {client ? (
+              <><span className="ca-sub">This lead is a client.</span><Link className="ca-btn pri" href={`/admin/clients/${client.id}`}>Open client portal →</Link></>
+            ) : (
+              <><span className="ca-sub">Accepted the project? Give them a private portal.</span><Link className="ca-btn pri" href={`/admin/clients/new?lead=${lead.id}`} data-testid="make-client">Make client →</Link></>
+            )}
+          </div>
           <div className="rail">
             <div className="rhead">Pipeline · {lead.status.charAt(0).toUpperCase() + lead.status.slice(1)}</div>
             <div className="steps">
