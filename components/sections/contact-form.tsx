@@ -41,6 +41,7 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
       message: String(fd.get("brief") ?? ""),
       website: String(fd.get("website") ?? ""), // honeypot
     };
+    const wantsUpdates = fd.get("updates") === "on";
 
     try {
       const res = await fetch("/api/leads", {
@@ -51,11 +52,19 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
       const data = await res.json().catch(() => null);
 
       if (res.ok && data?.ok) {
+        // the opt-in box: add their email to the newsletter list (best effort — the brief is already sent)
+        if (wantsUpdates && payload.email.includes("@")) {
+          fetch("/api/subscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: payload.email, list: "newsletter", source: "contact-form" }) }).catch(() => {});
+        }
         setSent({ name: payload.name.trim().split(/\s+/)[0] || "", via: payload.phone.trim().length >= 7 ? "whatsapp" : "email" });
         return;
       }
-      if (data?.errors) setErrors(data.errors);
-      setFormError(data?.error ?? "Something went wrong — please try again, or just call us.");
+      if (data?.errors) {
+        setErrors(data.errors);
+        // take the visitor to the first field that needs fixing
+        requestAnimationFrame(() => document.querySelector<HTMLElement>(".cf-fld.err :is(input, select, textarea)")?.focus());
+      }
+      if (!data?.errors) setFormError(data?.error ?? "Something went wrong — please try again, or just call us.");
     } catch {
       setFormError("Network hiccup — please try again, or just call us.");
     } finally {
@@ -69,14 +78,14 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
         <div className="f-done" ref={done} tabIndex={-1} role="status" aria-live="polite">
           <span className="f-done-ic" aria-hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
           <h3>{sent.name ? `Thanks, ${sent.name}. Your brief is in.` : "Thanks. Your brief is in."}</h3>
-          <p>We&apos;ll read it today and reply on {sent.via === "whatsapp" ? "WhatsApp" : "email"} within one business day, from the person who&apos;d actually do the work.</p>
+          <p>We&apos;ll read it today and reply {sent.via === "whatsapp" ? "on WhatsApp" : "by email"} within one business day, from the person who&apos;d actually do the work.</p>
           <ol className="f-done-steps">
             <li><b>Today</b><span>We read your brief</span></li>
             <li><b>Within a day</b><span>A real reply, with first thoughts</span></li>
             <li><b>Next</b><span>A 15-minute call, if it helps</span></li>
           </ol>
           <div className="f-done-acts">
-            <a className="action dark" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Talk sooner on WhatsApp</a>
+            <a className="cf-submit" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Talk sooner on WhatsApp</a>
             <a className="f-done-link" href={`tel:${CONTACT.phoneTel}`}>or call {CONTACT.phoneDisplay}</a>
           </div>
           <button type="button" className="f-done-again" onClick={() => setSent(null)}>Send another brief</button>
@@ -85,69 +94,45 @@ export function DeskForm({ content }: { content?: typeof contact.deskForm }) {
     );
   }
 
+  const fld = (key: string, field: { label: string; hint?: string }, control: React.ReactNode, opts: { full?: boolean; optional?: boolean; err?: string } = {}) => (
+    <div className={`cf-fld${opts.full ? " full" : ""}${opts.err ? " err" : ""}`}>
+      <label htmlFor={`cf-${key}`}>{field.label}{opts.optional ? <span className="cf-opt"> (optional)</span> : null}</label>
+      {control}
+      {opts.err ? <p className="cf-msg" id={`cf-${key}-err`}>{opts.err}</p> : field.hint ? <p className="cf-help">{field.hint}</p> : null}
+    </div>
+  );
+
   return (
-    <form className="form-sheet" onSubmit={onSubmit} noValidate>
+    <form className="cform" onSubmit={onSubmit} noValidate>
       {/* honeypot — hidden from humans, tempting for bots */}
       <input type="text" name="website" tabIndex={-1} autoComplete="off"
              aria-hidden="true" style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }} />
+      <div className="cf-head"><h2>Send us a brief</h2><p>{c.hint}</p></div>
+      <div className="cf-grid">
+        {fld("name", f.name, <input className="cf-ctl" id="cf-name" type="text" name="name" autoComplete="name" placeholder={f.name.placeholder} required aria-invalid={!!errors.name} />, { full: true, err: errors.name })}
+        {fld("phone", f.phone, <input className="cf-ctl" id="cf-phone" type="tel" inputMode="tel" name="phone" autoComplete="tel" placeholder={f.phone.placeholder} aria-invalid={!!errors.phone} />, { err: errors.phone })}
+        {fld("email", f.email, <input className="cf-ctl" id="cf-email" type="email" name="email" autoComplete="email" placeholder={f.email.placeholder} aria-invalid={!!errors.email} />, { err: errors.email })}
+        {fld("service", f.service, (
+          <select className="cf-ctl" id="cf-service" name="service" defaultValue="">
+            <option value="">{f.service.placeholder}</option>
+            {f.service.options.map((o) => <option key={o}>{o}</option>)}
+          </select>
+        ), { err: errors.service })}
+        {fld("budget", f.budget, (
+          <select className="cf-ctl" id="cf-budget" name="budget" defaultValue="">
+            <option value="">{f.budget.placeholder}</option>
+            {f.budget.options.map((o) => <option key={o}>{o}</option>)}
+          </select>
+        ), { optional: true, err: errors.budget })}
+        {fld("brief", f.brief, <textarea className="cf-ctl" id="cf-brief" name="brief" placeholder={f.brief.placeholder} required aria-invalid={!!errors.message} />, { full: true, err: errors.message })}
+      </div>
 
-      <div className="sheet-rows">
-        <div className={`f-row${errors.name ? " err" : ""}`}>
-          <div className="lab">{f.name.label}<small>{f.name.hint}</small></div>
-          <div className="field">
-            <input type="text" name="name" placeholder={f.name.placeholder} required />
-            {errors.name && <p className="f-error">{errors.name}</p>}
-          </div>
-        </div>
-        <div className={`f-row${errors.phone ? " err" : ""}`}>
-          <div className="lab">{f.phone.label}<small>{f.phone.hint}</small></div>
-          <div className="field">
-            <input type="tel" name="phone" placeholder={f.phone.placeholder} />
-            {errors.phone && <p className="f-error">{errors.phone}</p>}
-          </div>
-        </div>
-        <div className={`f-row${errors.email ? " err" : ""}`}>
-          <div className="lab">{f.email.label}<small>{f.email.hint}</small></div>
-          <div className="field">
-            <input type="email" name="email" placeholder={f.email.placeholder} />
-            {errors.email && <p className="f-error">{errors.email}</p>}
-          </div>
-        </div>
-        <div className={`f-row${errors.service ? " err" : ""}`}>
-          <div className="lab">{f.service.label}<small>{f.service.hint}</small></div>
-          <div className="field">
-            <select name="service" defaultValue="">
-              <option value="">{f.service.placeholder}</option>
-              {f.service.options.map((o) => <option key={o}>{o}</option>)}
-            </select>
-          </div>
-        </div>
-        <div className={`f-row${errors.budget ? " err" : ""}`}>
-          <div className="lab">{f.budget.label}<small>{f.budget.hint}</small></div>
-          <div className="field">
-            <select name="budget" defaultValue="">
-              <option value="">{f.budget.placeholder}</option>
-              {f.budget.options.map((o) => <option key={o}>{o}</option>)}
-            </select>
-          </div>
-        </div>
-        <div className={`f-row${errors.message ? " err" : ""}`}>
-          <div className="lab">{f.brief.label}<small>{f.brief.hint}</small></div>
-          <div className="field">
-            <textarea name="brief" placeholder={f.brief.placeholder} required />
-            {errors.message && <p className="f-error">{errors.message}</p>}
-          </div>
-        </div>
+      {formError && <div className="cf-alert" ref={errBox} role="alert"><b>Couldn&apos;t send.</b> {formError}</div>}
 
-        {formError && <div className="callout f-form-error" ref={errBox} role="alert"><b>Couldn&apos;t send</b>{formError}</div>}
-
-        <label className="f-check"><span className="box" /><span>{c.checkText}</span></label>
-        <div className="f-foot">
-          <p className="hint">Typical reply: <b>under one business day</b> — from the person who'd actually do the work.</p>
-          <button className="action dark f-submit" type="submit" disabled={sending}>
-            {sending ? "Sending…" : c.submit}
-          </button>
-        </div>
+      <label className="cf-check" htmlFor="cf-updates"><input type="checkbox" id="cf-updates" name="updates" /><span>{c.checkText}</span></label>
+      <div className="cf-actions">
+        <p className="cf-note">Private. Used only to reply to you. No lists, no spam.</p>
+        <button className="cf-submit" type="submit" disabled={sending}>{sending ? "Sending…" : c.submit}</button>
       </div>
     </form>
   );
