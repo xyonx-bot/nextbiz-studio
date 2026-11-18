@@ -26,13 +26,17 @@ export const metadata: Metadata = {
   title: "NextBiz Studio — Your Digital Team, When You Need It",
   description:
     "We help businesses build, improve and grow through thoughtful digital solutions, marketing support and technology shaped around the way they work.",
+  // ?v= busts browser caches (nginx serves these with a 7-day cache); bump it whenever the icon changes
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicons/favicon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon.ico?v=3", sizes: "any" },
+      { url: "/favicons/favicon-32.png?v=3", sizes: "32x32", type: "image/png" },
+      { url: "/favicons/favicon-16.png?v=3", sizes: "16x16", type: "image/png" },
+      { url: "/favicons/favicon-192.png?v=3", sizes: "192x192", type: "image/png" },
     ],
-    apple: [{ url: "/favicons/apple-touch-icon.png" }],
+    apple: [{ url: "/favicons/apple-touch-icon.png?v=3", sizes: "180x180" }],
   },
+  manifest: "/site.webmanifest",
 };
 
 export const viewport: Viewport = {

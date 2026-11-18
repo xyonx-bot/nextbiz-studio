@@ -111,83 +111,78 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
   return (
     <PortalShell client={c} projects={projects} project={p} tab={tab} unread={tab === "messages" ? 0 : unread}>
       {tab === "overview" && (<>
-        <PortalHead micro={`${c.business || c.name} · started ${fmtDay(p.created_at)}`} title={p.title}
-          sub={p.summary || `Hi ${first}. This page shows where your project stands. It changes as we work.`} facts={facts} />
+        <PortalHead compact micro={`${c.business || c.name} · started ${fmtDay(p.created_at)}`} title={p.title}
+          sub={p.summary || `Hi ${first}. This page shows where your project stands. It changes as we work.`} />
 
-        <section className="pt-sec" aria-labelledby="h-stage">
-          <div className="pt-sechead"><span className="pt-no">01</span><h2 id="h-stage">Where it stands</h2><span className="pt-aside">Stage {stageIdx + 1} of {STAGES.length}</span></div>
-          <ol className="pt-rail">
+        {/* stage tracker: one compact strip, the current stage explained underneath */}
+        <section className="pt-stepper" aria-label="Project stage">
+          <ol>
             {STAGES.map((s, i) => {
               const st = i < stageIdx ? "done" : i === stageIdx ? "now" : "todo";
               return (
                 <li key={s.id} className={st} aria-current={st === "now" ? "step" : undefined}>
-                  <span className="pt-railno">{String(i + 1).padStart(2, "0")}</span>
-                  <b>{s.label}</b>
-                  <span className="pt-railst">{st === "done" ? "Done" : st === "now" ? "In progress" : "Coming up"}</span>
-                  <p>{STAGE_NOTE[s.id]}</p>
+                  <span className="pt-stepdot" aria-hidden>{st === "done" ? "✓" : i + 1}</span>
+                  <span className="pt-steptxt"><b>{s.label}</b><small>{st === "done" ? "Done" : st === "now" ? "In progress" : "Coming up"}</small></span>
                 </li>
               );
             })}
           </ol>
+          <p className="pt-stepnote"><b>Now · {stage.label}.</b> {STAGE_NOTE[stage.id]}</p>
         </section>
 
-        {waiting.length === 0 ? (
-          <section className="pt-sec" aria-label="Waiting on you">
-            <div className="pt-clearrow">
-              <span className="pt-no">02</span>
-              <b>Waiting on you</b>
-              <p>Nothing needed from you right now. We&apos;ll email you when we need photos, text or a decision.</p>
-              <span className="pt-cleartag">✓ All clear</span>
-            </div>
-          </section>
-        ) : (
-          <section className="pt-sec pt-ask on" aria-labelledby="h-ask">
-            <div className="pt-sechead"><span className="pt-no">02</span><h2 id="h-ask">Waiting on you</h2><span className="pt-aside">{waiting.length} to send</span></div>
-            <ul className="pt-asklist">
-              {waiting.map((r, i) => (
-                <li key={r.id}>
-                  <span className="pt-askno">{String(i + 1).padStart(2, "0")}</span>
-                  <b>{r.title}</b>
-                  <span className="pt-askdue">{r.due_on ? `By ${fmtDay(r.due_on)}` : "When you can"}</span>
-                  <a href={filesTab}>Send it →</a>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        <div className="pt-split">
-          <section className="pt-sec" aria-labelledby="h-upd">
-            <div className="pt-sechead"><span className="pt-no">03</span><h2 id="h-upd">Latest from the studio</h2>
-              {updates.length > 0 && <a className="pt-aside pt-arrow" href={`/portal/p/${p.id}?tab=updates`}>All updates →</a>}</div>
-            {updates.length === 0 ? <Blank mark="✎" title="No updates yet">We post a short note here whenever something moves. The first one is on its way.</Blank> : <Journal updates={updates} limit />}
-          </section>
-
-          <section className="pt-sec" aria-labelledby="h-mile">
-            <div className="pt-sechead"><span className="pt-no">04</span><h2 id="h-mile">Milestones</h2>
-              {milestones.length > 0 && <span className="pt-aside">{doneCount} of {milestones.length} done</span>}</div>
-            {milestones.length === 0 ? <Blank mark="◷" title="Dates coming soon">Each step gets a date once the plan is set.</Blank> : (<>
-              <div className="pt-segs" role="progressbar" aria-valuenow={doneCount} aria-valuemin={0} aria-valuemax={milestones.length} aria-label="Milestones done">
-                {milestones.map((m) => <i key={m.id} className={m.done ? "done" : m.id === next?.id ? "next" : ""} />)}
-              </div>
-              <ul className="pt-miles">
-                {milestones.map((m) => (
-                  <li key={m.id} className={m.done ? "done" : m.id === next?.id ? "next" : ""}>
-                    <i aria-hidden>{m.done ? "✓" : ""}</i>
-                    <span>{m.title}{m.id === next?.id && <em>Next</em>}</span>
-                    <small>{m.due_on ? fmtDay(m.due_on) : "—"}</small>
-                  </li>
-                ))}
+        <div className="pt-board">
+          <div className="pt-boardmain">
+            <section className="pt-panel" aria-labelledby="h-upd">
+              <header><h2 id="h-upd">Latest from the studio</h2>
+                {updates.length > 0 && <a className="pt-aside pt-arrow" href={`/portal/p/${p.id}?tab=updates`}>All updates →</a>}</header>
+              {updates.length === 0
+                ? <Blank mark="✎" title="No updates yet">We post a short note here whenever something moves. The first one is on its way.</Blank>
+                : <Journal updates={updates} limit />}
+            </section>
+            <section className="pt-panel pt-talk" aria-labelledby="h-talk">
+              <header><h2 id="h-talk">Talk to us</h2></header>
+              <ul className="pt-links">
+                <li><a href={`/portal/p/${p.id}?tab=messages`}><b>Message the team{unread ? ` · ${unread} new` : ""}</b><small>Usually answered the same day</small><i aria-hidden>→</i></a></li>
+                <li><a href={`https://wa.me/${CONTACT.phoneTel.replace(/\D/g, "")}`} target="_blank" rel="noreferrer"><b>WhatsApp {CONTACT.phoneDisplay}</b><small>For anything urgent</small><i aria-hidden>↗</i></a></li>
+                <li><a href={filesTab}><b>Send files or links</b><small>Up to 7 MB each, or a link</small><i aria-hidden>→</i></a></li>
               </ul>
-            </>)}
-          </section>
-        </div>
+            </section>
+          </div>
 
-        <section className="pt-ways" aria-label="Talk to the studio">
-          <a className="pt-way" href={`/portal/p/${p.id}?tab=messages`}><span className="pt-micro">Fastest</span><b>Message us here{unread ? ` · ${unread} new` : ""}</b><span>Read by the person doing the work, usually the same day.</span><i aria-hidden>→</i></a>
-          <a className="pt-way" href={`https://wa.me/${CONTACT.phoneTel.replace(/\D/g, "")}`} target="_blank" rel="noreferrer"><span className="pt-micro">Quick question</span><b>WhatsApp {CONTACT.phoneDisplay}</b><span>For anything urgent.</span><i aria-hidden>↗</i></a>
-          <a className="pt-way" href={filesTab}><span className="pt-micro">Files</span><b>Send files or links</b><span>Photos, logos, documents. Up to 7 MB each, or a link.</span><i aria-hidden>→</i></a>
-        </section>
+          <aside className="pt-boardside">
+            <section className="pt-panel" aria-labelledby="h-glance">
+              <header><h2 id="h-glance">At a glance</h2></header>
+              <dl className="pt-facts flat">{facts.map((f) => <div key={f.k}><dt>{f.k}</dt><dd className={f.live ? "live" : undefined}>{f.v}</dd></div>)}</dl>
+            </section>
+
+            <section className={`pt-panel${waiting.length ? " hot" : ""}`} aria-labelledby="h-ask">
+              <header><h2 id="h-ask">Waiting on you</h2><span className={`pt-tag${waiting.length ? " hot" : ""}`}>{waiting.length ? `${waiting.length} to send` : "✓ All clear"}</span></header>
+              {waiting.length === 0 ? <p className="pt-paneltext">Nothing needed right now. We&apos;ll email you when we need photos, text or a decision.</p> : (<>
+                <ul className="pt-asklist">
+                  {waiting.map((r) => <li key={r.id}><b>{r.title}</b><span className="pt-askdue">{r.due_on ? `By ${fmtDay(r.due_on)}` : "When you can"}</span></li>)}
+                </ul>
+                <a className="pt-btn sm" href={filesTab}>Send files <span aria-hidden>→</span></a>
+              </>)}
+            </section>
+
+            <section className="pt-panel" aria-labelledby="h-mile">
+              <header><h2 id="h-mile">Milestones</h2>{milestones.length > 0 && <span className="pt-aside">{doneCount} of {milestones.length} done</span>}</header>
+              {milestones.length === 0 ? <p className="pt-paneltext">Each step gets a date once the plan is set.</p> : (<>
+                <div className="pt-segs" role="progressbar" aria-valuenow={doneCount} aria-valuemin={0} aria-valuemax={milestones.length} aria-label="Milestones done">
+                  {milestones.map((m) => <i key={m.id} className={m.done ? "done" : m.id === next?.id ? "next" : ""} />)}
+                </div>
+                <ul className="pt-miles">
+                  {milestones.map((m) => (
+                    <li key={m.id} className={m.done ? "done" : m.id === next?.id ? "next" : ""}>
+                      <i aria-hidden>{m.done ? "✓" : ""}</i><span>{m.title}</span><small>{m.due_on ? fmtDay(m.due_on) : "—"}</small>
+                    </li>
+                  ))}
+                </ul>
+              </>)}
+            </section>
+
+          </aside>
+        </div>
       </>)}
 
       {tab === "updates" && (<>
