@@ -826,3 +826,6 @@
 /* login top strip: logo sized to the 12px wordmark (it was rendering at the sidebar's 22px) */
 .adminui .topstrip .brand .logo-img { height: 16px; width: auto; }
 .adminui .topstrip .brand small { font-size: 8px; font-weight: 800; letter-spacing: 1.1px; text-transform: uppercase; color: var(--muted); padding-left: 8px; margin-left: 2px; border-left: 1px solid var(--line); }
+/* sidebar header (admin + portal): same small logo as the login strip */
+.adminui .side .sbrand { gap: 8px; font-size: 12px; }
+.adminui .side .sbrand .logo-img { height: 16px; width: auto; }
