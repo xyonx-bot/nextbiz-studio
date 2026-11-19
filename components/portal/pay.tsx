@@ -64,7 +64,7 @@ export function PayBox({ id, currency, amountLabel, reference, online, bank, inr
     return () => clearInterval(t);
   }, [qr]);
 
-  async function payNow() {
+  async function payNow(upiQr = false) {
     setErr(null); setMode("busy");
     const [loaded, o] = await Promise.all([loadCheckout(), post(id, { action: "order" })]);
     if (!o.ok) { setErr(o.error); setMode("idle"); return; }
@@ -72,6 +72,8 @@ export function PayBox({ id, currency, amountLabel, reference, online, bank, inr
     const rz = new window.Razorpay({
       key: o.keyId, order_id: o.orderId, amount: o.amount, currency: o.currency, name: "NextBiz Studio", description: o.description,
       image: `${location.origin}/brand/nb-logo-web.png`, prefill: o.prefill, theme: { color: "#0F1115" },
+      // "Show UPI QR" without the QR Codes product: open Checkout straight on its UPI QR screen
+      ...(upiQr ? { config: { display: { blocks: { qr: { name: "Scan the QR with any UPI app", instruments: [{ method: "upi", flows: ["qr"] }] } }, sequence: ["block.qr"], preferences: { show_default_blocks: true } } } } : {}),
       modal: { ondismiss: () => { setMode("idle"); void check(); } },
       handler: async (r) => {
         setMode("busy");
@@ -86,6 +88,7 @@ export function PayBox({ id, currency, amountLabel, reference, online, bank, inr
   async function showQr() {
     setErr(null); setMode("busy");
     const q = await post(id, { action: "qr" });
+    if (!q.ok && q.fallback === "checkout") { await payNow(true); return; }
     if (!q.ok) { setErr(q.error); setMode("idle"); return; }
     setQr({ image: q.image, closesAt: q.closesAt }); setMode("qr");
     if (poll.current) clearInterval(poll.current);
@@ -136,7 +139,7 @@ export function PayBox({ id, currency, amountLabel, reference, online, bank, inr
         </div>
       ) : (
         <div className="ca-row">
-          <button type="button" className="ca-btn pri pui-paybtn" onClick={payNow} disabled={mode === "busy"}>{mode === "busy" ? "Opening…" : `Pay ${amountLabel}`}</button>
+          <button type="button" className="ca-btn pri pui-paybtn" onClick={() => payNow()} disabled={mode === "busy"}>{mode === "busy" ? "Opening…" : `Pay ${amountLabel}`}</button>
           <button type="button" className="ca-btn" onClick={showQr} disabled={mode === "busy"}>Show UPI QR</button>
           <span className="pui-hint">UPI · cards · netbanking · secured by Razorpay</span>
         </div>

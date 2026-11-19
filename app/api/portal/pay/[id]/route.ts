@@ -60,7 +60,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     if (body.action === "qr") {
       if (pay.currency !== "INR") return NextResponse.json({ ok: false, error: "UPI QR works for rupee payments only." }, { status: 400 });
       if (pay.rzp_qr_id) await rzpCloseQr(pay.rzp_qr_id); // one live QR per request
-      const qr = await rzpCreateQr(pay, o.name);
+      // the QR Codes product is enabled per account (usually after live activation);
+      // until then the client gets Checkout's own UPI QR screen instead
+      const qr = await rzpCreateQr(pay, o.name).catch((e: Error) => { console.error("[pay] qr unavailable:", e.message); return null; });
+      if (!qr) return NextResponse.json({ ok: false, fallback: "checkout" });
       await setRzpRefs(pay.id, { qr: qr.id });
       return NextResponse.json({ ok: true, image: qr.image_url, closesAt: qr.close_by * 1000 });
     }
