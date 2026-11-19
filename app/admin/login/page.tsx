@@ -17,7 +17,7 @@ export default function AdminLoginPage() {
     <>
       <div className="topstrip">
         <Link className="brand" href="/"><img className="logo-img" src="/brand/nb-logo-web.png" alt="" width={29} height={22} /> NextBiz Studio</Link>
-        <Link className="back" href="/">← Back to site <ArrowLeft size={12} /></Link>
+        <Link className="back" href="/"><ArrowLeft size={12} /> Back to site</Link>
       </div>
       <main className="stage">
         <Suspense fallback={null}>

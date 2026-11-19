@@ -655,3 +655,15 @@ a.pt-aside { color: var(--ink); text-decoration: none; border-bottom: 2px solid 
 .adminui.pui :is(.ca-card, .ca-btn, .ca-in, .ca-ta, .ca-f input, .ca-f textarea, .ca-f select, .ca-msg p, .ca-tablewrap, .ca-banner,
   .pay-sums dl, .pay-det, .pay-amt select, .pay-amt input, .pui-duebar, .pui-stages, .pui-empty, .pui-drop, .pui-seg, .pui-copy,
   .pui-paid, .pui-qr img, .pui-picked, .pui-ext, .pui-dayrule, .pui-paycard, .topline .acts .ca-btn) { border-radius: 0; }
+
+/* client login on the Studio Desk login card */
+.adminui.pui-loginpage { min-height: 100vh; }
+.pui-logincard { max-width: 380px; }
+.pui-logincard form { margin: 0; }
+.pui-loginwarn { margin: 0; padding: 10px 24px; font-size: 9.5px; font-weight: 600; line-height: 1.5; color: var(--st-red); border-bottom: 1px solid var(--line); background: #FBEAE8; }
+.adminui .pui-code { font-size: 18px !important; letter-spacing: .4em; font-variant-numeric: tabular-nums; }
+.pui-loginalt { list-style: none; margin: 0; padding: 4px 24px 10px; border-top: 1px solid var(--line); }
+.pui-loginalt li { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 8px 0; border-bottom: 1px dashed var(--line); font-size: 9.5px; color: var(--muted); font-weight: 600; }
+.pui-loginalt li:last-child { border-bottom: 0; }
+.pui-lnk { font: inherit; font-size: 9.5px; font-weight: 800; color: var(--ink); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: none; border-bottom: 1px solid var(--ink); }
+.adminui .topstrip .back svg { width: 12px; height: 12px; }
