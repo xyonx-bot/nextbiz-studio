@@ -202,6 +202,13 @@ export async function listProjects(clientId: string): Promise<Project[]> {
   const { rows } = await getPool().query(`SELECT * FROM client_projects WHERE client_id = $1 ORDER BY created_at`, [clientId]);
   return rows;
 }
+/** Every project with its client (admin pickers, e.g. Request a payment). */
+export async function listAllProjects(): Promise<{ id: string; title: string; client_name: string; client_business: string | null; value_currency: string }[]> {
+  const { rows } = await getPool().query(
+    `SELECT p.id, p.title, c.name AS client_name, c.business AS client_business, p.value_currency
+       FROM client_projects p JOIN clients c ON c.id = p.client_id ORDER BY c.name, p.created_at`);
+  return rows;
+}
 export async function getProject(id: string): Promise<Project | null> {
   if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
   const { rows } = await getPool().query(`SELECT * FROM client_projects WHERE id = $1`, [id]);

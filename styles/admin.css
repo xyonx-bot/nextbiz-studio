@@ -732,3 +732,11 @@
 .adminui .ca-stages button.held { color: #8A6A00; background: repeating-linear-gradient(-45deg, var(--card), var(--card) 6px, #FBF3DC 6px, #FBF3DC 12px); }
 @media (max-width: 640px) { .adminui .pay-sums dl { grid-template-columns: 1fr 1fr; } .adminui .pay-sums dl > div { border-bottom: 1px solid var(--line); } }
 .adminui .ss-tag { display: inline-flex; align-self: flex-start; justify-self: start; font-size: 9.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 99px; background: #E7F0FB; color: #0B4A82; border: 1px solid #C5DBF3; margin-right: 6px; }
+/* whole table row opens the record: the name link stretches over the row */
+.adminui .ca-rowlinks tbody tr { position: relative; cursor: pointer; }
+.adminui .ca-rowlinks tbody tr:hover td { background: var(--card); }
+.adminui .ca-rowlinks .ca-rowlink { color: var(--ink); text-decoration: none; }
+.adminui .ca-rowlinks .ca-rowlink::after { content: ""; position: absolute; inset: 0; }
+.adminui .ca-rowlinks tbody tr:hover .ca-rowlink b { text-decoration: underline; }
+.adminui .ca-rowend { text-align: right; white-space: nowrap; }
+.adminui .ca-rowend .ca-go { font-size: 12.5px; font-weight: 800; margin-left: 10px; }

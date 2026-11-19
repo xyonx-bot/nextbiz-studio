@@ -3,10 +3,10 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { isAuthenticated } from "@/lib/auth";
 import { countLeads } from "@/lib/db";
-import { countUnreadForStudio, siteUrl } from "@/lib/portal";
+import { countUnreadForStudio, listAllProjects, siteUrl } from "@/lib/portal";
 import { getPaymentSettings, isOverdue, listAllPayments, money, payRef, rzpOn, rzpTestMode, VIA_LABEL, type Currency } from "@/lib/payments";
 import { AdminShell } from "@/components/admin/shell";
-import { PaymentSettingsForm } from "@/components/admin/payment-forms";
+import { PaymentSettingsForm, RequestPaymentForm } from "@/components/admin/payment-forms";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Payments — Studio Desk | NextBiz Studio" };
@@ -15,7 +15,7 @@ const fmtWhen = (d: string) => new Date(d).toLocaleDateString("en-IN", { day: "n
 
 export default async function PaymentsPage() {
   if (!(await isAuthenticated())) redirect("/admin/login");
-  const [rows, leads, unread, settings] = await Promise.all([listAllPayments(), countLeads(), countUnreadForStudio(), getPaymentSettings()]);
+  const [rows, leads, unread, settings, projects] = await Promise.all([listAllPayments(), countLeads(), countUnreadForStudio(), getPaymentSettings(), listAllProjects()]);
   const sum = (cur: Currency, f: (r: (typeof rows)[number]) => boolean) => rows.filter((r) => r.currency === cur && f(r)).reduce((a, r) => a + r.amount, 0);
   const curs = (["INR", "USD"] as Currency[]).filter((c) => rows.some((r) => r.currency === c));
   const site = await siteUrl();
@@ -34,14 +34,22 @@ export default async function PaymentsPage() {
         </div>
 
         <section className="ca-card">
-          <h2>All payments {rows.length ? <em>{rows.length}</em> : null}</h2>
-          {rows.length === 0 ? <p className="ca-sub">No payments yet. Open a client&apos;s project and use <b>Request a payment</b>. Clients only see what you request.</p> : (
-            <div className="ca-tablewrap pay-wrap"><table className="ca-table pay-table">
+          <h2>Request a payment</h2>
+          {projects.length === 0 ? <p className="ca-sub">Add a client first (Clients → New client, or <b>Make client</b> on a lead). Payments are requested per project.</p> : (<>
+            <p className="ca-sub">Ask a client for any amount. They see it in their portal&apos;s Payments tab (and get an email if you tick it), and can pay by UPI, card or netbanking. USD requests show your bank details.</p>
+            <RequestPaymentForm currency="INR" projects={projects.map((p) => ({ id: p.id, label: `${p.client_name}${p.client_business ? ` (${p.client_business})` : ""} · ${p.title}` }))} />
+          </>)}
+        </section>
+
+        <section className="ca-card">
+          <h2>All payments {rows.length ? <em>{rows.length} · click a row to mark paid or cancel</em> : null}</h2>
+          {rows.length === 0 ? <p className="ca-sub">No payments yet. Use <b>Request a payment</b> above (or the Payments card on a client&apos;s project). Clients only see what you request. Click a row to open the project, where you can mark it paid or cancel it.</p> : (
+            <div className="ca-tablewrap pay-wrap"><table className="ca-table pay-table ca-rowlinks">
               <thead><tr><th>Client · project</th><th>For</th><th>Amount</th><th>Status</th><th>When</th></tr></thead>
               <tbody>
                 {rows.map((r) => (
                   <tr key={r.id} className={r.status === "cancelled" ? "off" : ""}>
-                    <td><Link href={`/admin/clients/${r.client_id}/p/${r.project_id}`}><b>{r.client_name}</b></Link><small>{r.project_title}</small></td>
+                    <td><Link className="ca-rowlink" href={`/admin/clients/${r.client_id}/p/${r.project_id}`}><b>{r.client_name}</b></Link><small>{r.project_title}</small></td>
                     <td>{r.label}<small>{payRef(r)}</small></td>
                     <td><b>{money(r.amount, r.currency)}</b></td>
                     <td><span className={`pay-st ${r.status === "paid" ? "paid" : r.status === "cancelled" ? "cancelled" : isOverdue(r) ? "overdue" : "due"}`}>{r.status === "paid" ? "Paid" : r.status === "cancelled" ? "Cancelled" : isOverdue(r) ? "Overdue" : "Requested"}</span></td>

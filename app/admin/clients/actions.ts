@@ -228,6 +228,7 @@ export async function requestPaymentAction(_prev: FormState, fd: FormData): Prom
   });
   await announceRequest(pay, fd.get("notify") === "on");
   revalidatePath(path);
+  revalidatePath("/admin/payments");
   return { ok: `Requested ${money(amount, cur)}.`, at: Date.now() };
 }
 

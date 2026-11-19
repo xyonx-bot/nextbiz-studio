@@ -25,17 +25,17 @@ export default async function ClientsPage() {
           </div>
         ) : (
           <div className="ca-card ca-tablewrap">
-            <table className="ca-table">
+            <table className="ca-table ca-rowlinks">
               <thead><tr><th>Client</th><th>Stage</th><th>Projects</th><th>Portal</th><th>Last seen</th><th></th></tr></thead>
               <tbody>
                 {clients.map((c) => (
                   <tr key={c.id}>
-                    <td><Link href={`/admin/clients/${c.id}`}><b>{c.name}</b></Link><small>{c.business ?? c.email}</small></td>
+                    <td><Link className="ca-rowlink" href={`/admin/clients/${c.id}`}><b>{c.name}</b></Link><small>{c.business ?? c.email}</small></td>
                     <td>{c.stage ? STAGES.find((s) => s.id === c.stage)?.label : "—"}</td>
                     <td>{c.projects}</td>
                     <td>{c.portal_enabled ? (c.last_seen_at ? <span className="ca-tag ok">Active</span> : c.invited_at ? <span className="ca-tag">Invited</span> : <span className="ca-tag">Not invited</span>) : <span className="ca-tag off">Off</span>}</td>
                     <td>{c.last_seen_at ? fmtRel(new Date(c.last_seen_at)) : "—"}</td>
-                    <td>{c.unread ? <Link className="ca-tag new" href={`/admin/clients/${c.id}`}>{c.unread} new message{c.unread > 1 ? "s" : ""}</Link> : null}</td>
+                    <td className="ca-rowend">{c.unread ? <span className="ca-tag new">{c.unread} new message{c.unread > 1 ? "s" : ""}</span> : null}<span className="ca-go">Open →</span></td>
                   </tr>
                 ))}
               </tbody>

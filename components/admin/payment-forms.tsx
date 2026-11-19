@@ -16,12 +16,20 @@ const STAGES = [["design", "Design"], ["build", "Build"], ["launch", "Launch"], 
 const VIA = [["bank", "Bank transfer"], ["upi", "UPI (direct)"], ["razorpay", "Razorpay"], ["cash", "Cash"], ["other", "Other"]] as const;
 
 /** Ask the client for money: label, amount, currency, due date, optional stage hold. */
-export function RequestPaymentForm({ projectId, currency }: { projectId: string; currency: string }) {
+export function RequestPaymentForm({ projectId, currency, projects }: {
+  projectId?: string; currency: string; projects?: { id: string; label: string }[];
+}) {
   const [state, act, busy] = useActionState<FormState, FormData>(requestPaymentAction, null);
   const ref = useReset(state);
   return (
     <form ref={ref} action={act} className="ca-form">
-      <input type="hidden" name="project" value={projectId} />
+      {projects ? (
+        <label className="ca-f"><span>Client · project</span>
+          <select name="project" className="ca-in" required defaultValue="">
+            <option value="" disabled>Choose who to ask…</option>
+            {projects.map((p) => <option key={p.id} value={p.id}>{p.label}</option>)}
+          </select></label>
+      ) : <input type="hidden" name="project" value={projectId} />}
       <div className="ca-two">
         <label className="ca-f"><span>For</span><input name="label" placeholder="Advance, Full payment, Extra pages…" required maxLength={120} /></label>
         <div className="ca-f"><span>Amount</span>
