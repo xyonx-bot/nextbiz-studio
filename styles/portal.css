@@ -662,3 +662,9 @@ a.pt-aside { color: var(--ink); text-decoration: none; border-bottom: 2px solid 
   .adminui.pui .topline .crumb { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 }
 @media (max-width: 640px) { .adminui.pui .topline .acts { display: none; } }
+
+/* Hard edges, like the Studio Desk: no rounded boxes anywhere in the portal.
+   (Status pills, dots and avatars stay round, as in the admin.) */
+.adminui.pui :is(.ca-card, .ca-btn, .ca-in, .ca-ta, .ca-f input, .ca-f textarea, .ca-f select, .ca-msg p, .ca-tablewrap, .ca-banner,
+  .pay-sums dl, .pay-det, .pay-amt select, .pay-amt input, .pui-duebar, .pui-stages, .pui-empty, .pui-drop, .pui-seg, .pui-copy,
+  .pui-paid, .pui-qr img, .pui-mtabs a, .pui-picked, .pui-ext, .pui-dayrule, .pui-paycard, .topline .acts .ca-btn) { border-radius: 0; }
