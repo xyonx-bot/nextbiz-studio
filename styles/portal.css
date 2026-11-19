@@ -508,53 +508,41 @@ a.pt-aside { color: var(--ink); text-decoration: none; border-bottom: 2px solid 
    CLIENT PORTAL v4 — the Studio Desk shell (admin.css .adminui: sidebar, topline, ca-* cards, tables, pills)
    with a friendlier type scale for clients. Everything below is scoped .adminui.pui.
    ============================================================ */
-.portal .adminui.pui { font-size: 14px; line-height: 1.5; }
-.adminui.pui .side .sbrand { color: var(--ink); text-decoration: none; font-size: 13px; }
-.adminui.pui .side .slabel { font-size: 9.5px; padding-top: 16px; }
-.adminui.pui .side nav a { font-size: 13px; padding: 9px 14px; grid-template-columns: 16px 1fr auto; }
-.adminui.pui .side nav a svg { width: 15px; height: 15px; }
-.adminui.pui .side nav a .cnt { font-size: 10px; padding: 2px 7px; }
+.portal .adminui.pui { font-size: 11.5px; line-height: 1.5; }
+.adminui.pui .side .sbrand { color: var(--ink); text-decoration: none; }
 .adminui.pui .side nav a .cnt.new { background: var(--acc, #C6F432); color: #090B0F; }
 .adminui.pui .side nav a .cnt.due { background: #F0B429; color: #1F1600; }
 .pui-projects { display: grid; }
-.pui-projects a { display: flex; gap: 9px; align-items: center; padding: 8px 14px; font-size: 13px; font-weight: 700; color: var(--muted); text-decoration: none; border-left: 2px solid transparent; overflow: hidden; }
+.pui-projects a { display: flex; gap: 9px; align-items: center; padding: 8px 14px; font-size: 11.5px; font-weight: 700; color: var(--muted); text-decoration: none; border-left: 2px solid transparent; overflow: hidden; }
 .pui-projects a i { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid currentColor; flex: none; }
 .pui-projects a.on { color: var(--ink); background: var(--card); border-left-color: var(--ink); }
 .pui-projects a.on i { background: var(--acc, #C6F432); border-color: var(--ink); }
 .pui-projects a:hover { color: var(--ink); }
-.pui-none { padding: 6px 14px; font-size: 12px; color: var(--muted); }
-.adminui.pui .side .sfoot .who { font-size: 12px; }
-.adminui.pui .side .sfoot .who .av { width: 30px; height: 30px; font-size: 11px; background: var(--ink); color: var(--acc, #C6F432); border-color: var(--ink); }
-.pui-who { display: grid; min-width: 0; } .pui-who small { font-size: 11px; color: var(--muted); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.adminui.pui .side .sfoot .logout { font-size: 11.5px; }
-.adminui.pui .topline { height: 60px; }
-.adminui.pui .topline .crumb { font-size: 9.5px; }
-.adminui.pui .topline h1 { font-size: 18px; letter-spacing: -.4px; }
-.adminui.pui .topline .acts .ca-btn { min-height: 34px; }
+.pui-none { padding: 6px 14px; font-size: 10px; color: var(--muted); }
+.adminui.pui .side .sfoot .who .av { width: 22px; height: 22px; font-size: 8px; background: var(--ink); color: var(--acc, #C6F432); border-color: var(--ink); }
+.pui-who { display: grid; min-width: 0; } .pui-who small { font-size: 8.5px; color: var(--muted); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pui-content { max-width: 1240px; width: 100%; }
-.pui-foot { display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; padding: 16px clamp(14px, 2.5vw, 28px) 22px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); margin-top: auto; }
+.pui-foot { display: flex; flex-wrap: wrap; gap: 6px 18px; justify-content: space-between; padding: 12px clamp(14px, 2.5vw, 28px) 16px; border-top: 1px solid var(--line); font-size: 9px; font-weight: 600; color: var(--muted); margin-top: auto; }
 .pui-foot a { color: var(--ink); font-weight: 700; text-decoration: none; }
-.adminui.pui .ca-card h2 { font-size: 15px; }
-.adminui.pui .ca-sub { font-size: 13px; }
-.pui-micro { display: block; font-size: 10px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.pui-more { font-size: 12.5px; font-weight: 800; color: var(--ink); text-decoration: none; }
+.pui-micro { display: block; font-size: 8px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.pui-more { font-size: 9.5px; letter-spacing: .2px; text-transform: none; font-weight: 800; color: var(--ink); text-decoration: none; }
 .pui-more:hover { text-decoration: underline; }
 .pui-hot { box-shadow: inset 0 3px 0 var(--acc, #C6F432); border-color: var(--ink); }
-.pui-hint { font-size: 11.5px; color: var(--muted); }
+.pui-hint { font-size: 9px; color: var(--muted); }
 
 /* due banner (every tab except Payments) */
-.pui-duebar { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 12px 16px; border: 1px solid var(--ink); border-radius: 8px; background: #FFF8E1; color: var(--ink); text-decoration: none; }
-.pui-duebar b { display: block; font-size: 14px; } .pui-duebar small { display: block; font-size: 12.5px; color: var(--muted); }
+.pui-duebar { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 9px 14px; border: 1px solid var(--ink); border-radius: 8px; background: #FFF8E1; color: var(--ink); text-decoration: none; }
+.pui-duebar b { display: block; font-size: 11.5px; } .pui-duebar small { display: block; font-size: 10px; color: var(--muted); }
 .pui-duebar.late { background: #FBEAE8; }
-.pui-duedot { width: 10px; height: 10px; border-radius: 50%; background: #F0B429; box-shadow: 0 0 0 4px rgb(240 180 41 / .25); }
+.pui-duedot { width: 8px; height: 8px; border-radius: 50%; background: #F0B429; box-shadow: 0 0 0 4px rgb(240 180 41 / .25); }
 .pui-duebar.late .pui-duedot { background: #B3261E; box-shadow: 0 0 0 4px rgb(179 38 30 / .18); }
 
 /* stage strip */
 .pui-stages { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--card); }
-.pui-stages li { display: flex; gap: 10px; align-items: center; padding: 12px; border-right: 1px solid var(--line); min-width: 0; }
+.pui-stages li { display: flex; gap: 9px; align-items: center; padding: 10px 12px; border-right: 1px solid var(--line); min-width: 0; }
 .pui-stages li:last-child { border-right: 0; }
-.pui-stages b { display: block; font-size: 13.5px; } .pui-stages small { display: block; font-size: 11.5px; color: var(--muted); }
-.pui-dot { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; font-size: 11.5px; font-weight: 800; flex: none; color: var(--muted); background: var(--paper); }
+.pui-stages b { display: block; font-size: 11px; } .pui-stages small { display: block; font-size: 8.5px; font-weight: 600; color: var(--muted); }
+.pui-dot { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; font-size: 9px; font-weight: 800; flex: none; color: var(--muted); background: var(--paper); }
 .pui-stages li.done .pui-dot { background: var(--ink); border-color: var(--ink); color: #fff; }
 .pui-stages li.now { background: color-mix(in srgb, var(--acc, #C6F432) 18%, var(--card)); box-shadow: inset 0 3px 0 var(--acc, #C6F432); }
 .pui-stages li.now .pui-dot { background: var(--acc, #C6F432); border-color: var(--ink); color: #090B0F; }
@@ -562,43 +550,43 @@ a.pt-aside { color: var(--ink); text-decoration: none; border-bottom: 2px solid 
 .pui-stages li.todo b, .pui-stages li.held b { color: var(--muted); }
 .pui-stages li.held { background: repeating-linear-gradient(-45deg, var(--card), var(--card) 6px, #FBF3DC 6px, #FBF3DC 12px); }
 .pui-stages li.held small { color: #7A5600; font-weight: 700; }
-.pui-stages li.held .pui-dot { font-size: 11px; border-style: dashed; }
-.pui-note { margin: 0; font-size: 13.5px; color: var(--muted); } .pui-note b { color: var(--ink); }
+.pui-stages li.held .pui-dot { font-size: 8px; border-style: dashed; }
+.pui-note { margin: 0; font-size: 10.5px; color: var(--muted); } .pui-note b { color: var(--ink); }
 
 /* feeds, lists, threads */
 .pui-feed { list-style: none; margin: 0; padding: 0; display: grid; }
-.pui-feed li { display: grid; gap: 4px; padding: 11px 0; border-top: 1px solid var(--line); }
+.pui-feed li { display: grid; gap: 3px; padding: 9px 0; border-top: 1px solid var(--line); }
 .pui-feed li:first-child { border-top: 0; padding-top: 0; }
-.pui-feed small { font-size: 11.5px; color: var(--muted); font-weight: 700; } .pui-feed p { margin: 0; font-size: 14px; white-space: pre-wrap; }
+.pui-feed small { font-size: 8.5px; color: var(--muted); font-weight: 700; } .pui-feed p { margin: 0; font-size: 11px; line-height: 1.55; white-space: pre-wrap; }
 .adminui.pui .ca-list.pui-list li { grid-template-columns: 20px minmax(0, 1fr) auto; }
-.pui-list li i { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid #BDB8AF; display: grid; place-items: center; font-style: normal; font-size: 10px; font-weight: 800; color: #fff; }
+.pui-list li i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid #BDB8AF; display: grid; place-items: center; font-style: normal; font-size: 10px; font-weight: 800; color: #fff; }
 .pui-list li.done i { background: var(--ink); border-color: var(--ink); }
 .pui-mini { max-height: none; }
 .pui-thread { max-height: min(60vh, 560px); }
 .pui-day { display: flex; flex-direction: column; gap: 10px; }
-.pui-dayrule { align-self: center; font-size: 10.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 4px 10px; border: 1px solid var(--line); border-radius: 99px; background: var(--paper); margin: 6px 0 2px; }
+.pui-dayrule { align-self: center; font-size: 8px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 4px 10px; border: 1px solid var(--line); border-radius: 99px; background: var(--paper); margin: 6px 0 2px; }
 .adminui.pui .ca-msg.me p { background: var(--ink); color: #fff; }
-.pui-file { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; font-weight: 700; color: var(--ink); text-decoration: none; overflow-wrap: anywhere; }
+.pui-file { display: inline-flex; gap: 7px; align-items: center; font-size: 10.5px; font-weight: 700; color: var(--ink); text-decoration: none; overflow-wrap: anywhere; }
 .pui-file:hover span:last-child { text-decoration: underline; }
-.pui-ext { font-size: 9px; font-weight: 800; letter-spacing: .04em; padding: 3px 5px; border-radius: 4px; background: var(--soft, #F2EEE4); border: 1px solid var(--line); flex: none; }
+.pui-ext { font-size: 7.5px; font-weight: 800; letter-spacing: .04em; padding: 3px 5px; border-radius: 4px; background: var(--soft, #F2EEE4); border: 1px solid var(--line); flex: none; }
 .pui-ext.link { background: #E7F0FB; }
-.pui-empty { padding: 18px; border: 1px dashed var(--line); border-radius: 8px; background: var(--card); display: grid; gap: 4px; }
-.pui-empty b { font-size: 14px; } .pui-empty p { margin: 0; font-size: 13px; color: var(--muted); max-width: 60ch; }
-.pui-kvsub { display: block; font-size: 11.5px; color: var(--muted); }
-.adminui.pui .ca-kv li { align-items: center; font-size: 13px; }
+.pui-empty { padding: 14px; border: 1px dashed var(--line); border-radius: 8px; background: var(--card); display: grid; gap: 4px; }
+.pui-empty b { font-size: 11px; } .pui-empty p { margin: 0; font-size: 10.5px; color: var(--muted); max-width: 60ch; }
+.pui-kvsub { display: block; font-size: 8.5px; color: var(--muted); }
+.adminui.pui .ca-kv li { align-items: center; }
 .adminui.pui .ca-kv li > span:first-child { color: var(--muted); }
 .pui-pwgo { gap: 14px; }
 
 /* forms */
 .pui-attach { position: relative; overflow: hidden; }
 .pui-attach input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-.pui-picked { display: inline-flex; gap: 8px; align-items: center; padding: 5px 6px 5px 10px; border: 1px solid var(--line); border-radius: 99px; background: var(--card); font-size: 12.5px; max-width: 100%; }
+.pui-picked { display: inline-flex; gap: 8px; align-items: center; padding: 4px 5px 4px 9px; border: 1px solid var(--line); border-radius: 99px; background: var(--card); font-size: 10px; max-width: 100%; }
 .pui-picked b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px; } .pui-picked small { color: var(--muted); }
 .pui-picked.bad { border-color: #E8C2BF; color: #8A1F18; }
 .pui-picked button { border: 0; background: var(--soft, #F2EEE4); width: 22px; height: 22px; border-radius: 50%; cursor: pointer; font: inherit; font-weight: 800; }
-.pui-drop { position: relative; display: grid; place-items: center; text-align: center; min-height: 120px; padding: 18px; border: 1.5px dashed #BDB8AF; border-radius: 8px; background: var(--card); cursor: pointer; font-size: 13.5px; }
+.pui-drop { position: relative; display: grid; place-items: center; text-align: center; min-height: 96px; padding: 14px; border: 1px dashed var(--muted); background: var(--card); cursor: pointer; font-size: 11px; }
 .pui-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-.pui-drop small { display: block; font-size: 12px; color: var(--muted); margin-top: 4px; }
+.pui-drop small { display: block; font-size: 9.5px; color: var(--muted); margin-top: 4px; }
 .pui-drop.drag, .pui-drop:hover { border-color: var(--ink); background: color-mix(in srgb, var(--acc, #C6F432) 12%, var(--card)); }
 .pui-drop.has { border-style: solid; }
 .pui-drop .pui-picked { position: relative; z-index: 1; }
@@ -608,27 +596,27 @@ a.pt-aside { color: var(--ink); text-decoration: none; border-bottom: 2px solid 
 .pui-paycard { border-color: var(--ink); box-shadow: inset 0 3px 0 #F0B429; }
 .pui-paycard.late { box-shadow: inset 0 3px 0 #B3261E; }
 .pui-payhead { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
-.pui-payhead h2 { font-size: 18px !important; margin-top: 3px !important; }
+.adminui.pui .pui-payhead h2 { font-size: 14px; margin-top: 3px; letter-spacing: -.2px; text-transform: none; color: var(--ink); }
 .pui-payamt { display: grid; justify-items: end; gap: 6px; }
-.pui-payamt b { font-size: 26px; letter-spacing: -.6px; font-variant-numeric: tabular-nums; }
-.pui-holdnote { margin: 6px 0 0; font-size: 12.5px; font-weight: 700; color: #7A5600; }
+.pui-payamt b { font-size: 20px; letter-spacing: -.6px; font-variant-numeric: tabular-nums; }
+.pui-holdnote { margin: 5px 0 0; font-size: 10px; font-weight: 700; color: #7A5600; }
 .pui-paybox { display: grid; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
-.pui-paybtn { min-height: 42px; padding: 0 20px; font-size: 14px; }
-.pui-qr { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 18px; align-items: center; }
-.pui-qr img { width: 220px; height: auto; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
-.pui-qrtxt { display: grid; gap: 8px; font-size: 13px; } .pui-qrtxt > b { font-size: 16px; } .pui-qrtxt > span { color: var(--muted); }
+.adminui.pui .pui-paybtn { min-height: 32px; padding: 0 16px; font-size: 10.5px; }
+.pui-qr { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 18px; align-items: center; }
+.pui-qr img { width: 200px; height: auto; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+.pui-qrtxt { display: grid; gap: 7px; font-size: 10.5px; } .pui-qrtxt > b { font-size: 13px; } .pui-qrtxt > span { color: var(--muted); }
 .pui-wait { display: inline-flex; gap: 8px; align-items: center; font-weight: 700; color: var(--ink) !important; }
 .pui-wait i { width: 9px; height: 9px; border-radius: 50%; background: #F0B429; animation: pui-pulse 1.2s ease-in-out infinite; }
 @keyframes pui-pulse { 50% { opacity: .3; transform: scale(.7); } }
-.pui-paid { padding: 14px 16px; border-radius: 8px; background: #E3F2D7; color: #2F5E12; font-size: 14px; }
+.pui-paid { padding: 11px 14px; background: #E3F2D7; color: #2F5E12; font-size: 11px; }
 .pui-bank { display: grid; gap: 10px; padding-top: 12px; border-top: 1px solid var(--line); }
 .pui-bank .ca-kv b { display: inline-flex; gap: 8px; align-items: center; justify-content: flex-end; flex-wrap: wrap; overflow-wrap: anywhere; }
-.pui-ref b { font-size: 14px; }
-.pui-seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; justify-self: start; max-width: 100%; }
-.pui-seg button { font: inherit; font-size: 12.5px; font-weight: 800; padding: 8px 12px; border: 0; background: var(--card); color: var(--muted); cursor: pointer; }
+.pui-ref b { font-size: 11.5px; }
+.pui-seg { display: inline-flex; border: 1px solid var(--line); overflow: hidden; justify-self: start; max-width: 100%; }
+.pui-seg button { font: inherit; font-size: 9.5px; font-weight: 700; padding: 7px 11px; border: 0; background: var(--card); color: var(--muted); cursor: pointer; }
 .pui-seg button + button { border-left: 1px solid var(--line); }
 .pui-seg button.on { background: var(--ink); color: #fff; }
-.pui-copy { font: inherit; font-size: 10.5px; font-weight: 800; padding: 2px 7px; border: 1px solid var(--line); border-radius: 5px; background: var(--card); color: var(--ink); cursor: pointer; }
+.pui-copy { font: inherit; font-size: 8.5px; font-weight: 700; padding: 2px 6px; border: 1px solid var(--line); border-radius: 3px; background: var(--card); color: var(--ink); cursor: pointer; }
 .pui-copy:hover { border-color: var(--ink); }
 
 @media (max-width: 900px) {
@@ -637,26 +625,25 @@ a.pt-aside { color: var(--ink); text-decoration: none; border-bottom: 2px solid 
   .pui-stages small { display: none; }
 }
 @media (max-width: 640px) {
-  .pui-stages b { font-size: 11.5px; }
+  .pui-stages b { font-size: 9.5px; }
   .pui-qr { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; }
   .pui-duebar { grid-template-columns: auto minmax(0, 1fr); } .pui-duebar .ca-btn { grid-column: 1 / -1; }
   .pui-payamt { justify-items: start; }
-  .adminui.pui .topline h1 { font-size: 15px; }
   .adminui.pui .topline .acts { display: none; }
 }
 /* phone: section tabs under the top bar (the sidebar is a drawer there) */
 .pui-mtabs { display: none; }
 @media (max-width: 900px) {
-  .pui-mtabs { display: flex; gap: 6px; overflow-x: auto; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--paper); position: sticky; top: 60px; z-index: 9; scrollbar-width: none; }
+  .pui-mtabs { display: flex; gap: 6px; overflow-x: auto; padding: 8px 14px; border-bottom: 1px solid var(--line); background: var(--paper); position: sticky; top: 52px; z-index: 9; scrollbar-width: none; }
   .pui-mtabs::-webkit-scrollbar { display: none; }
-  .pui-mtabs a { flex: none; display: inline-flex; gap: 6px; align-items: center; padding: 7px 12px; border: 1px solid var(--line); border-radius: 99px; font-size: 13px; font-weight: 700; color: var(--muted); text-decoration: none; background: var(--card); }
+  .pui-mtabs a { flex: none; display: inline-flex; gap: 6px; align-items: center; padding: 5px 11px; border: 1px solid var(--line); border-radius: 999px; font-size: 10px; font-weight: 700; color: var(--muted); text-decoration: none; background: var(--card); }
   .pui-mtabs a.on { background: var(--ink); color: #fff; border-color: var(--ink); }
-  .pui-mtabs span { font-size: 10px; font-weight: 800; padding: 1px 6px; border-radius: 99px; background: var(--acc, #C6F432); color: #090B0F; }
+  .pui-mtabs span { font-size: 8px; font-weight: 800; padding: 1px 6px; border-radius: 99px; background: var(--acc, #C6F432); color: #090B0F; }
   .pui-mtabs span.due { background: #F0B429; color: #1F1600; }
 }
 
 @media (max-width: 900px) {
-  .adminui.pui .topline { height: auto; min-height: 60px; padding-top: 8px; padding-bottom: 8px; }
+  .adminui.pui .topline { height: auto; min-height: 52px; padding-top: 6px; padding-bottom: 6px; }
   .adminui.pui .topline .tl-left > div { min-width: 0; }
   .adminui.pui .topline h1 { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .adminui.pui .topline .crumb { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -667,4 +654,4 @@ a.pt-aside { color: var(--ink); text-decoration: none; border-bottom: 2px solid 
    (Status pills, dots and avatars stay round, as in the admin.) */
 .adminui.pui :is(.ca-card, .ca-btn, .ca-in, .ca-ta, .ca-f input, .ca-f textarea, .ca-f select, .ca-msg p, .ca-tablewrap, .ca-banner,
   .pay-sums dl, .pay-det, .pay-amt select, .pay-amt input, .pui-duebar, .pui-stages, .pui-empty, .pui-drop, .pui-seg, .pui-copy,
-  .pui-paid, .pui-qr img, .pui-mtabs a, .pui-picked, .pui-ext, .pui-dayrule, .pui-paycard, .topline .acts .ca-btn) { border-radius: 0; }
+  .pui-paid, .pui-qr img, .pui-picked, .pui-ext, .pui-dayrule, .pui-paycard, .topline .acts .ca-btn) { border-radius: 0; }

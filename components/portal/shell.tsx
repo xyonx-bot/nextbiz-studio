@@ -74,8 +74,8 @@ export function PortalShell({ client, projects, project, current, counts, crumb,
 
           <span className="slabel">You</span>
           <nav>
-            {!project && <Link href="/portal" onClick={close} className={current === "home" ? "on" : ""}>{I.home} All projects</Link>}
-            <Link href="/portal/account" onClick={close} className={current === "account" ? "on" : ""}>{I.account} Account</Link>
+            {(!project || projects.length > 1) && <Link href="/portal?all=1" onClick={close} className={current === "home" ? "on" : ""}>{I.home} All projects</Link>}
+            <Link href={`/portal/account${project ? `?p=${project.id}` : ""}`} onClick={close} className={current === "account" ? "on" : ""}>{I.account} Account</Link>
           </nav>
 
           <span className="sgap" />

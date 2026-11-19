@@ -1,17 +1,22 @@
 import { redirect } from "next/navigation";
-import { currentClient, listProjects } from "@/lib/portal";
+import { currentClient, listProjects, unreadFor } from "@/lib/portal";
+import { countDue } from "@/lib/payments";
 import { PortalShell } from "@/components/portal/shell";
 import { PasswordForm } from "@/components/portal/forms";
 import { logoutClientAction } from "@/app/portal/actions";
 
 export const dynamic = "force-dynamic";
 
-export default async function AccountPage() {
+export default async function AccountPage({ searchParams }: { searchParams: Promise<{ p?: string }> }) {
   const c = await currentClient();
   if (!c) redirect("/portal/login");
   const projects = await listProjects(c.id);
+  // keep the project menu in the sidebar: the project they came from (?p=), or their only project
+  const { p } = await searchParams;
+  const project = projects.find((x) => x.id === p) ?? (projects.length === 1 ? projects[0] : undefined);
+  const [unread, due] = project ? await Promise.all([unreadFor(project.id, "client"), countDue(project.id)]) : [0, 0];
   return (
-    <PortalShell client={c} projects={projects} current="account" crumb="Portal / Account" title="Your account">
+    <PortalShell client={c} projects={projects} project={project} counts={{ unread, due }} current="account" crumb="Portal / Account" title="Your account">
       <div className="content pui-content">
         <div className="ca-grid">
           <div className="ca-col">
