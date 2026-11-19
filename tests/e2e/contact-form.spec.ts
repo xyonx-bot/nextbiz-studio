@@ -77,8 +77,8 @@ test.describe("contact form (P1.3)", () => {
     await expect(page.getByText("Brief received.")).toBeVisible({ timeout: 15000 });
   });
 
-  test("honeypot filled → fake-ok, no success panel change demanded", async ({ request }) => {
-    // API-level: bots hitting the endpoint directly get ok without a save
+  test("honeypot filled → still ok and saved (flagged), never dropped", async ({ request }) => {
+    // API-level: a filled trap only flags the lead — autofill fills it for real people too
     const res = await request.post("/api/leads", {
       data: {
         name: "Bot Bot",

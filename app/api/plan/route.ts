@@ -31,7 +31,8 @@ export async function POST(req: Request) {
   const parsed = Body.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ ok: false, error: parsed.error.issues[0]?.message ?? "Check the form." }, { status: 422 });
   const b = parsed.data;
-  if (b.website) return NextResponse.json({ ok: true });
+  // honeypot is a flag only — autofill fills hidden fields, so never drop a lead over it
+  const trapped = !!b.website?.trim();
   const phone = (b.phone ?? "").trim(), email = (b.email ?? "").trim();
   if (phone.replace(/\D/g, "").length < 7 && !email.includes("@")) return NextResponse.json({ ok: false, error: "Leave a WhatsApp number or an email so we can reply." }, { status: 422 });
 
@@ -50,7 +51,8 @@ export async function POST(req: Request) {
     });
     void notifySlack(lead);
     void addSystemNote(lead.id, "Lead captured via the project planner (/plan).").catch(() => {});
-    void sendLeadEmails(lead).then((notes) => Promise.all(notes.map((n) => addSystemNote(lead.id, n)))).catch(() => {});
+    if (trapped) void addSystemNote(lead.id, "Spam-trap field was filled (often just browser autofill). Check before replying — no auto thank-you email was sent.").catch(() => {});
+    else void sendLeadEmails(lead).then((notes) => Promise.all(notes.map((n) => addSystemNote(lead.id, n)))).catch(() => {});
     return NextResponse.json({ ok: true });
   } catch (e) {
     console.error("[plan] save failed", (e as Error).message);

@@ -82,7 +82,7 @@ export default async function LeadDetailPage({
           <div className="panel">
             <div className="phead">
               <span className="pt">The brief · As submitted</span>
-              <span className="when">{fmtStamp(lead.created_at)} · via contact form</span>
+              <span className="when">{fmtStamp(lead.created_at)} · {lead.source === "planner" ? "via project planner" : "via contact form"}</span>
             </div>
             <div className="brow"><span className="bl">Name</span><span className="bv big">{lead.name}</span></div>
             <div className="brow">

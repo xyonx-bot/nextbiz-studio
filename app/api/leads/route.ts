@@ -28,10 +28,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, errors }, { status: 422 });
   }
 
-  // honeypot: bots fill the hidden field — accept silently, save nothing
-  if (parsed.data.website) {
-    return NextResponse.json({ ok: true, lead: "thanks" });
-  }
+  // honeypot: a filled trap field is only a *flag*, never a reason to drop the lead —
+  // browser autofill (Edge, password managers) fills hidden fields and silently lost
+  // real leads (19 Nov 2026). It passed validation, so save it and let a human judge.
+  const trapped = !!parsed.data.website?.trim();
 
   const ip = clientIp(req.headers);
   const ipHash = hashIp(ip);
@@ -54,10 +54,15 @@ export async function POST(req: Request) {
       lead.id,
       "Lead captured via contact form. Slack notification delivered to #agent-org.",
     ).catch(() => {});
-    // thank-you email to the lead (+ optional alert to us); ledger gets a line per send
-    void sendLeadEmails(lead)
-      .then((notes) => Promise.all(notes.map((n) => addSystemNote(lead.id, n))))
-      .catch(() => {});
+    if (trapped) {
+      // possible bot: keep it, flag it, but don't auto-email an address a bot may have made up
+      void addSystemNote(lead.id, "Spam-trap field was filled (often just browser autofill). Check before replying — no auto thank-you email was sent.").catch(() => {});
+    } else {
+      // thank-you email to the lead (+ optional alert to us); ledger gets a line per send
+      void sendLeadEmails(lead)
+        .then((notes) => Promise.all(notes.map((n) => addSystemNote(lead.id, n))))
+        .catch(() => {});
+    }
 
     return NextResponse.json({
       ok: true,

@@ -47,7 +47,7 @@ export function DeskForm({ content, variant = "classic" }: { content?: typeof co
       service: String(fd.get("service") ?? ""),
       budget: String(fd.get("budget") ?? ""),
       message: String(fd.get("brief") ?? ""),
-      website: String(fd.get("website") ?? ""), // honeypot
+      website: String(fd.get("nb_trap") ?? ""), // honeypot (named nb_trap so browser autofill never fills it)
     };
     const wantsUpdates = fd.get("updates") === "on";
 
@@ -123,7 +123,7 @@ export function DeskForm({ content, variant = "classic" }: { content?: typeof co
     return (
       <div className="cs-layout">
       <form className="csheet-form" onSubmit={onSubmit} onInput={(e) => readDraft(e.currentTarget)} noValidate>
-        <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }} />
+        <input type="text" name="nb_trap" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }} />
         <div className="cs-grid">
           {cell("name", f.name.label, <input id="cs-name" name="name" type="text" autoComplete="name" placeholder={f.name.placeholder} aria-invalid={!!errors.name} />, { cls: "w6", err: errors.name })}
           {cell("phone", f.phone.label, <input id="cs-phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder={f.phone.placeholder} aria-invalid={!!errors.phone} />, { cls: "w3", err: errors.phone })}
@@ -183,7 +183,7 @@ export function DeskForm({ content, variant = "classic" }: { content?: typeof co
   return (
     <form className="cform" onSubmit={onSubmit} noValidate>
       {/* honeypot — hidden from humans, tempting for bots */}
-      <input type="text" name="website" tabIndex={-1} autoComplete="off"
+      <input type="text" name="nb_trap" tabIndex={-1} autoComplete="off"
              aria-hidden="true" style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }} />
       <div className="cf-head"><h2>Send us a brief</h2><p>{c.hint}</p></div>
       <div className="cf-grid">

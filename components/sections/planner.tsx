@@ -150,7 +150,7 @@ function Result({ pricing, a, plan, wa, done, setDone, edit, restart, switchTo }
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault(); setErr(""); setBusy(true);
     const fd = new FormData(e.currentTarget);
-    const r = await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: fd.get("name"), phone: fd.get("phone"), email: fd.get("email"), website: fd.get("website"), answers: a }) }).catch(() => null);
+    const r = await fetch("/api/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: fd.get("name"), phone: fd.get("phone"), email: fd.get("email"), website: fd.get("nb_trap"), answers: a }) }).catch(() => null);
     const d = (await r?.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
     setBusy(false);
     if (d?.ok) setDone(true); else setErr(d?.error ?? "Couldn't send — try WhatsApp instead.");
@@ -196,7 +196,7 @@ function Result({ pricing, a, plan, wa, done, setDone, edit, restart, switchTo }
             <div className="pl-alt"><a href={waUrl} target="_blank" rel="noreferrer">Or send it on WhatsApp →</a><a href="/contact">Book a call →</a></div>
           </div>
           <form onSubmit={submit} className="pl-form">
-            <input type="text" name="website" tabIndex={-1} autoComplete="off" className="pl-hp" aria-hidden />
+            <input type="text" name="nb_trap" tabIndex={-1} autoComplete="off" className="pl-hp" aria-hidden />
             <label><span>Your name</span><input name="name" required minLength={2} maxLength={120} autoComplete="name" /></label>
             <label><span>WhatsApp / phone</span><input name="phone" type="tel" maxLength={24} placeholder="+91 …" autoComplete="tel" /></label>
             <label><span>Email <small>optional</small></span><input name="email" type="email" maxLength={160} autoComplete="email" /></label>

@@ -44,11 +44,11 @@ describe("leadSchema (S3 — zod validation per technical-plan §5)", () => {
       expect(leadSchema.safeParse({ ...validLead, budget: b }).success).toBe(true);
     }
   });
-  it("honeypot: schema ignores the field; the route fake-oks bots (no save)", () => {
+  it("honeypot: schema keeps the field; the route saves the lead and only flags it", () => {
     const r = leadSchema.safeParse({ ...validLead, website: "http://spam.example" });
     // schema-level: honeypot is IGNORED (zod strips unknown-ish optional) so a
-    // bot passes validation — the ROUTE sees website filled and silently
-    // returns ok:true while saving nothing.
+    // filled trap passes validation — the ROUTE saves the lead with a flag note
+    // (autofill fills it for real visitors, so it must never drop a lead).
     expect(r.success).toBe(true);
     expect(r.data?.website).toBe("http://spam.example");
   });

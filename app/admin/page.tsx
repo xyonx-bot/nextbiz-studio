@@ -84,7 +84,7 @@ export default async function AdminInboxPage({
                 data-status={l.status}
                 data-created-at={l.created_at.toISOString()}
               >
-                <span className="nm">{l.name}<small>via contact form</small></span>
+                <span className="nm">{l.name}<small>{l.source === "planner" ? "via project planner" : "via contact form"}</small></span>
                 <span className="ct"><b>{l.phone || "—"}</b>{l.email || "—"}</span>
                 <span className="msg">{l.message}</span>
                 <span className="svc">{l.service || "—"}</span>

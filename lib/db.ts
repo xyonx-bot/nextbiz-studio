@@ -27,6 +27,7 @@ export interface LeadRow {
   status: string;
   ip_hash: string | null;
   created_at: Date;
+  source?: string | null;   // "planner" for /plan leads (migration 009)
 }
 
 export async function insertLead(input: {
