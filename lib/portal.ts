@@ -34,7 +34,7 @@ export interface Client {
   id: string; name: string; business: string | null; email: string; phone: string | null; lead_id: string | null;
   portal_enabled: boolean; has_password: boolean; invited_at: string | null; last_seen_at: string | null; created_at: string;
 }
-export interface Project { id: string; client_id: string; title: string; stage: Stage; summary: string | null; plan: unknown; created_at: string; updated_at: string }
+export interface Project { id: string; client_id: string; title: string; stage: Stage; summary: string | null; plan: unknown; created_at: string; updated_at: string; value_amount?: string | number | null; value_currency?: string }
 export interface Milestone { id: string; title: string; due_on: string | null; done: boolean }
 export interface Req { id: string; title: string; due_on: string | null; done: boolean }
 export interface FileRow { id: string; name: string; kind: "file" | "link"; url: string | null; mime: string | null; size_bytes: number | null; uploaded_by: "client" | "studio"; created_at: string }

@@ -25,30 +25,33 @@ export async function sendInvite(c: Client, linkToken: string, projectTitle?: st
     { label: "Open my portal", url: `${site}/portal/l/${linkToken}` });
 }
 
-export async function notifyClient(c: Client, p: Project, what: "update" | "message" | "stage" | "request" | "file", detail: string) {
+export async function notifyClient(c: Client, p: Project, what: "update" | "message" | "stage" | "request" | "file" | "payment" | "receipt", detail: string) {
   if (!c.portal_enabled) return;
   const site = await siteUrl();
-  const tab = what === "message" ? "messages" : what === "file" ? "files" : "overview";
+  const tab = what === "message" ? "messages" : what === "file" ? "files" : what === "payment" || what === "receipt" ? "payments" : "overview";
   const lines: Record<typeof what, [string, string]> = {
     update: [`New update on ${p.title}`, `There's a new update on your project:\n\n${detail.slice(0, 600)}`],
     message: [`New message about ${p.title}`, `You have a new message from the studio:\n\n${detail.slice(0, 600)}`],
     stage: [`${p.title} moved to ${STAGES.find((s) => s.id === detail)?.label ?? detail}`, `Your project just moved to the ${STAGES.find((s) => s.id === detail)?.label ?? detail} stage.`],
     request: [`We need something for ${p.title}`, `To keep things moving we need: ${detail}`],
     file: [`New file on ${p.title}`, `We shared a new file with you: ${detail}`],
+    payment: [`Payment request for ${p.title}`, `${detail}\n\nYou can pay by UPI, card or netbanking from the Payments tab in your portal.`],
+    receipt: [`Payment received, thank you`, `${detail}\n\nYour receipt is in the Payments tab of your portal.`],
   };
   const [subject, body] = lines[what];
   await mail(c, "portal_notify", subject, subject, `Hi ${first(c.name)},\n\n${body}`, { label: "Open my portal", url: `${site}/portal/p/${p.id}?tab=${tab}` });
 }
 
 /** Tell the studio (Slack + the owner's inbox) that a client wrote or uploaded something. */
-export async function notifyStudio(c: Client, p: Project, what: "message" | "file", detail: string) {
+export async function notifyStudio(c: Client, p: Project, what: "message" | "file" | "payment", detail: string) {
   const site = await siteUrl();
-  const text = `*${c.name}${c.business ? ` (${c.business})` : ""}* ${what === "message" ? "sent a message" : "uploaded a file"} on *${p.title}*\n> ${detail.slice(0, 400)}\n${site}/admin/clients/${c.id}/p/${p.id}`;
+  const verb = what === "message" ? "sent a message" : what === "file" ? "uploaded a file" : "paid";
+  const text = `${what === "payment" ? "💰 " : ""}*${c.name}${c.business ? ` (${c.business})` : ""}* ${verb} on *${p.title}*\n> ${detail.slice(0, 400)}\n${site}/admin/clients/${c.id}/p/${p.id}`;
   const hook = process.env.SLACK_WEBHOOK_URL;
   if (hook) await fetch(hook, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) }).catch(() => {});
   const to = process.env.LEAD_ALERT_TO;
   if (to) {
-    const r = renderEmail("plain", { subject: `${c.name}: ${what === "message" ? "new message" : "new file"} on ${p.title}`, body: `${detail.slice(0, 1500)}\n\nOpen it: ${site}/admin/clients/${c.id}/p/${p.id}` });
+    const r = renderEmail("plain", { subject: `${c.name}: ${what === "message" ? "new message" : what === "file" ? "new file" : "payment received"} on ${p.title}`, body: `${detail.slice(0, 1500)}\n\nOpen it: ${site}/admin/clients/${c.id}/p/${p.id}` });
     await sendMail({ to, subject: r.subject, html: r.html, text: r.text, kind: "portal_alert", clientId: c.id, theme: "plain" }).catch(() => {});
   }
 }

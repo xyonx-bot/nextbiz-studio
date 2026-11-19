@@ -28,6 +28,7 @@ export interface LeadRow {
   ip_hash: string | null;
   created_at: Date;
   source?: string | null;   // "planner" for /plan leads (migration 009)
+  self_service?: boolean;   // chose "no calls, everything in the portal" (migration 011)
 }
 
 export async function insertLead(input: {
@@ -40,6 +41,7 @@ export async function insertLead(input: {
   ipHash?: string | null;
   source?: string | null;           // e.g. "planner" (migration 009)
   plan?: unknown;                   // the project plan from /plan (migration 009)
+  selfService?: boolean;            // migration 011
 }): Promise<LeadRow> {
   const extra = input.source !== undefined || input.plan !== undefined;
   const { rows } = await getPool().query<LeadRow>(
@@ -53,6 +55,10 @@ export async function insertLead(input: {
      input.message, input.ipHash ?? null,
      ...(extra ? [input.source ?? null, input.plan === undefined ? null : JSON.stringify(input.plan)] : [])],
   );
+  if (input.selfService && rows[0]) {
+    await getPool().query(`UPDATE leads SET self_service = true WHERE id = $1`, [rows[0].id]);
+    rows[0].self_service = true;
+  }
   return rows[0];
 }
 

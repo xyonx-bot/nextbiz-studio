@@ -696,3 +696,39 @@
 .adminui .cnt.new { background: var(--acc, #C6F432); color: #090B0F; }
 @media (max-width: 1000px) { .adminui .ca-grid { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 640px) { .adminui .ca-two { grid-template-columns: minmax(0, 1fr); } .adminui .ca-stages { grid-template-columns: repeat(3, minmax(0, 1fr)); } .adminui .ca-projrow { grid-template-columns: minmax(0, 1fr) auto; } }
+
+/* ═══ Payments (admin project page, /admin/payments, and the client portal — same classes) ═══ */
+.adminui .pay-sums { display: grid; gap: 10px; }
+.adminui .pay-sums dl { margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--card); }
+.adminui .pay-sums dl > div { padding: 12px 14px; border-right: 1px solid var(--line); display: grid; gap: 4px; min-width: 0; }
+.adminui .pay-sums dl > div:last-child { border-right: 0; }
+.adminui .pay-sums dt { font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.adminui .pay-sums dd { margin: 0; font-size: 19px; font-weight: 800; letter-spacing: -.3px; font-variant-numeric: tabular-nums; }
+.adminui .pay-sums .due { background: color-mix(in srgb, var(--acc, #C6F432) 22%, var(--card)); box-shadow: inset 0 3px 0 var(--acc, #C6F432); }
+.adminui .pay-sums.wide { margin-bottom: 14px; }
+.adminui .pay-wrap { padding: 0; }
+.adminui .pay-table { min-width: 620px; }
+.adminui .pay-table tr.off td { color: var(--muted); } .adminui .pay-table tr.off b { text-decoration: line-through; }
+.adminui .pay-acts { display: flex; gap: 6px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
+.adminui .pay-acts form { display: inline; }
+.adminui .pay-st { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 99px; white-space: nowrap; border: 1px solid transparent; }
+.adminui .pay-st::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.adminui .pay-st.paid { background: #E3F2D7; color: #2F5E12; border-color: #C9E3B4; }
+.adminui .pay-st.due { background: #FFF4D6; color: #7A5600; border-color: #F0DC9F; }
+.adminui .pay-st.overdue { background: #F6E3E1; color: #8A1F18; border-color: #E8C2BF; }
+.adminui .pay-st.cancelled { background: var(--soft, #F2EEE4); color: var(--muted); }
+.adminui .pay-amt { display: flex; gap: 6px; align-items: stretch; }
+.adminui .pay-amt select { font: inherit; font-size: 13px; font-weight: 800; padding: 0 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--soft, #F2EEE4); color: var(--ink); }
+.adminui .pay-amt input { flex: 1; min-width: 0; font: inherit; font-size: 13.5px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 6px; background: var(--card); color: var(--ink); }
+.adminui select.ca-in { appearance: auto; }
+.adminui .pay-forms { display: grid; gap: 8px; }
+.adminui .pay-det { border: 1px solid var(--line); border-radius: 8px; background: var(--card); }
+.adminui .pay-det summary { cursor: pointer; padding: 11px 14px; font-size: 13px; font-weight: 800; list-style: none; display: flex; justify-content: space-between; }
+.adminui .pay-det summary::after { content: "+"; color: var(--muted); } .adminui .pay-det[open] summary::after { content: "–"; }
+.adminui .pay-det[open] summary { border-bottom: 1px solid var(--line); }
+.adminui .pay-det > form { padding: 14px; }
+.adminui .pay-markpaid { display: grid; gap: 6px; min-width: 220px; padding: 8px; border: 1px dashed var(--line); border-radius: 6px; }
+.adminui .pay-mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; overflow-wrap: anywhere; }
+.adminui .ca-stages button.held { color: #8A6A00; background: repeating-linear-gradient(-45deg, var(--card), var(--card) 6px, #FBF3DC 6px, #FBF3DC 12px); }
+@media (max-width: 640px) { .adminui .pay-sums dl { grid-template-columns: 1fr 1fr; } .adminui .pay-sums dl > div { border-bottom: 1px solid var(--line); } }
+.adminui .ss-tag { display: inline-flex; align-self: flex-start; justify-self: start; font-size: 9.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 99px; background: #E7F0FB; color: #0B4A82; border: 1px solid #C5DBF3; margin-right: 6px; }

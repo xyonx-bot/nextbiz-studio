@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { isAuthenticated } from "@/lib/auth";
 import { countLeads, getLead } from "@/lib/db";
 import { fmtRel, fmtStamp } from "@/lib/format";
-import { setStatusAction, addNoteAction } from "@/app/admin/actions";
+import { setStatusAction, addNoteAction, declineLeadAction } from "@/app/admin/actions";
 import { AdminShell } from "@/components/admin/shell";
 import { ArrowLeft, ArrowRight, Check } from "@/components/admin/icons";
 import { EmailComposer } from "@/components/admin/email-composer";
@@ -153,7 +153,22 @@ export default async function LeadDetailPage({
             {client ? (
               <><span className="ca-sub">This lead is a client.</span><Link className="ca-btn pri" href={`/admin/clients/${client.id}`}>Open client portal →</Link></>
             ) : (
-              <><span className="ca-sub">Accepted the project? Give them a private portal.</span><Link className="ca-btn pri" href={`/admin/clients/new?lead=${lead.id}`} data-testid="make-client">Make client →</Link></>
+              lead.self_service ? (
+                <>
+                  <span className="ss-tag">Self-service request</span>
+                  <span className="ca-sub">They&apos;d rather not have calls: everything happens in the portal. <b>Accept</b> creates their portal and emails the invite. Nothing is charged until you request a payment.</span>
+                  <div className="ca-row">
+                    <Link className="ca-btn pri" href={`/admin/clients/new?lead=${lead.id}`} data-testid="make-client">Accept → make client</Link>
+                    {lead.status !== "lost" && (
+                      <form action={declineLeadAction} className="ca-row"><input type="hidden" name="id" value={lead.id} />
+                        <label className="ca-check"><input type="checkbox" name="email" defaultChecked={!!lead.email} /> Send a polite no</label>
+                        <button className="ca-btn danger" type="submit">Decline</button></form>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <><span className="ca-sub">Accepted the project? Give them a private portal.</span><Link className="ca-btn pri" href={`/admin/clients/new?lead=${lead.id}`} data-testid="make-client">Make client →</Link></>
+              )
             )}
           </div>
           <div className="rail">

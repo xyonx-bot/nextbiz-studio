@@ -219,3 +219,24 @@ export async function savePlannerAction(raw: unknown): Promise<{ ok: boolean; me
   revalidatePath("/plan");
   return { ok: true, message: "Saved — the planner uses these prices now." };
 }
+
+/** Self-service request we can't take on: mark lost, and (optionally) send a kind, short no. */
+export async function declineLeadAction(formData: FormData) {
+  if (!(await isAuthenticated())) redirect("/admin/login");
+  const id = String(formData.get("id") ?? "");
+  const lead = await getLead(id);
+  if (!lead) return;
+  await moveLeadStatus(id, "lost");
+  if (formData.get("email") === "on" && lead.email && mailOn()) {
+    const first = lead.name.trim().split(/\s+/)[0] || "there";
+    const r = renderEmail("studio", {
+      subject: "About your project request",
+      heading: `Thank you, ${first}`,
+      body: `Thanks for sending us your project. We've looked at it carefully, and we're not the right fit for it right now, so we'd rather say so today than keep you waiting.\n\nIf your plans change, or you have another project in mind, we'd be glad to hear from you again.`,
+    });
+    const sent = await sendMail({ to: lead.email, subject: r.subject, html: r.html, text: r.text, kind: "compose", leadId: id, theme: "studio" }).catch(() => null);
+    await addEmailNote(id, sent?.ok ? `Declined self-service request. Polite no sent to ${lead.email}.` : `Declined. The email to ${lead.email} didn't send.`);
+  }
+  revalidatePath("/admin");
+  revalidatePath(`/admin/lead/${id}`);
+}

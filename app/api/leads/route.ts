@@ -45,7 +45,8 @@ export async function POST(req: Request) {
       );
     }
 
-    const lead = await insertLead({ ...parsed.data, ipHash });
+    const lead = await insertLead({ ...parsed.data, selfService: !!parsed.data.selfService, ipHash });
+    if (parsed.data.selfService) void addSystemNote(lead.id, "Self-service request: they prefer no calls, everything in the portal. Accept = Make client (portal invite). Decline if it isn't a fit.").catch(() => {});
 
     // fire-and-forget: never blocks or fails the response
     void notifySlack(lead);

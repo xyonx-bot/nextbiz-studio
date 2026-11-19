@@ -10,6 +10,11 @@ import {
   issueLoginLink, markInvited, setMilestoneDone, setPortalEnabled, setRequestDone, siteUrl, updateClient, updateProject,
 } from "@/lib/portal";
 import { notifyClient, sendInvite } from "@/lib/portal-notify";
+import {
+  cancelPayment, createPayment, deletePayment, getPayment, isCurrency, listPayments, reopenPayment, savePaymentSettings, setProjectValue,
+  stageBlockedBy, toMinor, money, PAYMENT_DEFAULTS, type PaymentSettings,
+} from "@/lib/payments";
+import { announceRequest, confirmPayment } from "@/lib/payment-events";
 
 async function guard() { if (!(await isAuthenticated())) redirect("/admin/login"); }
 const s = (fd: FormData, k: string, max = 200) => String(fd.get(k) ?? "").trim().slice(0, max);
@@ -115,6 +120,9 @@ export async function setStageAction(fd: FormData) {
   const { p, c, path } = await proj(fd);
   const stage = s(fd, "stage", 20);
   if (!isStage(stage) || stage === p.stage) return;
+  // a stage held by an unpaid request can't be entered until it's paid (or the request is cancelled)
+  const held = stageBlockedBy(await listPayments(p.id), stage);
+  if (held) redirect(`${path}?held=${held.id}`);
   await updateProject(p.id, { stage });
   if (fd.get("notify") !== "off") await notifyClient(c, p, "stage", stage);
   revalidatePath(path);
@@ -201,4 +209,71 @@ export async function deleteThingAction(fd: FormData) {
   if (what === "file") await deleteFile(id, p.id);
   if (what === "update") await deleteUpdate(id, p.id);
   revalidatePath(path);
+}
+
+/* ── payments ── */
+const STAGE_IDS = ["plan", "design", "build", "launch", "care"] as const;
+
+/** Ask the client for an amount. Any amount, any time; optionally holds a stage until paid. */
+export async function requestPaymentAction(_prev: FormState, fd: FormData): Promise<FormState> {
+  const { p, path } = await proj(fd);
+  const label = s(fd, "label", 120), cur = s(fd, "currency", 3), amount = toMinor(s(fd, "amount", 20));
+  if (!label) return { error: "Say what the payment is for, e.g. Advance." };
+  if (!amount) return { error: "Enter an amount, e.g. 15000." };
+  if (!isCurrency(cur)) return { error: "Pick INR or USD." };
+  const blocks = s(fd, "blocks", 20);
+  const pay = await createPayment({
+    projectId: p.id, label, amount, currency: cur, note: s(fd, "note", 600) || null, dueOn: day(s(fd, "due", 10)),
+    blocksStage: (STAGE_IDS as readonly string[]).includes(blocks) ? (blocks as (typeof STAGE_IDS)[number]) : null,
+  });
+  await announceRequest(pay, fd.get("notify") === "on");
+  revalidatePath(path);
+  return { ok: `Requested ${money(amount, cur)}.`, at: Date.now() };
+}
+
+/** Log money received outside the portal (bank transfer, cash, direct UPI). */
+export async function recordPaymentAction(_prev: FormState, fd: FormData): Promise<FormState> {
+  const { p, path } = await proj(fd);
+  const label = s(fd, "label", 120) || "Payment", cur = s(fd, "currency", 3), amount = toMinor(s(fd, "amount", 20));
+  if (!amount) return { error: "Enter the amount you received." };
+  if (!isCurrency(cur)) return { error: "Pick INR or USD." };
+  await createPayment({ projectId: p.id, label, amount, currency: cur, kind: "record", via: s(fd, "via", 20) || "other", ref: s(fd, "ref", 120) || null, paidOn: day(s(fd, "on", 10)) });
+  revalidatePath(path);
+  return { ok: `Logged ${money(amount, cur)} received.`, at: Date.now() };
+}
+
+/** Row actions: mark paid (with how + reference), cancel, undo a manual "paid", delete. */
+export async function paymentOpAction(fd: FormData) {
+  const { p, path } = await proj(fd);
+  const pay = await getPayment(s(fd, "id", 40));
+  if (!pay || pay.project_id !== p.id) return;
+  const op = s(fd, "op", 10);
+  if (op === "paid") await confirmPayment(pay.id, { via: s(fd, "via", 20) || "bank", ref: s(fd, "ref", 120) || null, paidOn: day(s(fd, "on", 10)), ping: false, receipt: fd.get("receipt") === "on" });
+  if (op === "cancel") await cancelPayment(pay.id, p.id);
+  if (op === "reopen") await reopenPayment(pay.id, p.id);
+  if (op === "delete") await deletePayment(pay.id, p.id);
+  revalidatePath(path);
+}
+
+export async function projectValueAction(_prev: FormState, fd: FormData): Promise<FormState> {
+  const { p, path } = await proj(fd);
+  const raw = s(fd, "value", 20), cur = s(fd, "currency", 3);
+  if (!isCurrency(cur)) return { error: "Pick INR or USD." };
+  const amount = raw ? toMinor(raw) : null;
+  if (raw && !amount) return { error: "Enter a number, e.g. 40000, or leave it empty." };
+  await setProjectValue(p.id, amount, cur);
+  revalidatePath(path);
+  return { ok: amount ? `Project value set to ${money(amount, cur)}.` : "Project value cleared.", at: Date.now() };
+}
+
+export async function savePaymentSettingsAction(_prev: FormState, fd: FormData): Promise<FormState> {
+  await guard();
+  const b = PAYMENT_DEFAULTS.usdBank;
+  const next: PaymentSettings = {
+    usdBank: Object.fromEntries(Object.keys(b).map((k) => [k, s(fd, `usd_${k}`, k === "note" ? 400 : 160)])) as PaymentSettings["usdBank"],
+    inrNote: s(fd, "inrNote", 400),
+  };
+  await savePaymentSettings(next);
+  revalidatePath("/admin/payments");
+  return { ok: "Saved.", at: Date.now() };
 }

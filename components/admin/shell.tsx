@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { logoutAction } from "@/app/admin/actions";
-import { Inbox, LayoutGrid, Settings, LogOut, Mail, Palette } from "./icons";
+import { Inbox, LayoutGrid, Settings, LogOut, Mail, Palette, Wallet } from "./icons";
 
 /**
  * Admin shell (Mira's inbox/lead wireframes): FIXED 216px sidebar + main.
@@ -26,7 +26,7 @@ export function AdminShell({
 }: {
   leadCount: number;
   pageCount?: number;
-  current?: "leads" | "clients" | "pages" | "subscribers" | "email" | "design" | "planner";
+  current?: "leads" | "clients" | "payments" | "pages" | "subscribers" | "email" | "design" | "planner";
   clientUnread?: number;
   crumb: string;
   title: React.ReactNode;
@@ -48,6 +48,9 @@ export function AdminShell({
             </Link>
             <Link href="/admin/clients" className={current === "clients" ? "on" : ""} onClick={() => setOpen(false)} data-testid="nav-clients">
               <Mail /> Clients {clientUnread ? <span className="cnt new" title="Unread client messages">{clientUnread}</span> : null}
+            </Link>
+            <Link href="/admin/payments" className={current === "payments" ? "on" : ""} onClick={() => setOpen(false)} data-testid="nav-payments">
+              <Wallet /> Payments
             </Link>
             <Link href="/admin/pages" className={current === "pages" ? "on" : ""} onClick={() => setOpen(false)}>
               <LayoutGrid /> Pages {pageCount !== undefined && <span className="cnt">{pageCount}</span>}

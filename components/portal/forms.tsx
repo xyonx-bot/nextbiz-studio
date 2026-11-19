@@ -9,7 +9,7 @@ const MAX = 7 * 1024 * 1024;
 /** Picked-file chip with a remove button. */
 function Picked({ file, onClear }: { file: File; onClear: () => void }) {
   return (
-    <span className={`pt-picked${file.size > MAX ? " bad" : ""}`}>
+    <span className={`pui-picked${file.size > MAX ? " bad" : ""}`}>
       <b>{file.name}</b><small>{file.size > MAX ? "Over 7 MB" : kb(file.size)}</small>
       <button type="button" onClick={onClear} aria-label="Remove file">×</button>
     </span>
@@ -23,26 +23,22 @@ export function MessageForm({ projectId }: { projectId: string }) {
   const [file, setFile] = useState<File | null>(null);
   useEffect(() => { if (state?.ok) { ref.current?.reset(); setFile(null); } }, [state?.at, state?.ok]);
   // keep the newest message in view
-  useEffect(() => { const el = document.getElementById("pt-msgs"); if (el) el.scrollTop = el.scrollHeight; }, [state?.at]);
+  useEffect(() => { const el = document.getElementById("pui-thread"); if (el) el.scrollTop = el.scrollHeight; }, [state?.at]);
   const clear = () => { if (fileRef.current) fileRef.current.value = ""; setFile(null); };
   return (
-    <form ref={ref} action={act} className="pt-compose">
+    <form ref={ref} action={act} className="ca-form ca-reply">
       <input type="hidden" name="project" value={projectId} />
-      <label className="pt-composecell">
-        <span className="pt-l">Your message</span>
-        <textarea name="body" placeholder="Write to the studio…" rows={3} maxLength={4000}
-          onKeyDown={(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) e.currentTarget.form?.requestSubmit(); }} />
-      </label>
-      <div className="pt-composebar">
-        <label className="pt-attach">
-          <input ref={fileRef} type="file" name="file" onChange={(e) => setFile(e.currentTarget.files?.[0] ?? null)} />
-          <span>＋ Attach a file</span>
-        </label>
-        {file && <Picked file={file} onClear={clear} />}
-        <span className="pt-hint">Ctrl + Enter to send</span>
-        <button className="pt-btn" type="submit" disabled={busy}>{busy ? "Sending…" : "Send message"} <span aria-hidden>→</span></button>
+      <textarea className="ca-ta" name="body" placeholder="Write to the studio…" rows={3} maxLength={4000} aria-label="Your message"
+        onKeyDown={(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) e.currentTarget.form?.requestSubmit(); }} />
+      <div className="ca-row ca-between">
+        <div className="ca-row">
+          <label className="ca-btn pui-attach"><input ref={fileRef} type="file" name="file" onChange={(e) => setFile(e.currentTarget.files?.[0] ?? null)} />＋ Attach</label>
+          {file && <Picked file={file} onClear={clear} />}
+        </div>
+        <div className="ca-row"><span className="pui-hint">Ctrl + Enter</span>
+          <button className="ca-btn pri" type="submit" disabled={busy}>{busy ? "Sending…" : "Send message"}</button></div>
       </div>
-      {state?.error && <p className="pt-err" role="alert">{state.error}</p>}
+      {state?.error && <p className="ca-err" role="alert">{state.error}</p>}
     </form>
   );
 }
@@ -56,31 +52,26 @@ export function UploadForm({ projectId }: { projectId: string }) {
   useEffect(() => { if (state?.ok) { ref.current?.reset(); setFile(null); } }, [state?.at, state?.ok]);
   const clear = () => { if (fileRef.current) fileRef.current.value = ""; setFile(null); };
   return (
-    <form ref={ref} action={act} className="pt-upload">
+    <form ref={ref} action={act} className="ca-form">
       <input type="hidden" name="project" value={projectId} />
-      <div className="pt-sheet two">
-        <label className={`pt-drop${drag ? " drag" : ""}${file ? " has" : ""}`}
-          onDragOver={(e) => { e.preventDefault(); setDrag(true); }} onDragLeave={() => setDrag(false)}
-          onDrop={(e) => {
-            e.preventDefault(); setDrag(false);
-            const f = e.dataTransfer.files?.[0];
-            if (f && fileRef.current) { const dt = new DataTransfer(); dt.items.add(f); fileRef.current.files = dt.files; setFile(f); }
-          }}>
-          <span className="pt-l">A file</span>
-          <input ref={fileRef} type="file" name="file" onChange={(e) => setFile(e.currentTarget.files?.[0] ?? null)} />
-          {file ? <Picked file={file} onClear={clear} /> : <span className="pt-dropcta"><b>Choose a file</b> or drop it here<small>Photos, logos, PDFs, documents · up to 7 MB</small></span>}
-        </label>
-        <div className="pt-linkcell">
-          <label className="pt-cellf"><span className="pt-l">…or a link</span><input name="url" type="url" placeholder="https://drive.google.com/…" inputMode="url" /></label>
-          <label className="pt-cellf"><span className="pt-l">Name it <em>optional</em></span><input name="name" type="text" placeholder="e.g. Product photos, June shoot" maxLength={200} /></label>
-        </div>
+      <label className={`pui-drop${drag ? " drag" : ""}${file ? " has" : ""}`}
+        onDragOver={(e) => { e.preventDefault(); setDrag(true); }} onDragLeave={() => setDrag(false)}
+        onDrop={(e) => {
+          e.preventDefault(); setDrag(false);
+          const f = e.dataTransfer.files?.[0];
+          if (f && fileRef.current) { const dt = new DataTransfer(); dt.items.add(f); fileRef.current.files = dt.files; setFile(f); }
+        }}>
+        <input ref={fileRef} type="file" name="file" onChange={(e) => setFile(e.currentTarget.files?.[0] ?? null)} />
+        {file ? <Picked file={file} onClear={clear} /> : <span><b>Choose a file</b> or drop it here<small>Photos, logos, PDFs, documents · up to 7 MB</small></span>}
+      </label>
+      <div className="ca-two">
+        <label className="ca-f"><span>…or paste a link</span><input name="url" type="url" placeholder="https://drive.google.com/…" inputMode="url" /></label>
+        <label className="ca-f"><span>Name it <small>optional</small></span><input name="name" type="text" placeholder="e.g. Product photos, June shoot" maxLength={200} /></label>
       </div>
-      <div className="pt-go">
-        <span className="pt-small">Bigger than 7 MB? Share a Google Drive or Dropbox link instead.</span>
-        <button className="pt-btn" type="submit" disabled={busy}>{busy ? "Adding…" : "Add to folder"} <span aria-hidden>→</span></button>
-      </div>
-      {state?.error && <p className="pt-err" role="alert">{state.error}</p>}
-      {state?.ok && <p className="pt-ok" role="status">Added. The studio has been told.</p>}
+      {state?.error && <p className="ca-err" role="alert">{state.error}</p>}
+      {state?.ok && <p className="ca-ok" role="status">Added. The studio has been told.</p>}
+      <div className="ca-row ca-between"><span className="ca-sub">Bigger than 7 MB? Share a Google Drive or Dropbox link.</span>
+        <button className="ca-btn pri" type="submit" disabled={busy}>{busy ? "Adding…" : "Add to files"}</button></div>
     </form>
   );
 }
@@ -90,20 +81,18 @@ export function PasswordForm({ hasPassword }: { hasPassword: boolean }) {
   const ref = useRef<HTMLFormElement>(null);
   useEffect(() => { if (state?.ok) ref.current?.reset(); }, [state]);
   return (
-    <form ref={ref} action={act} className="pt-pwform">
-      <div className="pt-sheet">
-        {hasPassword && <label className="pt-cellf"><span className="pt-l">Current password</span><input name="current" type="password" autoComplete="current-password" /></label>}
-        <div className="pt-sheet-row">
-          <label className="pt-cellf"><span className="pt-l">{hasPassword ? "New password" : "Password"}</span><input name="password" type="password" autoComplete="new-password" minLength={8} placeholder="8 characters or more" /></label>
-          <label className="pt-cellf"><span className="pt-l">Type it again</span><input name="again" type="password" autoComplete="new-password" minLength={8} /></label>
-        </div>
+    <form ref={ref} action={act} className="ca-form">
+      {hasPassword && <label className="ca-f"><span>Current password</span><input name="current" type="password" autoComplete="current-password" /></label>}
+      <div className="ca-two">
+        <label className="ca-f"><span>{hasPassword ? "New password" : "Password"}</span><input name="password" type="password" autoComplete="new-password" minLength={8} placeholder="8 characters or more" /></label>
+        <label className="ca-f"><span>Type it again</span><input name="again" type="password" autoComplete="new-password" minLength={8} /></label>
       </div>
-      {state?.error && <p className="pt-err" role="alert">{state.error}</p>}
-      {state?.ok && <p className="pt-ok" role="status">Saved.</p>}
-      <div className="pt-go">
+      {state?.error && <p className="ca-err" role="alert">{state.error}</p>}
+      {state?.ok && <p className="ca-ok" role="status">Saved.</p>}
+      <div className="ca-row pui-pwgo">
         {/* the main button comes first in the DOM so Enter never removes the password */}
-        <button className="pt-btn ink" type="submit" disabled={busy}>{busy ? "Saving…" : hasPassword ? "Change password" : "Set password"}</button>
-        {hasPassword && <button className="pt-linkbtn pt-before" type="submit" name="remove" value="1">Remove password, use codes only</button>}
+        <button className="ca-btn pri" type="submit" disabled={busy}>{busy ? "Saving…" : hasPassword ? "Change password" : "Set password"}</button>
+        {hasPassword && <button className="ca-x" type="submit" name="remove" value="1">Remove password, use codes only</button>}
       </div>
     </form>
   );

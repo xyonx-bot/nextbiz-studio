@@ -18,7 +18,13 @@ export function DeskForm({ content, variant = "classic" }: { content?: typeof co
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
-  const [sent, setSent] = useState<null | { name: string; via: "whatsapp" | "email" }>(null);
+  const [sent, setSent] = useState<null | { name: string; via: "whatsapp" | "email"; self?: boolean }>(null);
+  // self-service: "no calls, everything in the portal". ?mode=self (or #self-service) preselects it — for reels / links
+  const [self, setSelf] = useState(false);
+  useEffect(() => {
+    const q = new URLSearchParams(location.search);
+    if (q.get("mode") === "self" || location.hash === "#self-service") setSelf(true);
+  }, []);
   const [pick, setPick] = useState<{ service: string; budget: string }>({ service: "", budget: "" });
   // live "your brief so far" summary (Editorial sheet) — read from the form as the visitor types
   const [draft, setDraft] = useState({ name: "", contact: "", words: 0 });
@@ -48,6 +54,7 @@ export function DeskForm({ content, variant = "classic" }: { content?: typeof co
       budget: String(fd.get("budget") ?? ""),
       message: String(fd.get("brief") ?? ""),
       website: String(fd.get("nb_trap") ?? ""), // honeypot (named nb_trap so browser autofill never fills it)
+      selfService: self,
     };
     const wantsUpdates = fd.get("updates") === "on";
 
@@ -64,7 +71,7 @@ export function DeskForm({ content, variant = "classic" }: { content?: typeof co
         if (wantsUpdates && payload.email.includes("@")) {
           fetch("/api/subscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email: payload.email, list: "newsletter", source: "contact-form" }) }).catch(() => {});
         }
-        setSent({ name: payload.name.trim().split(/\s+/)[0] || "", via: payload.phone.trim().length >= 7 ? "whatsapp" : "email" });
+        setSent({ name: payload.name.trim().split(/\s+/)[0] || "", via: self ? "email" : payload.phone.trim().length >= 7 ? "whatsapp" : "email", self });
         return;
       }
       if (data?.errors) {
@@ -80,18 +87,40 @@ export function DeskForm({ content, variant = "classic" }: { content?: typeof co
     }
   }
 
+
+  const modeChoice = (
+    <div className="cf-mode" role="radiogroup" aria-label="How would you like to work with us?">
+      <span className="cf-mode-l">How would you like to work?</span>
+      <div className="cf-mode-opts">
+        <button type="button" role="radio" aria-checked={!self} className={!self ? "on" : ""} onClick={() => setSelf(false)}>
+          <b>Talk it through</b><small>A quick reply on WhatsApp or a short call</small></button>
+        <button type="button" role="radio" aria-checked={self} className={self ? "on" : ""} onClick={() => setSelf(true)}>
+          <b>Self-service · no calls</b><small>Everything in your private portal: chat, files, payments</small></button>
+      </div>
+    </div>
+  );
+
   if (sent) {
     return (
       <div className="form-sheet f-done-wrap" id="brief-sheet">
         <div className="f-done" ref={done} tabIndex={-1} role="status" aria-live="polite">
           <span className="f-done-ic" aria-hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></span>
           <h3>{sent.name ? `Thanks, ${sent.name}. Your brief is in.` : "Thanks. Your brief is in."}</h3>
-          <p>We&apos;ll read it today and reply {sent.via === "whatsapp" ? "on WhatsApp" : "by email"} within one business day, from the person who&apos;d actually do the work.</p>
-          <ol className="f-done-steps">
-            <li><b>Today</b><span>We read your brief</span></li>
-            <li><b>Within a day</b><span>A real reply, with first thoughts</span></li>
-            <li><b>Next</b><span>A 15-minute call, if it helps</span></li>
-          </ol>
+          {sent.self ? (<>
+            <p>You chose self-service: no calls. We&apos;ll review your request within one business day. If we can take it on, you&apos;ll get an email invite to your private client portal, where everything happens.</p>
+            <ol className="f-done-steps">
+              <li><b>Within a day</b><span>We review your request</span></li>
+              <li><b>If it&apos;s a fit</b><span>Your portal invite arrives by email</span></li>
+              <li><b>Then</b><span>Brief, files, updates and payments, all in the portal</span></li>
+            </ol>
+          </>) : (<>
+            <p>We&apos;ll read it today and reply {sent.via === "whatsapp" ? "on WhatsApp" : "by email"} within one business day, from the person who&apos;d actually do the work.</p>
+            <ol className="f-done-steps">
+              <li><b>Today</b><span>We read your brief</span></li>
+              <li><b>Within a day</b><span>A real reply, with first thoughts</span></li>
+              <li><b>Next</b><span>A 15-minute call, if it helps</span></li>
+            </ol>
+          </>)}
           <div className="f-done-acts">
             <a className="cf-submit" href={WHATSAPP_URL} target="_blank" rel="noreferrer">Talk sooner on WhatsApp</a>
             <a className="f-done-link" href={`tel:${CONTACT.phoneTel}`}>or call {CONTACT.phoneDisplay}</a>
@@ -124,6 +153,7 @@ export function DeskForm({ content, variant = "classic" }: { content?: typeof co
       <div className="cs-layout">
       <form className="csheet-form" onSubmit={onSubmit} onInput={(e) => readDraft(e.currentTarget)} noValidate>
         <input type="text" name="nb_trap" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }} />
+        {modeChoice}
         <div className="cs-grid">
           {cell("name", f.name.label, <input id="cs-name" name="name" type="text" autoComplete="name" placeholder={f.name.placeholder} aria-invalid={!!errors.name} />, { cls: "w6", err: errors.name })}
           {cell("phone", f.phone.label, <input id="cs-phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder={f.phone.placeholder} aria-invalid={!!errors.phone} />, { cls: "w3", err: errors.phone })}
@@ -186,6 +216,7 @@ export function DeskForm({ content, variant = "classic" }: { content?: typeof co
       <input type="text" name="nb_trap" tabIndex={-1} autoComplete="off"
              aria-hidden="true" style={{ position: "absolute", left: "-9999px", height: 0, width: 0, opacity: 0 }} />
       <div className="cf-head"><h2>Send us a brief</h2><p>{c.hint}</p></div>
+      {modeChoice}
       <div className="cf-grid">
         {fld("name", f.name, <input className="cf-ctl" id="cf-name" type="text" name="name" autoComplete="name" placeholder={f.name.placeholder} required aria-invalid={!!errors.name} />, { full: true, err: errors.name })}
         {fld("phone", f.phone, <input className="cf-ctl" id="cf-phone" type="tel" inputMode="tel" name="phone" autoComplete="tel" placeholder={f.phone.placeholder} aria-invalid={!!errors.phone} />, { err: errors.phone })}

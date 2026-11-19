@@ -42,9 +42,15 @@ export const leadSchema = z.object({
   // honeypot: schema IGNORES it entirely (zod v4 strict off) — the route
   // silently fake-oks any request that fills it, so bots learn nothing.
   website: z.string().optional(),
+  // self-service: "no calls, everything in the portal" — the portal logs in by email, so it needs one
+  selfService: z.boolean().optional(),
 }).superRefine((v, ctx) => {
   const hasPhone = v.phone && v.phone.length >= 7;
   const hasEmail = v.email && v.email.includes("@");
+  if (v.selfService && !hasEmail) {
+    ctx.addIssue({ code: "custom", path: ["email"], message: "Self-service runs in your client portal, which logs in by email. Add your email." });
+    return;
+  }
   if (!hasPhone && !hasEmail) {
     ctx.addIssue({
       code: "custom",
