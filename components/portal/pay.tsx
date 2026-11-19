@@ -33,8 +33,8 @@ function Copy({ v }: { v: string }) {
  * INR → Pay now (Razorpay Checkout: UPI, cards, netbanking) · Show UPI QR (scan with any UPI app; confirms itself).
  * USD → bank transfer details (ACH / Fedwire / SWIFT) with the reference to quote; the studio confirms it.
  */
-export function PayBox({ id, currency, amountLabel, reference, online, bank, inrNote }: {
-  id: string; currency: "INR" | "USD"; amountLabel: string; reference: string; online: boolean; bank: Bank; inrNote: string;
+export function PayBox({ id, currency, amountLabel, reference, online, upi, bank, inrNote }: {
+  id: string; currency: "INR" | "USD"; amountLabel: string; reference: string; online: boolean; upi: boolean; bank: Bank; inrNote: string;
 }) {
   const router = useRouter();
   const [mode, setMode] = useState<"idle" | "busy" | "qr" | "paid">("idle");
@@ -140,8 +140,8 @@ export function PayBox({ id, currency, amountLabel, reference, online, bank, inr
       ) : (
         <div className="ca-row">
           <button type="button" className="ca-btn pri pui-paybtn" onClick={() => payNow()} disabled={mode === "busy"}>{mode === "busy" ? "Opening…" : `Pay ${amountLabel}`}</button>
-          <button type="button" className="ca-btn" onClick={showQr} disabled={mode === "busy"}>Show UPI QR</button>
-          <span className="pui-hint">UPI · cards · netbanking · secured by Razorpay</span>
+          {upi && <button type="button" className="ca-btn" onClick={showQr} disabled={mode === "busy"}>Show UPI QR</button>}
+          <span className="pui-hint">{upi ? "UPI · cards · netbanking" : "Cards · netbanking · wallets"} · secured by Razorpay</span>
         </div>
       )}
       {inrNote && <p className="ca-sub">{inrNote}</p>}

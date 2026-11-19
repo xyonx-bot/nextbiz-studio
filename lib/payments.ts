@@ -188,6 +188,23 @@ async function rzp<T>(method: "GET" | "POST", path: string, body?: unknown): Pro
   return data as T;
 }
 
+/**
+ * Is UPI switched on for this Razorpay account? (Razorpay enables it per account, usually after live activation.)
+ * Asked once every 10 minutes; if Razorpay can't be reached we assume yes so the button isn't hidden by a blip.
+ */
+let upiCache: { at: number; on: boolean } | null = null;
+export async function rzpUpiOn(): Promise<boolean> {
+  if (!rzpOn()) return false;
+  if (upiCache && Date.now() - upiCache.at < 10 * 60_000) return upiCache.on;
+  try {
+    const auth = Buffer.from(`${process.env.RAZORPAY_KEY_ID}:`).toString("base64");
+    const r = await fetch("https://api.razorpay.com/v1/methods", { headers: { Authorization: `Basic ${auth}` }, cache: "no-store" });
+    const m = (await r.json()) as { upi?: boolean };
+    upiCache = { at: Date.now(), on: r.ok ? m.upi === true : true };
+  } catch { upiCache = { at: Date.now(), on: true }; }
+  return upiCache.on;
+}
+
 export async function rzpCreateOrder(p: Payment, projectTitle: string) {
   return rzp<{ id: string; amount: number; currency: string; status: string }>("POST", "/orders", {
     amount: Number(p.amount), currency: p.currency, receipt: payRef(p),

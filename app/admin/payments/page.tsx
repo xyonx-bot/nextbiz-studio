@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { isAuthenticated } from "@/lib/auth";
 import { countLeads } from "@/lib/db";
 import { countUnreadForStudio, listAllProjects, siteUrl } from "@/lib/portal";
-import { getPaymentSettings, isOverdue, listAllPayments, money, payRef, rzpOn, rzpTestMode, VIA_LABEL, type Currency } from "@/lib/payments";
+import { getPaymentSettings, isOverdue, listAllPayments, money, payRef, rzpOn, rzpTestMode, rzpUpiOn, VIA_LABEL, type Currency } from "@/lib/payments";
 import { AdminShell } from "@/components/admin/shell";
 import { PaymentSettingsForm, RequestPaymentForm } from "@/components/admin/payment-forms";
 
@@ -19,6 +19,7 @@ export default async function PaymentsPage() {
   const sum = (cur: Currency, f: (r: (typeof rows)[number]) => boolean) => rows.filter((r) => r.currency === cur && f(r)).reduce((a, r) => a + r.amount, 0);
   const curs = (["INR", "USD"] as Currency[]).filter((c) => rows.some((r) => r.currency === c));
   const site = await siteUrl();
+  const upi = await rzpUpiOn();
   return (
     <AdminShell leadCount={leads} current="payments" clientUnread={unread} crumb="Desk / Payments" title="Payments">
       <div className="content">
@@ -70,6 +71,7 @@ export default async function PaymentsPage() {
             <h2>Razorpay</h2>
             <ul className="ca-kv">
               <li><span>Status</span><b>{rzpOn() ? (rzpTestMode() ? "Connected · test mode" : "Connected · live") : "Not connected"}</b></li>
+              {rzpOn() && <li><span>UPI + UPI QR</span><b>{upi ? "On" : "Off on your Razorpay account. Ask Razorpay to enable UPI and QR Codes"}</b></li>}
               <li><span>Webhook URL</span><b className="pay-mono">{site}/api/razorpay/webhook</b></li>
               <li><span>Webhook events</span><b>payment.captured, order.paid, qr_code.credited</b></li>
             </ul>

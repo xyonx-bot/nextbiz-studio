@@ -5,7 +5,7 @@ import {
   markMessagesRead, unreadFor, type FileRow, type MessageRow,
 } from "@/lib/portal";
 import {
-  blockingPayment, getPaymentSettings, isOverdue, listPayments, money, payRef, rzpOn, totals, VIA_LABEL, type Payment,
+  blockingPayment, getPaymentSettings, isOverdue, listPayments, money, payRef, rzpOn, rzpUpiOn, totals, VIA_LABEL, type Payment,
 } from "@/lib/payments";
 import { PortalShell, type Tab } from "@/components/portal/shell";
 import { MessageForm, UploadForm } from "@/components/portal/forms";
@@ -61,6 +61,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
     tab === "files" ? listFiles(p.id) : Promise.resolve([] as FileRow[]),
     unreadFor(p.id, "client"), listPayments(p.id), tab === "payments" ? getPaymentSettings() : Promise.resolve(null),
   ]);
+  const upi = tab === "payments" ? await rzpUpiOn() : false;
   const time = (d: string | null) => (d ? new Date(d).getTime() : Infinity);
   const milestones = [...milestonesRaw].sort((a, b) => time(a.due_on) - time(b.due_on));
   const stageIdx = Math.max(0, STAGES.findIndex((s) => s.id === p.stage));
@@ -226,7 +227,7 @@ export default async function ProjectPage({ params, searchParams }: { params: Pr
                   {x.blocks_stage && <p className="pui-holdnote">🔒 {STAGES.find((s) => s.id === x.blocks_stage)?.label} starts once this is paid.</p>}</div>
                 <div className="pui-payamt"><b>{money(x.amount, x.currency)}</b><span className={`pay-st ${stClass(x)}`}>{stLabel(x)}</span></div>
               </div>
-              <PayBox id={x.id} currency={x.currency} amountLabel={money(x.amount, x.currency)} reference={payRef(x)} online={rzpOn()} bank={paySettings.usdBank} inrNote={paySettings.inrNote} />
+              <PayBox id={x.id} currency={x.currency} amountLabel={money(x.amount, x.currency)} reference={payRef(x)} online={rzpOn()} upi={upi} bank={paySettings.usdBank} inrNote={paySettings.inrNote} />
             </section>
           ))}
 
