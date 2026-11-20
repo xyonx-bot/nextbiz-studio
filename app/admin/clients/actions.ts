@@ -120,11 +120,14 @@ export async function setStageAction(fd: FormData) {
   const { p, c, path } = await proj(fd);
   const stage = s(fd, "stage", 20);
   if (!isStage(stage) || stage === p.stage) return;
+  // one step at a time — never jump (a stray click once moved a project straight to Care)
+  const order = ["plan", "design", "build", "launch", "care"];
+  if (Math.abs(order.indexOf(stage) - order.indexOf(p.stage)) !== 1) return;
   // a stage held by an unpaid request can't be entered until it's paid (or the request is cancelled)
   const held = stageBlockedBy(await listPayments(p.id), stage);
   if (held) redirect(`${path}?held=${held.id}`);
   await updateProject(p.id, { stage });
-  if (fd.get("notify") !== "off") await notifyClient(c, p, "stage", stage);
+  if (fd.get("notify") === "on") await notifyClient(c, p, "stage", stage);
   revalidatePath(path);
 }
 

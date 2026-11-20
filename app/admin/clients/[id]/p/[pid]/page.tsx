@@ -9,7 +9,8 @@ import {
 } from "@/lib/portal";
 import { AdminShell } from "@/components/admin/shell";
 import { FileForm, ProjectEditForm, ReplyForm, UpdateForm } from "@/components/admin/client-forms";
-import { deleteThingAction, milestoneAction, paymentOpAction, requestAction, setStageAction } from "../../../actions";
+import { deleteThingAction, milestoneAction, paymentOpAction, requestAction } from "../../../actions";
+import { StageMover } from "@/components/admin/stage-mover";
 import { MarkPaidButton, ProjectValueForm, RecordPaymentForm, RequestPaymentForm } from "@/components/admin/payment-forms";
 import { VIA_LABEL, isOverdue, listPayments, money, payRef, rzpOn, rzpTestMode, stageBlockedBy, totals } from "@/lib/payments";
 
@@ -40,18 +41,27 @@ export default async function AdminProjectPage({ params, searchParams }: { param
       acts={<><Link className="back" href={`/admin/clients/${c.id}`}>← {c.name}</Link></>}>
       <div className="content">
         <section className="ca-card">
-          <div className="ca-row ca-between"><h2>Stage</h2><span className="ca-sub">Changing it emails the client. 🔒 = held until a payment is made.</span></div>
+          <div className="ca-row ca-between"><h2>Stage</h2><span className="ca-sub">Moves one step at a time, after you confirm.</span></div>
           {heldBy && <p className="ca-err" role="alert">Can&apos;t move yet: “{heldBy.label}” ({money(heldBy.amount, heldBy.currency)}) is unpaid and holds this stage. Mark it paid or cancel it first.</p>}
-          <div className="ca-stages">
-            {STAGES.map((s) => {
-              const lock = s.id !== p.stage && stageBlockedBy(payments, s.id);
+          <ol className="ca-stagebar">
+            {STAGES.map((s, i) => {
+              const cur = STAGES.findIndex((x) => x.id === p.stage);
+              const lock = i > cur && stageBlockedBy(payments, s.id);
+              const st = i < cur ? "done" : i === cur ? "now" : lock ? "held" : "todo";
               return (
-                <form key={s.id} action={setStageAction}>{hidden("project", p.id)}{hidden("stage", s.id)}
-                  <button type="submit" className={p.stage === s.id ? "on" : lock ? "held" : ""} aria-pressed={p.stage === s.id} title={lock ? `Held until “${lock.label}” is paid` : undefined}>{lock ? "🔒 " : ""}{s.label}</button>
-                </form>
+                <li key={s.id} className={st}>
+                  <span className="sb-dot" aria-hidden>{st === "done" ? "✓" : st === "held" ? "🔒" : i + 1}</span>
+                  <span><b>{s.label}</b><small>{st === "done" ? "Done" : st === "now" ? "Current" : st === "held" ? "Held for payment" : "Next up"}</small></span>
+                </li>
               );
             })}
-          </div>
+          </ol>
+          {(() => {
+            const cur = STAGES.findIndex((x) => x.id === p.stage);
+            const prev = cur > 0 ? STAGES[cur - 1] : null, next = cur < STAGES.length - 1 ? STAGES[cur + 1] : null;
+            const hold = next ? stageBlockedBy(payments, next.id) : null;
+            return <StageMover projectId={p.id} prev={prev} next={next} heldBy={hold ? { label: hold.label, amount: money(hold.amount, hold.currency) } : null} />;
+          })()}
         </section>
 
         <section className="ca-card">

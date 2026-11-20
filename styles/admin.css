@@ -829,3 +829,29 @@
 /* sidebar header (admin + portal): same small logo as the login strip */
 .adminui .side .sbrand { gap: 8px; font-size: 12px; }
 .adminui .side .sbrand .logo-img { height: 16px; width: auto; }
+
+/* stage bar (read-only) + the deliberate mover under it */
+.adminui .ca-stagebar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid var(--line); background: var(--card); }
+.adminui .ca-stagebar li { display: flex; gap: 8px; align-items: center; padding: 9px 10px; border-right: 1px solid var(--line); min-width: 0; }
+.adminui .ca-stagebar li:last-child { border-right: 0; }
+.adminui .ca-stagebar b { display: block; font-size: 10.5px; } .adminui .ca-stagebar small { display: block; font-size: 8px; font-weight: 600; color: var(--muted); }
+.adminui .sb-dot { width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; font-size: 8.5px; font-weight: 800; flex: none; color: var(--muted); background: var(--paper); }
+.adminui .ca-stagebar li.done .sb-dot { background: var(--ink); border-color: var(--ink); color: #fff; }
+.adminui .ca-stagebar li.now { background: color-mix(in srgb, var(--acc, #C6F432) 22%, var(--card)); box-shadow: inset 0 2px 0 var(--acc, #C6F432); }
+.adminui .ca-stagebar li.now .sb-dot { background: var(--acc, #C6F432); border-color: var(--ink); color: #090B0F; }
+.adminui .ca-stagebar li.todo b, .adminui .ca-stagebar li.held b { color: var(--muted); }
+.adminui .ca-stagebar li.held { background: repeating-linear-gradient(-45deg, var(--card), var(--card) 6px, #FBF3DC 6px, #FBF3DC 12px); }
+.adminui .ca-stagebar li.held .sb-dot { font-size: 8px; border-style: dashed; }
+@media (max-width: 760px) {
+  .adminui .ca-stagebar { grid-template-columns: minmax(0, 1fr); }
+  .adminui .ca-stagebar li { border-right: 0; border-bottom: 1px solid var(--line); }
+  .adminui .ca-stagebar li:last-child { border-bottom: 0; }
+}
+.adminui .sm-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.adminui .sm-held { font-size: 10px; font-weight: 700; color: #7A5600; }
+.adminui .sm-confirm { display: grid; gap: 8px; padding: 10px 12px; border: 1px solid var(--ink); background: var(--card); box-shadow: inset 0 2px 0 var(--acc, #C6F432); }
+.adminui .sm-confirm p { margin: 0; font-size: 10.5px; color: var(--muted); } .adminui .sm-confirm p b { color: var(--ink); }
+
+/* table cards: keep the side gutter so rows don't press against the border */
+.adminui .ca-card.ca-tablewrap { padding: 0 14px 4px; }
+.adminui .ca-card.ca-tablewrap .ca-table td:first-child, .adminui .ca-card.ca-tablewrap .ca-table th:first-child { padding-left: 0; }
